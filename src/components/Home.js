@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import '../bootstrap/bootstrap.min.css';
 import '../App.css';
 import '../bootstrap/js/bootstrap.bundle.min.js';
+import '../awesome/all.min.css';
 
 
 function Navbar() {
@@ -29,19 +30,25 @@ function Navbar() {
                 >
                     <span className="navbar-toggler-icon"></span>
                 </button>
-                <div className="collapse navbar-collapse justify-content-center" id="navbarNav">
-                    <ul className="navbar-nav subir">
+                <div className="collapse navbar-collapse" id="navbarNav">
+                    <ul className="navbar-nav subir mx-auto">
                         <li className="nav-item">
                             <Link className="nav-link fw-bold fs-5 m-1" to="/" style={{ color: '#FFD230' }}>Home</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link fw-bold fs-5 m-1" to="/sobre" style={{ color: '#FFD230' }}>Sobre Nós</Link>
+                            <Link className="nav-link fw-bold fs-5 m-1" to="/orcamento" style={{ color: '#FFD230' }}>Orçamento</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link fw-bold fs-5 m-1" to="/login" style={{ color: '#FFD230' }}>Login</Link>
+                            <Link className="nav-link fw-bold fs-5 m-1" to="/produtos" style={{ color: '#FFD230' }}>Produtos</Link>
+                        </li>
+                        <ul className="navbar-nav position-absolute end-0 me-2">
+                        <li className="nav-item">
+                            <Link className="nav-link fw-bold fs-5 m-1" to="/login" style={{ color: '#FFD230' }}><i class="fa-solid fa-user-plus me-2"></i>Login</Link>
                         </li>
                     </ul>
-                </div> {/* Fim da navbar e do collapse / (para fazer): colocar login no canto direito */}
+                    </ul>
+
+                </div>
             </div>
         </nav>
     );
