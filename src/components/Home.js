@@ -7,17 +7,25 @@ import '../awesome/all.min.css';
 
 
 function Navbar() {
+    const [isNavCollapsed, setIsNavCollapsed] = React.useState(true);
+
+    const handleToggle = () => {
+        setIsNavCollapsed(!isNavCollapsed);
+    };
+
     return (
         <nav className="navbar navbar-expand-lg CorNavbar navbarNav">
             <div className="container-fluid">
-                <img
-                    src="/logo_nav.png"
-                    alt="Logo"
-                    className="logo-navbar"
-                    width="150px"
-                    height="70px"
-                    style={{ position: 'absolute' }}
-                />
+                {!isNavCollapsed ? null : (
+                    <img
+                        src="/logo_nav.png"
+                        alt="Logo"
+                        className="logo-navbar"
+                        width="150px"
+                        height="70px"
+                        style={{ position: 'absolute' }}
+                    />
+                )}
                 <div className="d-flex"></div>
                 <button
                     className="navbar-toggler"
@@ -25,13 +33,14 @@ function Navbar() {
                     data-bs-toggle="collapse"
                     data-bs-target="#navbarNav"
                     aria-controls="navbarNav"
-                    aria-expanded="false"
+                    aria-expanded={!isNavCollapsed}
                     aria-label="Toggle navigation"
+                    onClick={handleToggle}
                 >
                     <span className="navbar-toggler-icon"></span>
                 </button>
-                <div className="collapse navbar-collapse" id="navbarNav">
-                    <ul className="navbar-nav subir mx-auto">
+                <div className={`collapse navbar-collapse${isNavCollapsed ? '' : ' show'}`} id="navbarNav">
+                    <ul className="navbar-nav subir mx-auto w-100 justify-content-center">
                         <li className="nav-item">
                             <Link className="nav-link fw-bold fs-5 m-1" to="/" style={{ color: '#FFD230' }}>Home</Link>
                         </li>
@@ -41,13 +50,19 @@ function Navbar() {
                         <li className="nav-item">
                             <Link className="nav-link fw-bold fs-5 m-1" to="/produtos" style={{ color: '#FFD230' }}>Produtos</Link>
                         </li>
-                        <ul className="navbar-nav position-absolute end-0 me-2">
-                        <li className="nav-item">
-                            <Link className="nav-link fw-bold fs-5 m-1" to="/login" style={{ color: '#FFD230' }}><i class="fa-solid fa-user-plus me-2"></i>Login</Link>
+                        <li className="nav-item d-lg-none">
+                            <Link className="nav-link fw-bold fs-5 m-1" to="/login" style={{ color: '#FFD230' }}>
+                                <i className="fa-solid fa-user-plus me-2"></i>Login
+                            </Link>
                         </li>
                     </ul>
+                    <ul className="navbar-nav ms-auto d-none d-lg-flex position-absolute end-0 me-2" >
+                        <li className="nav-item">
+                            <Link className="nav-link fw-bold fs-5 " to="/login" style={{ color: '#FFD230' }}>
+                                <i className="fa-solid fa-user-plus me-2"></i>Login
+                            </Link>
+                        </li>
                     </ul>
-
                 </div>
             </div>
         </nav>
