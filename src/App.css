@@ -4,6 +4,7 @@
   font-weight: normal;
   font-style: normal;
 }
+
 .App {
   text-align: center;
   font-family: RocaOne, sans-serif;
@@ -20,6 +21,7 @@
 .subir li:hover {
   transform: scale(1.10);
 }
+
 
 
 
