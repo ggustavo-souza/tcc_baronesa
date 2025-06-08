@@ -1,10 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../bootstrap/bootstrap.min.css';
 import '../App.css';
-import '../bootstrap/js/bootstrap.bundle.min.js';
 import '../awesome/all.min.css';
-import 'animate.css';
 
 
 function Navbar() {
@@ -57,7 +54,7 @@ function Navbar() {
                             </Link>
                         </li>
                     </ul>
-                    <ul className="navbar-nav ms-auto d-none d-lg-flex position-absolute end-0 me-2" >
+                    <ul className="navbar-nav ms-auto d-none d-lg-flex position-absolute end-0 me-2 subir" >
                         <li className="nav-item">
                             <Link className="nav-link fw-bold fs-5 " to="/login" style={{ color: '#FFD230' }}>
                                 <i className="fa-solid fa-user-plus me-2"></i>Login
@@ -72,42 +69,109 @@ function Navbar() {
 
 function Carroussel() {
     return (
-        <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel">
-            <div className="carousel-indicators">
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" className="active" aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-            </div>
-            <div className="carousel-inner">
-                <div className="carousel-item active">
-                    <img src="/carroussel1.jpg" className="d-block w-100" alt="..." />
-                </div>
-                <div className="carousel-item">
-                    <img src="/carroussel2.jpg" className="d-block w-100" alt="..." />
-                </div>
-                <div className="carousel-item">
-                    <img src="/carroussel3.jpg" className="d-block w-100" alt="..." />
-                </div>
-            </div>
-            <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span className="visually-hidden">Previous</span>
-            </button>
-            <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                <span className="visually-hidden">Next</span>
-            </button>
+        <div className="wide-carousel-container">
+      {/* O id "carouselExampleIndicators" é importante para o Bootstrap JS */}
+      <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel">
+        {/* Indicadores (os pequenos pontos na parte inferior) */}
+        <div className="carousel-indicators">
+          <button
+            type="button"
+            data-bs-target="#carouselExampleIndicators"
+            data-bs-slide-to="0"
+            className="active"
+            aria-current="true"
+            aria-label="Slide 1"
+          ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleIndicators"
+            data-bs-slide-to="1"
+            aria-label="Slide 2"
+          ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleIndicators"
+            data-bs-slide-to="2"
+            aria-label="Slide 3"
+          ></button>
         </div>
-    );
-}
+
+        {/* Itens do Carrossel */}
+        <div className="carousel-inner">
+          {/* Item 1 do Carrossel */}
+          <div className="carousel-item active">
+            <img
+              src="/carroussel1.jfif"
+              className="d-block w-100 wide-carousel-img"
+              alt="Primeiro slide"
+            />
+            <div className="carousel-caption d-none d-md-block">
+              <h5>Primeiro Slide</h5>
+              <p>Este é o primeiro item do nosso carrossel horizontal.</p>
+            </div>
+          </div>
+
+          {/* Item 2 do Carrossel */}
+          <div className="carousel-item">
+            <img
+              src="/carroussel2.jfif"
+              className="d-block w-100 wide-carousel-img"
+              alt="Segundo slide"
+            />
+            <div className="carousel-caption d-none d-md-block">
+              <h5>Segundo Slide</h5>
+              <p>Explore as possibilidades de um carrossel mais amplo.</p>
+            </div>
+          </div>
+
+          {/* Item 3 do Carrossel */}
+          <div className="carousel-item">
+            <img
+              src="/carroussel3.jfif"
+              className="d-block w-100 wide-carousel-img"
+              alt="Terceiro slide"
+            />
+            <div className="carousel-caption d-none d-md-block">
+              <h5>Terceiro Slide</h5>
+              <p>Conteúdo expansivo para uma melhor experiência visual.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Controles (setas de navegação) */}
+        <button
+          className="carousel-control-prev"
+          type="button"
+          data-bs-target="#carouselExampleIndicators"
+          data-bs-slide="prev"
+        >
+          <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span className="visually-hidden">Previous</span>
+        </button>
+        <button
+          className="carousel-control-next"
+          type="button"
+          data-bs-target="#carouselExampleIndicators"
+          data-bs-slide="next"
+        >
+          <span className="carousel-control-next-icon" aria-hidden="true"></span>
+          <span className="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+  );
+};
+
 
 function Home() {
     return (
         <div>
             <Navbar />
-            <div className="container mt-5">
+            <div className="container mt-5 ">
                 <h1 className=''>Bem-vindo à Baronesa</h1>
-                {/* <Carroussel /> */}
+                <div className="row justify-content-center mt-4">
+                 <Carroussel />
+                </div>
             </div>
         </div>
     );
