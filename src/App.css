@@ -37,6 +37,27 @@
   width: 100%;
 }
 
+.wide-carousel-container {
+  width: 90%; /* Ajuste a largura conforme sua necessidade. 100% para ocupar toda a largura disponível. */
+  margin: 20px auto; /* Centraliza o carrossel na página */
+  overflow: hidden; /* Garante que o conteúdo que extrapola o contêiner seja escondido */
+}
+
+.wide-carousel-img {
+  height: 400px; /* Defina uma altura fixa para as imagens para que fiquem padronizadas */
+  object-fit: cover; /* Garante que a imagem preencha o espaço sem distorção, cortando as partes extras */
+}
+
+/* Opcional: Ajustes para as legendas do carrossel */
+.carousel-caption h3 {
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.carousel-caption p {
+  color: #eee;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
 
 
 
