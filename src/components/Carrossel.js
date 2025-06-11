@@ -7,7 +7,7 @@ function Carroussel() {
     return (
         <div className="wide-carousel-container">
       {/* O id "carouselExampleIndicators" é importante para o Bootstrap JS */}
-      <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel">
+      <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel" data-bs-interval="4500">
         {/* Indicadores (os pequenos pontos na parte inferior) */}
         <div className="carousel-indicators">
           <button

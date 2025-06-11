@@ -23,6 +23,11 @@
   transform: scale(1.10);
 }
 
+.nav-item {
+  position: relative;
+  color: inherit;
+}
+
 .nav-item::after {
   content: " ";
   width: 0%;
@@ -37,6 +42,11 @@
 .nav-item:hover::after {
   width: 100%;
 }
+
+.carousel-item {
+  transition: transform 1s ease-in-out !important;
+}
+
 
 .wide-carousel-container {
   width: 90%; /* Ajuste a largura conforme sua necessidade. 100% para ocupar toda a largura disponível. */
