@@ -8,7 +8,7 @@
 .App {
   text-align: center;
   font-family: RocaOne, sans-serif;
-  background-color: #503325c1;
+  background-color: #503325c1; 
 }
 
 .CorNavbar {
@@ -40,19 +40,22 @@
 
 .wide-carousel-container {
   width: 90%; /* Ajuste a largura conforme sua necessidade. 100% para ocupar toda a largura disponível. */
-  margin: 20px auto; /* Centraliza o carrossel na página */
+  margin-right: 5px; /* Centraliza o carrossel na página */
   overflow: hidden; /* Garante que o conteúdo que extrapola o contêiner seja escondido */
+  border-radius: 45px;
 }
 
 .wide-carousel-img {
   height: 600px; /* Defina uma altura fixa para as imagens para que fiquem padronizadas */
-  object-fit: cover; /* Garante que a imagem preencha o espaço sem distorção, cortando as partes extras */
+  object-fit: fill; /* Garante que a imagem preencha o espaço sem distorção, cortando as partes extras */
+  opacity: 0.7;
 }
 
 /* Opcional: Ajustes para as legendas do carrossel */
 .carousel-caption h3 {
   color: #fff;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  font-weight: bolder;
 }
 
 .carousel-caption p {

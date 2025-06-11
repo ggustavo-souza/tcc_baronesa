@@ -2,7 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import '../App.css';
 import '../awesome/all.min.css';
+import Aos from 'aos';
+import Carroussel from './Carrossel';
 
+Aos.init();
 
 function Navbar() {
     const [isNavCollapsed, setIsNavCollapsed] = React.useState(true);
@@ -66,102 +69,6 @@ function Navbar() {
         </nav>
     );
 }
-
-function Carroussel() {
-    return (
-        <div className="wide-carousel-container">
-      {/* O id "carouselExampleIndicators" é importante para o Bootstrap JS */}
-      <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel">
-        {/* Indicadores (os pequenos pontos na parte inferior) */}
-        <div className="carousel-indicators">
-          <button
-            type="button"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide-to="0"
-            className="active"
-            aria-current="true"
-            aria-label="Slide 1"
-          ></button>
-          <button
-            type="button"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide-to="1"
-            aria-label="Slide 2"
-          ></button>
-          <button
-            type="button"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide-to="2"
-            aria-label="Slide 3"
-          ></button>
-        </div>
-
-        {/* Itens do Carrossel */}
-        <div className="carousel-inner">
-          {/* Item 1 do Carrossel */}
-          <div className="carousel-item active">
-            <img
-              src="/carroussel1.jfif"
-              className="d-block w-100 wide-carousel-img"
-              alt="Primeiro slide"
-            />
-            <div className="carousel-caption d-none d-md-block">
-              <h5>Primeiro Slide</h5>
-              <p>Este é o primeiro item do nosso carrossel horizontal.</p>
-            </div>
-          </div>
-
-          {/* Item 2 do Carrossel */}
-          <div className="carousel-item">
-            <img
-              src="/carroussel2.jfif"
-              className="d-block w-100 wide-carousel-img"
-              alt="Segundo slide"
-            />
-            <div className="carousel-caption d-none d-md-block">
-              <h5>Segundo Slide</h5>
-              <p>Explore as possibilidades de um carrossel mais amplo.</p>
-            </div>
-          </div>
-
-          {/* Item 3 do Carrossel */}
-          <div className="carousel-item">
-            <img
-              src="/carroussel3.jfif"
-              className="d-block w-100 wide-carousel-img"
-              alt="Terceiro slide"
-            />
-            <div className="carousel-caption d-none d-md-block">
-              <h5>Terceiro Slide</h5>
-              <p>Conteúdo expansivo para uma melhor experiência visual.</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Controles (setas de navegação) */}
-        <button
-          className="carousel-control-prev"
-          type="button"
-          data-bs-target="#carouselExampleIndicators"
-          data-bs-slide="prev"
-        >
-          <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span className="visually-hidden">Previous</span>
-        </button>
-        <button
-          className="carousel-control-next"
-          type="button"
-          data-bs-target="#carouselExampleIndicators"
-          data-bs-slide="next"
-        >
-          <span className="carousel-control-next-icon" aria-hidden="true"></span>
-          <span className="visually-hidden">Next</span>
-        </button>
-      </div>
-    </div>
-  );
-};
-
 
 function Home() {
     return (
