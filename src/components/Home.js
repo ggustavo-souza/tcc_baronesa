@@ -168,7 +168,6 @@ function Home() {
         <div>
             <Navbar />
             <div className="container mt-5 ">
-                <h1 className=''>Bem-vindo à Baronesa</h1>
                 <div className="row justify-content-center mt-4">
                  <Carroussel />
                 </div>

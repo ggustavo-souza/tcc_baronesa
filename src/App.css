@@ -8,6 +8,7 @@
 .App {
   text-align: center;
   font-family: RocaOne, sans-serif;
+  background-color: #503325c1;
 }
 
 .CorNavbar {
@@ -44,7 +45,7 @@
 }
 
 .wide-carousel-img {
-  height: 400px; /* Defina uma altura fixa para as imagens para que fiquem padronizadas */
+  height: 600px; /* Defina uma altura fixa para as imagens para que fiquem padronizadas */
   object-fit: cover; /* Garante que a imagem preencha o espaço sem distorção, cortando as partes extras */
 }
 
