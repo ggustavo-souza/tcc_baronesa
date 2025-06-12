@@ -39,7 +39,6 @@ function Carroussel() {
 
         </div>
 
-        {/* Itens do Carrossel */}
         <div className="carousel-inner shadow shadow-3">
           {/* Item 1 do Carrossel */}
           <div className="carousel-item active">
@@ -57,7 +56,7 @@ function Carroussel() {
           {/* Item 2 do Carrossel */}
           <div className="carousel-item">
             <img
-              src="/carroussel2.jfif"
+              src="/ex2.jpg"
               className="d-block w-100 wide-carousel-img"
               alt="Segundo slide"
             />
@@ -92,8 +91,7 @@ function Carroussel() {
           </div>
         </div>
         
-
-        {/* Controles (setas de navegação) */}
+        {/* Controles do Carrossel */}
         <button
           className="carousel-control-prev"
           type="button"
