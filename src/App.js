@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Routes, Route, Link, BrowserRouter } from 'rea
 import Home from './components/Home';
 import HomeProdutos from './components/Produtos';
 import HomeOrcamento from './components/Orcamento';
-import Login from './components/Login';
+import FormLogin from './components/Login';
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
             <Route path="/" element={<Home />}></Route>
             <Route path="/orcamento" element={<HomeOrcamento />}></Route>
             <Route path="/produtos" element={<HomeProdutos />}></Route>
-            <Route path="/login" element={<Login />}></Route>
+            <Route path="/login" element={<FormLogin />}></Route>
         </Routes>
       </BrowserRouter>
     </div>

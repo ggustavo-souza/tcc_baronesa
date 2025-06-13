@@ -10,6 +10,7 @@ function Navbar() {
         setIsNavCollapsed(!isNavCollapsed);
     };
 
+
     return (
         <nav className="navbar navbar-expand-lg CorNavbar navbarNav ">
             <div className="container-fluid">

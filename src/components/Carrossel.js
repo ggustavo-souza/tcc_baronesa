@@ -1,11 +1,24 @@
 import React from 'react';
+import AOS from 'aos';
+import { useEffect } from 'react';
+import 'aos/dist/aos.css';
 import '../App.css';
 import '../awesome/all.min.css';
 
 
 function Carroussel() {
+
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: true,
+    });
+  }, []);
+
+
+
     return (
-        <div className="wide-carousel-container">
+      <div className="wide-carousel-container" data-aos="fade-up">
       {/* O id "carouselExampleIndicators" é importante para o Bootstrap JS */}
       <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel" data-bs-interval="4500">
         {/* Indicadores (os pequenos pontos na parte inferior) */}
