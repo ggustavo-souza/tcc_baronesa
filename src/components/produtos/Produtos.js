@@ -1,6 +1,6 @@
-import "../App.css";
-import "../awesome/all.min.css";
-import Navbar from "./Navbar";
+import "../../App.css";
+import "../../awesome/all.min.css";
+import Navbar from "../Navbar";
 
 function HomeProdutos() {
     return (

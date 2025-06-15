@@ -86,5 +86,44 @@
   transform: scale(1.10);
 }
 
+.category-container {
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box; /* Garante que o padding não aumente a largura total */
+}
+
+.category-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.category-list {
+  list-style-type: none; /* Remove os marcadores (bolinhas) da lista */
+  display: flex;         /* O segredo para a lista horizontal! */
+  justify-content: center; /* Centraliza os itens na horizontal */
+  padding: 0;
+  margin: 0;
+  flex-wrap: wrap;       /* Permite que os itens quebrem para a próxima linha em telas pequenas */
+  gap: 15px;             /* Adiciona um espaçamento entre os itens */
+}
+
+.category-item a {
+  display: block;
+  padding: 12px 25px;
+  background-color: #503325;
+  color: #FFD230;
+  text-decoration: none;
+  border-radius: 25px; /* Deixa as bordas arredondadas */
+  font-weight: bold;
+  transition: background-color 0.3s, color 0.3s; /* Efeito suave na transição */
+}
+
+/* Efeito ao passar o mouse por cima */
+.category-item a:hover {
+  background-color: #FFD230;
+  color:#503325;
+}
+
 
 
