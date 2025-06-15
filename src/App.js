@@ -1,5 +1,4 @@
 import './App.css';
-import React from 'react';
 import './bootstrap/bootstrap.min.css';
 import './awesome/all.min.css';
 import { BrowserRouter as Router, Routes, Route, Link, BrowserRouter } from 'react-router-dom';
