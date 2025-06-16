@@ -48,19 +48,18 @@
 
 
 .wide-carousel-container {
-  width: 90%; /* Ajuste a largura conforme sua necessidade. 100% para ocupar toda a largura disponível. */
-  margin-right: 5px; /* Centraliza o carrossel na página */
+  width: 90%; 
+  margin-right: 5px; 
   overflow: hidden; /* Garante que o conteúdo que extrapola o contêiner seja escondido */
   border-radius: 45px;
 }
 
 .wide-carousel-img {
-  height: 600px; /* Defina uma altura fixa para as imagens para que fiquem padronizadas */
-  object-fit: fill; /* Garante que a imagem preencha o espaço sem distorção, cortando as partes extras */
+  height: 600px; 
+  object-fit: fill; /* Garante que a imagem preencha tudo o container */
   opacity: 0.7;
 }
 
-/* Opcional: Ajustes para as legendas do carrossel */
 .carousel-caption h3 {
   color: #fff;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
@@ -101,7 +100,7 @@
 .category-list {
   list-style-type: none; /* Remove os marcadores (bolinhas) da lista */
   display: flex;         /* O segredo para a lista horizontal! */
-  justify-content: center; /* Centraliza os itens na horizontal */
+  justify-content: center; 
   padding: 0;
   margin: 0;
   flex-wrap: wrap;       /* Permite que os itens quebrem para a próxima linha em telas pequenas */
@@ -114,15 +113,28 @@
   background-color: #503325;
   color: #FFD230;
   text-decoration: none;
-  border-radius: 25px; /* Deixa as bordas arredondadas */
+  border-radius: 25px; 
   font-weight: bold;
   transition: background-color 0.3s, color 0.3s; /* Efeito suave na transição */
 }
 
-/* Efeito ao passar o mouse por cima */
 .category-item a:hover {
   background-color: #FFD230;
   color:#503325;
+}
+
+.footerBotao {
+  transition: background-color 0.5s, color 0.3s;
+}
+
+
+.footerBotao:hover {
+  background-color: #503325;
+  color:#FFD230;
+}
+
+.corFooter {
+  background-color: #503325c1;
 }
 
 

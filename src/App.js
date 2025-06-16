@@ -1,5 +1,4 @@
 import './App.css';
-import './bootstrap/bootstrap.min.css';
 import './awesome/all.min.css';
 import { BrowserRouter as Router, Routes, Route, Link, BrowserRouter } from 'react-router-dom';
 import Home from './components/Home';
@@ -15,7 +14,7 @@ function App() {
         <Routes>  
             <Route path="/" element={<Home />}></Route>
             <Route path="/orcamento" element={<HomeOrcamento />}></Route>
-            <Route path="/produtos" element={<HomeProdutos />}></Route>
+            <Route path='/produtos' element={<HomeProdutos />}></Route> 
             <Route path="/produtos/:categoria" element={<HomeProdutos />}></Route>
             <Route path="/login" element={<FormLogin />}></Route>
             <Route path="/registrar" element={<FormRegistrar />}></Route>

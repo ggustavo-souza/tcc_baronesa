@@ -2,9 +2,11 @@ import '../App.css';
 import '../awesome/all.min.css';
 import Carroussel from './Carrossel';
 import Navbar from './Navbar';
+import Footer from './Footer';
 import Aos from 'aos';
 import 'aos/dist/aos.css';
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 function RemoverAcentos(str) {
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -23,6 +25,7 @@ function Home() {
                      <ListaPequena />
                 </div>
             </div>
+            <Footer />
         </div>
     );
 }
@@ -47,5 +50,6 @@ function ListaPequena() {
     </div>
   );
 }
+
 
 export default Home;
