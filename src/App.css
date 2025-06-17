@@ -137,5 +137,114 @@
   background-color: #503325c1;
 }
 
+.sobre-nos-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem; /* Espaçamento entre o texto e a imagem */
+  padding: 4rem 2rem;
+  background-color: #503325c1; /* Um tom de branco envelhecido, elegante */
+  max-width: 1200px;
+  margin: 4rem auto; /* Centraliza o componente na página */
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.sobre-nos-content {
+  flex: 1; /* O conteúdo de texto ocupa o espaço disponível */
+  max-width: 600px;
+}
+
+.sobre-nos-title {
+  font-size: 3.5rem;
+  color: #FFD230; /* Um tom de marrom escuro */
+  margin-bottom: 1.5rem;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+/* Linha sutil abaixo do título principal */
+.sobre-nos-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background-color: #503325c1; /* Um tom dourado/bege */
+}
+
+.sobre-nos-subtitle {
+  font-size: 2.5rem;
+  color: #FFD230; /* Tom de marrom médio */
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.sobre-nos-content p {
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: #fff; /* Cor de texto padrão, fácil de ler */
+  text-align: justify;
+}
+
+.sobre-nos-valores {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+}
+
+.sobre-nos-valores li {
+  color: #fff;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+/* Adiciona um ícone sutil antes de cada valor */
+.sobre-nos-valores li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #c8a97e; /* Mesma cor dourada do detalhe do título */
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.sobre-nos-image-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sobre-nos-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px; /* Bordas arredondadas */
+  object-fit: cover;
+  margin-right: 50px;
+}
+
+/* --- Responsividade para dispositivos móveis --- */
+@media (max-width: 900px) {
+  .sobre-nos-container {
+    flex-direction: column; /* Empilha o conteúdo e a imagem */
+    text-align: center;
+    gap: 2rem;
+    padding: 2rem 1.5rem;
+  }
+  
+  .sobre-nos-title::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .sobre-nos-content {
+    max-width: 100%;
+  }
+}
+
 
 
