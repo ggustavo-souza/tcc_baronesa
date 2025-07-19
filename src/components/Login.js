@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Aos from "aos";
 import "aos/dist/aos.css";
-import { use, useEffect } from "react";
+import { useEffect } from "react";
 
 function FormLogin() {
 
