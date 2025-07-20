@@ -2,14 +2,22 @@ import "../App.css";
 import "../awesome/all.min.css";
 import Navbar from "./Navbar"; 
 import Footer from "./Footer";
+import { useEffect } from "react";
+import Aos from "aos";
 
 function HomeOrcamento() {
+
+    useEffect(() => {
+        Aos.init({ duration: 1000, once: true });
+    }, []);
+
+
     return (
         <main>
             <Navbar />
             <div className="container mt-5">
                 <div>
-                    <div className="card text-center CardOrcamento mb-5">
+                    <div className="card text-center CardOrcamento mb-5" data-aos="fade-up">
                         <h1 className="mt-5" style={{ color: '#FFD230' }}>Faça já seu orçamento!</h1>
                         <div className="card-body">
                             <p className="card-text h5 mt-2 mb-5" style={{ color: '#fff' }}>

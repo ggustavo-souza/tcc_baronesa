@@ -3,7 +3,7 @@ import '../awesome/all.min.css';
 import Carroussel from './Carrossel';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import Aos, { AOS } from 'aos';
+import Aos from 'aos';
 import 'aos/dist/aos.css';
 import React, { useEffect } from 'react';
 
