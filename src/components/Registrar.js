@@ -4,14 +4,39 @@ import "../awesome/all.min.css";
 import Navbar from './Navbar';
 import Aos from "aos";
 import "aos/dist/aos.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function FormRegistrar() {
-    const path = '/tcc_baronesa/api/registrar.php';
+    const navigate = useNavigate();
     useEffect(() => {
         Aos.init({ duration: 1000, once: true });
     
     }, []);
+    const [form, setForm] = useState({ nome: "", email: "", password: "" });
+
+    const handleChange = e => {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async e => {
+        e.preventDefault();
+
+        const resposta = await fetch("http://localhost/tcc_baronesa/api/cadastro.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(form)
+        });
+
+        const data = await resposta.json();
+
+        if (data.mensagem) {
+            alert("Cadastro realizado com sucesso!");
+            navigate("/login")
+        } else {
+            alert(data.erro || "Erro inesperado");
+        }
+    };
 
     return (
         <main>
@@ -19,15 +44,20 @@ function FormRegistrar() {
             <div className="container">
                 <div className="row justify-content-center mt-5" data-aos="fade-up">
                     <div className="col-md-6 card p-3" style={{ backgroundColor: '#503325c1', borderRadius: '10px' }}>
-                        <form action={path} method="post" className="form-login">
+                        <form onSubmit={handleSubmit} className="form-login">
                             <h1 className="text-center corAmarela" style={{ color: '#FFD230' }}>Registrar</h1>
                             <div className="form-group mt-5">
                                 <label htmlFor="username" style={{ color: '#FFD230' }}>Nome de Usuário</label>
-                                <input type="text" id="username" name="username" className="form-control mt-1" required />
+                                <input type="text" id="username" name="nome" className="form-control mt-1" required value={form.nome} onChange={handleChange}
+/>
+                            </div>
+                            <div className="form-group mt-3">
+                                <label htmlFor="email" style={{ color: '#FFD230' }}>E-mail</label>
+                                <input type="email" id="email" name="email" className="form-control mt-1" required value={form.email} onChange={handleChange}/>
                             </div>
                             <div className="form-group mt-3">
                                 <label htmlFor="password" style={{ color: '#FFD230' }}>Senha</label>
-                                <input type="password" id="password" name="password" className="form-control mt-1" required />
+                                <input type="password" id="password" name="password" className="form-control mt-1" required value={form.password} onChange={handleChange}/>
                             </div>
                             <div>
                                 <button type="submit" className="btn btn-warning mt-5 corBotao">Registrar</button>

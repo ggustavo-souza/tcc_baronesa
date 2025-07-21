@@ -16,7 +16,7 @@ CREATE TABLE `usuarios` (
   `id` int(11) NOT NULL,
   `nome` varchar(15) NOT NULL,
   `email` varchar(50) NOT NULL,
-  `senha` varchar(50) NOT NULL,
+  `senha` varchar(60) NOT NULL,
   `foto` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 

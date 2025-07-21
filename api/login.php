@@ -1,0 +1,40 @@
+<?php
+header("Content-Type: application/json");
+header("Access-Control-Allow-Origin: *");
+
+include_once("config/database.php");
+
+$data = json_decode(file_get_contents("php://input"), true);
+
+if (!$data || !isset($data["email"]) || !isset($data["password"])) {
+    echo json_encode(["erro" => "Nenhum dado ou formato inválido"]);
+    exit;
+}
+
+$email = $data["email"];
+$senha = $data["password"];
+
+try {
+    $stmt = $pdo->prepare("SELECT id, nome, email, senha, cargo FROM usuarios WHERE email = ?");
+    $stmt->execute([$email]);
+
+    if ($stmt->rowCount() === 1) {
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (password_verify($senha, $usuario['senha'])) {
+            echo json_encode([
+                "sucesso" => true,
+                "usuario" => [
+                    "nome" => $usuario["nome"],
+                    "cargo" => $usuario["cargo"]
+                ]
+            ]);
+        } else {
+            echo json_encode(["erro" => "Email ou senha incorretos"]);
+        }
+    } else {
+        echo json_encode(["erro" => "Email ou senha incorretos"]);
+    }
+} catch (PDOException $e) {
+    echo json_encode(["erro" => "Erro no servidor: " . $e->getMessage()]);
+}
+?>

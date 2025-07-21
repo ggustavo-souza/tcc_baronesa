@@ -2,13 +2,22 @@ import React from "react";
 import { Link } from "react-router-dom";
 import '../App.css';
 import '../awesome/all.min.css';
+import { useEffect } from "react";
 
 function Navbar() {
     const [isNavCollapsed, setIsNavCollapsed] = React.useState(true);
+     const [usuarioLogado, setUsuarioLogado] = React.useState(null);
 
     const handleToggle = () => {
         setIsNavCollapsed(!isNavCollapsed);
     };
+
+    useEffect(() => {
+        const usuario = localStorage.getItem("usuarioLogado");
+        if (usuario) {
+            setUsuarioLogado(JSON.parse(usuario));
+        }
+    }, []);
 
 
     return (
@@ -49,15 +58,17 @@ function Navbar() {
                             <Link className="nav-link fw-bold fs-5 m-1" to="/produtos" style={{ color: '#FFD230' }}>Produtos</Link>
                         </li>
                         <li className="nav-item d-lg-none">
-                            <Link className="nav-link fw-bold fs-5 m-1" to="/login" style={{ color: '#FFD230' }}>
-                                <i className="fa-solid fa-user-plus me-2"></i>Login
+                             <Link className="nav-link fw-bold fs-5 " to={usuarioLogado ? "/minha-conta" : "/login"} style={{ color: '#FFD230' }}>
+                                <i className="fa-solid fa-user-plus me-2"></i>
+                                {usuarioLogado ? "Minha Conta" : "Login"}
                             </Link>
                         </li>
                     </ul>
                     <ul className="navbar-nav ms-auto d-none d-lg-flex position-absolute end-0 me-2 subir" >
                         <li className="nav-item">
-                            <Link className="nav-link fw-bold fs-5 " to="/login" style={{ color: '#FFD230' }}>
-                                <i className="fa-solid fa-user-plus me-2"></i>Login
+                             <Link className="nav-link fw-bold fs-5 " to={usuarioLogado ? "/minha-conta" : "/login"} style={{ color: '#FFD230' }}>
+                                <i className="fa-solid fa-user-plus me-2"></i>
+                                {usuarioLogado ? "Minha Conta" : "Login"}
                             </Link>
                         </li>
                     </ul>
