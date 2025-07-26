@@ -2,7 +2,6 @@ import "../App.css";
 import "../awesome/all.min.css";
 import Navbar from './Navbar'
 import { Link } from "react-router-dom";
-import axios from "axios";
 import Aos from "aos";
 import "aos/dist/aos.css";
 import { useEffect, useState } from "react";
@@ -49,7 +48,7 @@ function FormLogin() {
                 alert(data.erro || "Erro no login");
             }
         } catch (error) {
-            alert("Erro ao conectar com o servidor");
+            navigate("/erroservidor");
         }
     };
 
@@ -59,7 +58,7 @@ function FormLogin() {
             <Navbar />
             <div className="container">
                 <div className="row justify-content-center mt-5" data-aos="fade-up">
-                    <div className="col-md-6 card p-3" style={{ backgroundColor: '#503325c1', borderRadius: '10px' }}>
+                    <div className="col-md-6 card p-3" style={{ backgroundColor: '#503325c1', borderRadius: '10px' }} >
                         <form onSubmit={handleSubmit} className="form-login">
                             <h1 className="text-center corAmarela" style={{ color: '#FFD230' }}>Login</h1>
                             <div className="form-group mt-5">
