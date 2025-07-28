@@ -58,7 +58,7 @@ function Navbar() {
                             <Link className="nav-link fw-bold fs-5 m-1" to="/produtos" style={{ color: '#FFD230' }}>Produtos</Link>
                         </li>
                         <li className="nav-item d-lg-none">
-                             <Link className="nav-link fw-bold fs-5 " to={usuarioLogado ? "/minha-conta" : "/login"} style={{ color: '#FFD230' }}>
+                             <Link className="nav-link fw-bold fs-5 " to={usuarioLogado ? "/minhaconta" : "/login"} style={{ color: '#FFD230' }}>
                                 <i className="fa-solid fa-user-plus me-2"></i>
                                 {usuarioLogado ? "Minha Conta" : "Login"}
                             </Link>
@@ -66,7 +66,7 @@ function Navbar() {
                     </ul>
                     <ul className="navbar-nav ms-auto d-none d-lg-flex position-absolute end-0 me-2 subir" >
                         <li className="nav-item">
-                             <Link className="nav-link fw-bold fs-5 " to={usuarioLogado ? "/minha-conta" : "/login"} style={{ color: '#FFD230' }}>
+                             <Link className="nav-link fw-bold fs-5 " to={usuarioLogado ? "/minhaconta" : "/login"} style={{ color: '#FFD230' }}>
                                 <i className="fa-solid fa-user-plus me-2"></i>
                                 {usuarioLogado ? "Minha Conta" : "Login"}
                             </Link>
