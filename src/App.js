@@ -6,8 +6,6 @@ import HomeProdutos from './components/produtos/Produtos';
 import HomeOrcamento from './components/Orcamento';
 import FormLogin from './components/Login';
 import FormRegistrar from './components/Registrar';
-import ErroServidor from './errors/ErroServidor';
-import ErroLogin from './errors/ErroLogin';
 
 function App() {
   return (
@@ -21,8 +19,6 @@ function App() {
             <Route path="/login" element={<FormLogin />}></Route>
             <Route path="/registrar" element={<FormRegistrar />}></Route>
             <Route path="*" element={<h1>404 - Página não encontrada</h1>}></Route>
-            <Route path="/erroservidor" element={<ErroServidor />}></Route>
-            <Route path="/errologin" element={<ErroLogin />}></Route>
         </Routes>
       </BrowserRouter>
     </div>
