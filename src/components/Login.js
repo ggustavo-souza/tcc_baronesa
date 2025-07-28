@@ -13,6 +13,7 @@ function FormLogin() {
 
     }, []);
 
+    const [alertMessage, setAlertMessage] = useState({ type: "", message: "" });
     const [form, setForm] = useState({ email: "", password: "" });
     const navigate = useNavigate();
 
@@ -20,8 +21,13 @@ function FormLogin() {
     setForm({ ...form, [e.target.name]: e.target.value });
     };
 
+    const closeAlert = () => {
+        setAlertMessage({ type: "", message: "" });
+    }
+
     const handleSubmit = async e => {
         e.preventDefault();
+        setAlertMessage({ type: '', message: '' });
         try {
             const response = await fetch("http://localhost/tcc_baronesa/api/login.php", {
                 method: "POST",
@@ -34,7 +40,7 @@ function FormLogin() {
             const data = await response.json();
 
             if (data.sucesso) {
-                alert("Login realizado com sucesso!");
+                setAlertMessage({ type: 'success', message: 'Login realizado com sucesso!' });
                 localStorage.setItem("usuarioLogado", JSON.stringify({
                     nome: data.usuario.nome,
                     cargo: data.usuario.cargo,
@@ -45,10 +51,11 @@ function FormLogin() {
                     navigate("/"); // rota do usuário comum
                 }
             } else {
-                alert(data.erro || "Erro no login");
+                setAlertMessage({ type: 'danger', message: data.erro || "Erro no login" });
             }
         } catch (error) {
-            navigate("/erroservidor");
+            setAlertMessage({ type: 'danger', message: 'Erro ao conectar com o servidor. Por favor, tente novamente mais tarde.' });
+            console.error("Erro ao conectar com o servidor:", error);
         }
     };
 
@@ -59,6 +66,12 @@ function FormLogin() {
             <div className="container">
                 <div className="row justify-content-center mt-5" data-aos="fade-up">
                     <div className="col-md-6 card p-3" style={{ backgroundColor: '#503325c1', borderRadius: '10px' }} >
+                        {alertMessage.message && (
+                            <div className={`alert alert-${alertMessage.type} alert-dismissible fade show`} role="alert">
+                                {alertMessage.message}
+                                <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close" onClick={closeAlert}></button>
+                            </div>
+                        )}
                         <form onSubmit={handleSubmit} className="form-login">
                             <h1 className="text-center corAmarela" style={{ color: '#FFD230' }}>Login</h1>
                             <div className="form-group mt-5">
