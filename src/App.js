@@ -6,6 +6,7 @@ import HomeProdutos from './components/produtos/Produtos';
 import HomeOrcamento from './components/Orcamento';
 import FormLogin from './components/Login';
 import FormRegistrar from './components/Registrar';
+import MinhaConta from './components/Minhaconta';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="/produtos/:categoria" element={<HomeProdutos />}></Route>
             <Route path="/login" element={<FormLogin />}></Route>
             <Route path="/registrar" element={<FormRegistrar />}></Route>
+            <Route path="/minhaconta" element={<MinhaConta />}></Route>
             <Route path="*" element={<h1>404 - Página não encontrada</h1>}></Route>
         </Routes>
       </BrowserRouter>
