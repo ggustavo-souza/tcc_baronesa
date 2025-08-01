@@ -1,6 +1,6 @@
 import './App.css';
 import './awesome/all.min.css';
-import { BrowserRouter as Router, Routes, Route, Link, BrowserRouter } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, BrowserRouter } from 'react-router-dom';
 import Home from './components/Home';
 import HomeProdutos from './components/produtos/Produtos';
 import HomeOrcamento from './components/Orcamento';
