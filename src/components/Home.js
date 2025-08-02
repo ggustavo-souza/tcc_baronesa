@@ -14,7 +14,7 @@ function RemoverAcentos(str) {
 
 function Home() {
         useEffect(() => {
-        Aos.init({ duration: 1000 });
+        Aos.init({ duration: 850 });
     }, []);
 
     return (
