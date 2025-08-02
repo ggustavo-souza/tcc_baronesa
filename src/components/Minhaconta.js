@@ -2,7 +2,6 @@ import "../App.css";
 import "../awesome/all.min.css";
 import Navbar from './Navbar'
 import { Link, Router, Routes } from "react-router-dom";
-import axios from "axios";
 import Aos from "aos";
 import "aos/dist/aos.css";
 import { useEffect, useState } from "react";

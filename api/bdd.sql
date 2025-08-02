@@ -17,11 +17,12 @@ CREATE TABLE `usuarios` (
   `nome` varchar(15) NOT NULL,
   `email` varchar(50) NOT NULL,
   `senha` varchar(65) NOT NULL,
+  `cargo` enum('admin','usuario') NOT NULL DEFAULT 'usuario',
   `foto` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `usuarios` (`id`, `nome`, `email`, `senha`, `foto`) VALUES
-(1, 'Admin', 'cavalogames1231@gmail.com', '2aAnwG7BO/.7I', 'admin.jpg');
+INSERT INTO `usuarios` (`id`, `nome`, `email`, `senha`, `cargo`, `foto`) VALUES
+(1, 'Admin', 'cavalogames1231@gmail.com', '2aAnwG7BO/.7I', 'admin', 'admin.jpg');
 
 
 ALTER TABLE `moveis`

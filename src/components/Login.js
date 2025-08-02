@@ -14,7 +14,7 @@ function FormLogin() {
     }, []);
 
     const [alertMessage, setAlertMessage] = useState({ type: "", message: "" });
-    const [form, setForm] = useState({ email: "", password: "" });
+    const [form, setForm] = useState({ nome: "", password: "" });
     const navigate = useNavigate();
 
     const handleChange = e => {
@@ -33,7 +33,7 @@ function FormLogin() {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    email: form.email,
+                    nome: form.nome,
                     password: form.password
                 }),
             });
@@ -75,8 +75,8 @@ function FormLogin() {
                         <form onSubmit={handleSubmit} className="form-login">
                             <h1 className="text-center corAmarela" style={{ color: '#FFD230' }}>Login</h1>
                             <div className="form-group mt-5">
-                                <label htmlFor="email" style={{ color: '#FFD230' }}>E-mail</label>
-                                <input type="email" id="email" name="email" className="form-control mt-1" required value={form.email} onChange={handleChange}/>
+                                <label htmlFor="nome" style={{ color: '#FFD230' }}>Nome de Usuário</label>
+                                <input type="text" id="nome" name="nome" className="form-control mt-1" required value={form.usuario} onChange={handleChange}/>
                             </div>
                             <div className="form-group mt-3">
                                 <label htmlFor="password" style={{ color: '#FFD230' }}>Senha</label>
