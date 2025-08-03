@@ -64,7 +64,7 @@ function Navbar() {
                             </Link>
                         </li>
                     </ul>
-                    <ul className="navbar-nav ms-auto d-none d-lg-flex position-absolute end-0 me-2 subir" >
+                    <ul className="navbar-nav ms-auto d-none d-lg-flex position-absolute end-0 me-4 subir" >
                         <li className="nav-item">
                              <Link className="nav-link fw-bold fs-5 " to={usuarioLogado ? "/minhaconta" : "/login"} style={{ color: '#FFD230' }}>
                                 <i className="fa-solid fa-user-plus me-2"></i>
