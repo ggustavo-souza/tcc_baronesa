@@ -6,7 +6,7 @@ import HomeProdutos from './components/produtos/Produtos';
 import HomeOrcamento from './components/Orcamento';
 import FormLogin from './components/Login';
 import FormRegistrar from './components/Registrar';
-import MinhaConta from './components/MinhaConta';
+import MinhaConta from './components/Minhaconta';
 
 function App() {
   return (

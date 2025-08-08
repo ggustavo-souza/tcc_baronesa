@@ -14,13 +14,19 @@ function FormRegistrar() {
     
     }, []);
     const [form, setForm] = useState({ nome: "", email: "", password: "" });
+    const [alertMessage, setAlertMessage] = useState({ type: "", message: "" });
 
     const handleChange = e => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
+    const closeAlert = () => {
+        setAlertMessage({ type: "", message: "" });
+    }
+
     const handleSubmit = async e => {
         e.preventDefault();
+        setAlertMessage({ type: '', message: ''});
 
         const resposta = await fetch("http://localhost/tcc_baronesa/api/cadastro.php", {
             method: "POST",
@@ -31,10 +37,10 @@ function FormRegistrar() {
         const data = await resposta.json();
 
         if (data.mensagem) {
-            alert("Cadastro realizado com sucesso!");
+            setAlertMessage({ type: 'success', message: 'Registro realizado com sucesso!' });
             navigate("/login")
         } else {
-            alert(data.erro || "Erro inesperado");
+            setAlertMessage({ type: 'danger', message: data.erro || "Erro no Registro" });
         }
     };
 
@@ -44,6 +50,12 @@ function FormRegistrar() {
             <div className="container">
                 <div className="row justify-content-center mt-5" data-aos="fade-up">
                     <div className="col-md-6 card p-3" style={{ backgroundColor: '#503325c1', borderRadius: '10px' }}>
+                         {alertMessage.message && (
+                            <div className={`alert alert-${alertMessage.type} alert-dismissible fade show`} role="alert">
+                                {alertMessage.message}
+                                <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close" onClick={closeAlert}></button>
+                            </div>
+                        )}
                         <form onSubmit={handleSubmit} className="form-login">
                             <h1 className="text-center corAmarela" style={{ color: '#FFD230' }}>Registrar</h1>
                             <div className="form-group mt-5">
