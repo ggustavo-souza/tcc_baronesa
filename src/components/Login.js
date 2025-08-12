@@ -34,6 +34,7 @@ function FormLogin() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     nome: form.nome,
+                    email: form.email,
                     password: form.password
                 }),
             });
@@ -43,6 +44,7 @@ function FormLogin() {
                 setAlertMessage({ type: 'success', message: 'Login realizado com sucesso!' });
                 localStorage.setItem("usuarioLogado", JSON.stringify({
                     nome: data.usuario.nome,
+                    email: data.usuario.email,
                     cargo: data.usuario.cargo,
                 }));
                 if (data.usuario.cargo === "admin") {

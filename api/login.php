@@ -25,6 +25,7 @@ try {
                 "sucesso" => true,
                 "usuario" => [
                     "nome" => $usuario["nome"],
+                    "email" => $usuario["email"],
                     "cargo" => $usuario["cargo"]
                 ]
             ]);
