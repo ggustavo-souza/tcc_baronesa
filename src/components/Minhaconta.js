@@ -10,8 +10,10 @@ import { useAuthUser } from "./auths/useAuthUser";
 
 function MinhaConta() {
     useAuthUser();
-    const [modalSair, setModalSair] = useState(null)
     const [NomeUsuario, setNomeUsuario] = useState(null); 
+    const [showModal, setShowModal] = useState(false);
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         Aos.init({ duration: 600, once: true});
@@ -22,10 +24,11 @@ function MinhaConta() {
         }
     }, [])
 
-    const validarModal = () => {
-
+    const validarLogout = () => {
+        localStorage.removeItem("usuarioLogado");
+        setNomeUsuario(null);
+        navigate("/");
     }
-
 
     return (
         <main>
@@ -33,21 +36,41 @@ function MinhaConta() {
             <div className="container">
                 <div data-aos="fade-up" className="card mt-4 p-4 d-flex flex-column align-items-center shadow shadow-3" style={{ backgroundColor: '#503325c1', borderRadius: '10px' }}>
                     <h1 style={{ color: '#FFD230' }}>{NomeUsuario ? `Bem vindo!` : "Carregando..."}</h1>
-
                     <h4 style={{ color: '#FFD230' }} className="align-self-start mt-3 ms-5">Nome de Usuário: {NomeUsuario ? NomeUsuario.nome : "Carregando..."}</h4>
                     <h4 style={{ color: '#FFD230' }} className="align-self-start mt-3 ms-5">E-mail cadastrado: {NomeUsuario ? NomeUsuario.email : "Carregando..."} </h4>
 
                     <button         
-                        type="button"
-                        onClick={validarModal}                            
-                        data-bs-toggle="modal"        
-                        data-bs-target="#logoutModal" 
-                        className="btn btn-danger corBotao align-self-start mt-3 ms-5 col-sm-2 shadow shadow-3">
+                        type="button"                         
+                        className="btn btn-danger corBotao align-self-start mt-3 ms-5 col-sm-2 shadow shadow-3"
+                        onClick={() => setShowModal(true)}>
                             Sair
                     </button>
-
                 </div>
             </div>
+            {showModal && (
+                <div className="modal" data-aos="fade-up" tabIndex="-1" style={{ display: 'block' }}>
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Confirmar Saída</h5>
+                                <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
+                            </div>
+                            <div className="modal-body">
+                                <p>Tem certeza de que deseja sair da sua conta?</p>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
+                                    Cancelar
+                                </button>
+                                <button type="button" className="btn btn-danger" onClick={validarLogout}>
+                                    Sair
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {showModal && <div className="modal-backdrop fade show"></div>}
         </main>
     )
 }
