@@ -33,20 +33,40 @@ function MinhaConta() {
     return (
         <main>
             <Navbar />
-            <div className="container">
-                <div data-aos="fade-up" className="card mt-4 p-4 d-flex flex-column align-items-center shadow shadow-3" style={{ backgroundColor: '#503325c1', borderRadius: '10px' }}>
-                    <h1 style={{ color: '#FFD230' }}>{NomeUsuario ? `Bem vindo!` : "Carregando..."}</h1>
-                    <h4 style={{ color: '#FFD230' }} className="align-self-start mt-3 ms-5">Nome de Usuário: {NomeUsuario ? NomeUsuario.nome : "Carregando..."}</h4>
-                    <h4 style={{ color: '#FFD230' }} className="align-self-start mt-3 ms-5">E-mail cadastrado: {NomeUsuario ? NomeUsuario.email : "Carregando..."} </h4>
-
-                    <button         
-                        type="button"                         
-                        className="btn btn-danger corBotao align-self-start mt-3 ms-5 col-sm-2 shadow shadow-3"
-                        onClick={() => setShowModal(true)}>
-                            Sair
-                    </button>
+                <div className="container">
+                    <div data-aos="fade-up" className="card mt-4 p-4 d-flex flex-column align-items-center shadow shadow-3" style={{ backgroundColor: '#503325c1', borderRadius: '10px' }}>
+                        <h1 style={{ color: '#FFD230' }}>{NomeUsuario ? `Bem vindo!` : "Carregando..."}</h1>
+                        <h4 style={{ color: '#FFD230' }} className="align-self-start mt-3 ms-5">Nome de Usuário: {NomeUsuario ? NomeUsuario.nome : "Carregando..."}</h4>
+                        <h4 style={{ color: '#FFD230' }} className="align-self-start mt-3 ms-5">E-mail cadastrado: {NomeUsuario ? NomeUsuario.email : "Carregando..."} </h4>
+                        
+                        <div className="row w-100 justify-content-center mt-5">
+                            <div className="col-md-4 col-sm-12 mb-2">
+                                <button
+                                    type="button"
+                                    className="btn btn-warning corBotao w-100 shadow shadow-3"
+                                    onClick={() => navigate("/pedidos")}>
+                                    Pedidos
+                                </button>
+                            </div>
+                            <div className="col-md-4 col-sm-12 mb-2">
+                                <button
+                                    type="button"
+                                    className="btn btn-warning corBotao w-100 shadow shadow-3"
+                                    onClick={() => navigate("/meusorcamentos")}>
+                                    Orçamentos
+                                </button>
+                            </div>
+                            <div className="col-md-4 col-sm-12 mb-2">
+                                <button
+                                    type="button"
+                                    className="btn btn-danger corBotao w-100 shadow shadow-3"
+                                    onClick={() => setShowModal(true)}>
+                                    Sair da conta
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
             {showModal && (
                 <div className="modal" data-aos="fade-up" tabIndex="-1" style={{ display: 'block' }}>
                     <div className="modal-dialog modal-dialog-centered">
