@@ -48,7 +48,7 @@ function FormLogin() {
                     cargo: data.usuario.cargo,
                 }));
                 if (data.usuario.cargo === "admin") {
-                    navigate("/admin-crud"); // rota do admin
+                    navigate("/crud"); // rota do admin
                 } else {
                     navigate("/"); // rota do usuário comum
                 }
