@@ -1,12 +1,16 @@
-import React from "react";
+import React, { use } from "react";
 import { Link } from "react-router-dom";
 import '../App.css';
 import '../awesome/all.min.css';
 import { useEffect } from "react";
+import { useAuthAdm } from "./auths/useAuthAdm";
 
 function Navbar() {
+
+    useAuthAdm();
+
     const [isNavCollapsed, setIsNavCollapsed] = React.useState(true);
-     const [usuarioLogado, setUsuarioLogado] = React.useState(null);
+    const [usuarioLogado, setUsuarioLogado] = React.useState(null);
 
     const handleToggle = () => {
         setIsNavCollapsed(!isNavCollapsed);
@@ -31,6 +35,7 @@ function Navbar() {
                         width="150px"
                         height="70px"
                         style={{ position: 'absolute' }}
+                    
                     />
                 )}
                 <div className="d-flex"></div>

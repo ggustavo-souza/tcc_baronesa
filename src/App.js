@@ -8,8 +8,11 @@ import FormLogin from './components/Login';
 import FormRegistrar from './components/Registrar';
 import MinhaConta from './components/Minhaconta';
 import Crud from './components/Crud';
+import { useAuthAdm } from './components/auths/useAuthAdm';
+import AuthAcess from './components/auths/AuthAcess';
 
 function App() {
+
   return (
     <div className="App">
       <BrowserRouter>
@@ -21,7 +24,12 @@ function App() {
             <Route path="/login" element={<FormLogin />}></Route>
             <Route path="/registrar" element={<FormRegistrar />}></Route>
             <Route path="/minhaconta" element={<MinhaConta />}></Route>
-            <Route path="/crud" element={<Crud />}></Route>
+            <Route path="/crud" element={
+                <AuthAcess >
+                    <Crud />
+                </AuthAcess>
+              }>
+            </Route>
             <Route path="*" element={<h1>404 - Página não encontrada</h1>}></Route>
         </Routes>
       </BrowserRouter>

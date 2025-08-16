@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "./Navbar";
+import Navadm from "./Navadm";
 import "../App.css";
 import "../awesome/all.min.css";
 
@@ -44,7 +44,7 @@ function Crud() {
 
   return (
     <main>
-      <Navbar />
+      <Navadm />
       <div className="container mt-5">
         <h1 className="text-center corAmarela mb-4" style={{color: "#FFD230"}}>Painel Administrativo</h1>
         <div className="row g-4">
