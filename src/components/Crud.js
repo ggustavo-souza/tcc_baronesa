@@ -46,7 +46,7 @@ function Crud() {
     <main>
       <Navbar />
       <div className="container mt-5">
-        <h1 className="text-center corAmarela mb-4">Painel Administrativo</h1>
+        <h1 className="text-center corAmarela mb-4" style={{color: "#FFD230"}}>Painel Administrativo</h1>
         <div className="row g-4">
           {cards.map((card, index) => (
             <div className="col-md-6" key={index}>
