@@ -23,7 +23,7 @@ function Navadm() {
     }, []);
 
     return (
-        <nav className="navbar navbar-expand-lg CorNavbar navbarNav">
+        <nav className="navbar navbar-expand-lg CorNavbar navbarNav d-flex">
             <div className="container-fluid">
                 <img
                     src="/logo_nav.png"
@@ -46,7 +46,7 @@ function Navadm() {
                     <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className={`collapse navbar-collapse${isNavCollapsed ? "" : " show"}`} id="navbarAdmin">
-                    <ul className="navbar-nav subir mx-auto w-100 justify-content-center">
+                    <ul className="navbar-nav subir mx-auto w-100 justify-content-center ms-5">
                         <li className="nav-item">
                             <Link className="nav-link fw-bold fs-5 m-1" to="/admin-usuarios" style={{ color: '#FFD230' }}>
                                 <i className="fa-solid fa-users me-2"></i>Usuários
@@ -67,16 +67,14 @@ function Navadm() {
                                 <i className="fa-solid fa-file-invoice-dollar me-2"></i>Orçamentos
                             </Link>
                         </li>
-                        <li className="nav-item">
-                            <button 
-                                className="btn btn-danger mt-2" 
-                                onClick={handleLogout}
-                                style={{ fontWeight: 'bold' }}
-                            >
-                                Sair
-                            </button>
-                        </li>
                     </ul>
+                    <button 
+                        className="btn btn-danger mt-2" 
+                        onClick={handleLogout}
+                        style={{ fontWeight: 'bold' }}
+                    >
+                        Sair
+                    </button>
                 </div>
             </div>
         </nav>
