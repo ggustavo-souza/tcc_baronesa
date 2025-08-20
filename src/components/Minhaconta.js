@@ -69,20 +69,20 @@ function MinhaConta() {
                 </div>
             {showModal && (
                 <div className="modal" data-aos="fade-up" tabIndex="-1" style={{ display: 'block' }}>
-                    <div className="modal-dialog modal-dialog-centered">
-                        <div className="modal-content">
+                    <div className="modal-dialog modal-dialog-centered ">
+                        <div className="modal-content CorNavbar">
                             <div className="modal-header">
-                                <h5 className="modal-title">Confirmar Saída</h5>
+                                <h5 className="modal-title" style={{color: '#FFD230'}}>Confirmar Saída</h5>
                                 <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
                             </div>
                             <div className="modal-body">
-                                <p>Tem certeza de que deseja sair da sua conta?</p>
+                                <h3 style={{color: '#FFD230'}}>Tem certeza de que deseja sair da sua conta?</h3>
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
                                     Cancelar
                                 </button>
-                                <button type="button" className="btn btn-danger" onClick={validarLogout}>
+                                <button type="button" className="btn btn-warning" onClick={validarLogout}>
                                     Sair
                                 </button>
                             </div>

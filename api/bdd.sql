@@ -22,7 +22,7 @@ CREATE TABLE `usuarios` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `usuarios` (`id`, `nome`, `email`, `senha`, `cargo`, `foto`) VALUES
-(1, 'Admin', 'cavalogames1231@gmail.com', '2aAnwG7BO/.7I', 'admin', 'admin.jpg');
+(1, 'Admin', 'cavalogames1231@gmail.com', '2aAnwG7BO/.7I', 'admin', 'admin.jpg'), (2, 'adminTeste', 'teste@gmail.com', '2aAnwG7BO/.7I', 'usuario', 'admin.jpg');
 
 
 ALTER TABLE `moveis`

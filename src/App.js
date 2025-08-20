@@ -8,6 +8,8 @@ import FormLogin from './components/Login';
 import FormRegistrar from './components/Registrar';
 import MinhaConta from './components/Minhaconta';
 import Crud from './components/Crud';
+import UsuariosCrud from './components/cruds/UsuariosCrud';
+import MoveisCrud from './components/cruds/MoveisCrud';
 import { useAuthAdm } from './components/auths/useAuthAdm';
 import AuthAcess from './components/auths/AuthAcess';
 
@@ -27,6 +29,18 @@ function App() {
             <Route path="/crud" element={
                 <AuthAcess >
                     <Crud />
+                </AuthAcess>
+              }>
+            </Route>
+            <Route path="/admin-usuarios" element={
+                <AuthAcess >
+                    <UsuariosCrud />
+                </AuthAcess>
+              }>
+            </Route>
+            <Route path="/admin-produtos" element={
+                <AuthAcess >
+                    <MoveisCrud />
                 </AuthAcess>
               }>
             </Route>

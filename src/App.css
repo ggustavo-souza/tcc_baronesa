@@ -152,7 +152,7 @@
 
 .sobre-nos-content {
   flex: 1; /* O conteúdo de texto ocupa o espaço disponível */
-  max-width: 600px;
+  max-width: 800px;
 }
 
 .sobre-nos-title {
