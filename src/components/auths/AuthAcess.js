@@ -1,22 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import "../../App.css";
+import { Link } from "react-router-dom";
 
 export default function AuthAcess({ children }) {
-  const [showAlert, setShowAlert] = useState(false);
+  const [showMessage, setMessage] = useState(null);
   const usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
 
   useEffect(() => {
-    if (usuario && usuario.cargo !== "admin") {
-      setShowAlert(true);
-      setTimeout(() => setShowAlert(false), 25000); // alerta some em 2,5s
+    if (usuario && usuario.cargo === "admin") {
+      setMessage("logado"); // alerta some em 2,5s
+    } else {
+      setMessage("Você não é autorizado aqui!");
+
     }
   }, [usuario]);
 
   if (!usuario || usuario.cargo !== "admin") {
     return (
       <>
-        {showAlert && alert("Acesso restrito! Apenas administradores podem acessar.")}
-        <Navigate to="/" replace />
+        <div className="card mt-5 container col-md-5 col-6" style={{backgroundColor: "#503325"}}>
+          <div className="card-body shadow shadow-5">
+            <h3 style={{color: "#FFD230"}}>{showMessage}</h3>
+            <Link to="/"><button className="btn btn-danger col-3 align-self-center">Voltar</button> </Link>
+          </div>
+        </div>
       </>
     );
   }
