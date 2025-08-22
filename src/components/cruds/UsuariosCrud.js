@@ -5,7 +5,7 @@ export default function UsuariosCrud() {
     return (
         <>
             <Navadm />
-
+                
         </>
     )
 }

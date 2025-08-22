@@ -69,7 +69,7 @@ function Navadm() {
                         </li>
                     </ul>
                     <button 
-                        className="btn btn-danger mt-2" 
+                        className="btn btn-danger mt-1" 
                         onClick={handleLogout}
                         style={{ fontWeight: 'bold' }}
                     >
