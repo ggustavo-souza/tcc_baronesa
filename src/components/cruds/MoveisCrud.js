@@ -38,8 +38,9 @@ export default function MoveisCrud() {
         return <p>Ocorreu algum erro...</p>
     }
 
-    const excluirRegistro = () => {
-        
+    async function deletarUsuario(id) {
+        const url = `http://localhost/tcc_baronesa/api/usuarios/${id}` 
+        console.log(url)
     }
 
 
@@ -106,8 +107,8 @@ export default function MoveisCrud() {
                                 <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
                                     Cancelar
                                 </button>
-                                <button type="button" className="btn btn-warning" onClick={() => excluirRegistro()}>
-                                    Sair
+                                <button type="button" className="btn btn-warning" onClick={() => deletarUsuario(registros.map(registro => registro.id))}>
+                                    Excluir {registros.map(registro => registro.id)}?
                                 </button>
                             </div>
                         </div>
