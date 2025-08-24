@@ -8,7 +8,9 @@ CREATE TABLE `moveis` (
   `id` int(11) NOT NULL,
   `nome` varchar(60) NOT NULL,
   `valor` int(6) NOT NULL,
-  `descricao` varchar(200) DEFAULT NULL
+  `descricao` varchar(200) DEFAULT NULL,
+  `categoria` varchar(15) NOT NULL,
+  `foto` varchar(50) DEFAULT NULL 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -20,6 +22,8 @@ CREATE TABLE `usuarios` (
   `cargo` enum('admin','usuario') NOT NULL DEFAULT 'usuario',
   `foto` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `moveis` (`id`, `nome`, `valor`, `descricao`, `categoria`,`foto`) VALUES (1, 'Armário Uma porta', 200, 'Armário simples de cor marrom, ideal para cozinhas', 'cozinha', 'armáriosimples.jpg');
 
 INSERT INTO `usuarios` (`id`, `nome`, `email`, `senha`, `cargo`, `foto`) VALUES
 (1, 'Admin', 'cavalogames1231@gmail.com', '2aAnwG7BO/.7I', 'admin', 'admin.jpg'), (2, 'adminTeste', 'teste@gmail.com', '2aAnwG7BO/.7I', 'usuario', 'admin.jpg');
