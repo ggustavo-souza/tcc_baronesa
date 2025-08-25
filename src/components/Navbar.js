@@ -48,8 +48,9 @@ function Navbar() {
                     aria-expanded={!isNavCollapsed}
                     aria-label="Toggle navigation"
                     onClick={handleToggle}
+                    style={{backgroundColor: '#FFD230'}}
                 >
-                    <span className="navbar-toggler-icon"></span>
+                    <span className="navbar-toggler-icon" ></span>
                 </button>
                 <div className={`collapse navbar-collapse${isNavCollapsed ? '' : ' show'}`} id="navbarNav">
                     <ul className="navbar-nav subir mx-auto w-100 justify-content-center">
