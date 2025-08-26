@@ -1,7 +1,7 @@
 import './App.css';
 import './awesome/all.min.css';
 import Aos from 'aos';
-import { BrowserRouter as Router, Routes, Route, BrowserRouter, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, BrowserRouter, Link, useNavigate } from 'react-router-dom';
 import Home from './components/Home';
 import HomeProdutos from './components/produtos/Produtos';
 import HomeOrcamento from './components/Orcamento';
@@ -21,8 +21,8 @@ import { useEffect } from 'react';
 function App() {
 
   useEffect(() => {
-  Aos.init({ duration: 650 });
-}, [])
+    Aos.init({ duration: 650 });
+  }, [])
 
   return (
     <div className="App">
@@ -55,10 +55,7 @@ function App() {
           </Route>
           <Route path="*" element={
             <>
-              <div className='card container col-8 col-md-7 col-sm-6 mt-5 CorNavbar p-4' data-aos='fade-up'>
-                <h1 style={{ color: '#FFD230' }}>404 - Página não encontrada</h1>
-                <button className='btn btn-warning mt-4 col-5 align-self-center'>Voltar</button>
-              </div>
+              <Erro404 />
             </>
           }>
           </Route>
@@ -66,6 +63,17 @@ function App() {
       </BrowserRouter>
     </div>
   );
+}
+
+function Erro404() {
+
+  const navigate = useNavigate();
+  return (
+    <div className='card container col-8 col-md-7 col-sm-6 mt-5 CorNavbar p-4' data-aos='fade-up'>
+      <h1 style={{ color: '#FFD230' }}>404 - Página não encontrada</h1>
+      <button className='btn btn-warning mt-4 col-5 align-self-center'>Voltar</button>
+    </div>
+  )
 }
 
 export default App;
