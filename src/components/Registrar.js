@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 function FormRegistrar() {
     const navigate = useNavigate();
     useEffect(() => {
-        Aos.init({ duration: 1000, once: true });
+        Aos.init({ duration: 1000 });
     
     }, []);
     const [form, setForm] = useState({ nome: "", email: "", password: "" });
@@ -48,8 +48,8 @@ function FormRegistrar() {
         <main>
             <Navbar />
             <div className="container">
-                <div className="row justify-content-center mt-5" data-aos="fade-up">
-                    <div className="col-md-6 card p-3" style={{ backgroundColor: '#503325c1', borderRadius: '10px' }}>
+                <div className="row justify-content-center mt-4" data-aos="fade-up">
+                    <div className="col-md-6 card p-5" style={{ backgroundColor: '#503325c1', borderRadius: '10px' }}>
                          {alertMessage.message && (
                             <div className={`alert alert-${alertMessage.type} alert-dismissible fade show`} role="alert">
                                 {alertMessage.message}
@@ -72,7 +72,7 @@ function FormRegistrar() {
                                 <input type="password" id="password" name="password" className="form-control mt-1" required value={form.password} onChange={handleChange}/>
                             </div>
                             <div>
-                                <button type="submit" className="btn btn-warning mt-5 corBotao">Registrar</button>
+                                <button type="submit" className="btn btn-warning mt-4 corBotao">Registrar</button>
                             </div>
                         </form>
                     </div>

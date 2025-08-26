@@ -1,7 +1,7 @@
 import './App.css';
 import './awesome/all.min.css';
 import Aos from 'aos';
-import { BrowserRouter as Router, Routes, Route, BrowserRouter, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, BrowserRouter, useNavigate } from 'react-router-dom';
 import Home from './components/Home';
 import HomeProdutos from './components/produtos/Produtos';
 import HomeOrcamento from './components/Orcamento';
@@ -11,9 +11,7 @@ import MinhaConta from './components/Minhaconta';
 import Crud from './components/Crud';
 import UsuariosCrud from './components/cruds/UsuariosCrud';
 import MoveisCrud from './components/cruds/MoveisCrud';
-import { useAuthAdm } from './components/auths/useAuthAdm';
 import AuthAcess from './components/auths/AuthAcess';
-import Navbar from './components/Navbar';
 import { useEffect } from 'react';
 
 
@@ -71,7 +69,7 @@ function Erro404() {
   return (
     <div className='card container col-8 col-md-7 col-sm-6 mt-5 CorNavbar p-4' data-aos='fade-up'>
       <h1 style={{ color: '#FFD230' }}>404 - Página não encontrada</h1>
-      <button className='btn btn-warning mt-4 col-5 align-self-center'>Voltar</button>
+      <button className='btn btn-warning mt-4 col-5 align-self-center' onClick={() => navigate(-1)}>Voltar</button>
     </div>
   )
 }
