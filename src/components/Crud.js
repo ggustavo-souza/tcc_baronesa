@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navadm from "./Navadm";
+import Aos from "aos";
 import "../App.css";
 import "../awesome/all.min.css";
 
@@ -25,6 +26,8 @@ function Crud() {
         console.log(err);
         setLoading(false);
       });
+
+        Aos.init({ duration: 850 });
   }, []);
 
   const cards = [
@@ -47,7 +50,7 @@ function Crud() {
       <Navadm />
       <div className="container mt-5">
         <h1 className="text-center corAmarela mb-4" style={{color: "#FFD230"}}>Painel Administrativo</h1>
-        <div className="row g-4">
+        <div className="row g-4" data-aos="fade-up">
           {cards.map((card, index) => (
             <div className="col-md-6" key={index}>
               <div
