@@ -32,6 +32,22 @@ export default function UsuariosCrud() {
             });
     }, []);
 
+    const [usuarioSelecionado, setUsuarioSelecionado] = useState(null);
+
+    function excluirUsuario(id) {
+        fetch(`http://localhost/tcc_baronesa/api/usuarios/${id}`, {
+            method: "DELETE",
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            setRegistros(registros.filter(u => u.id !== id));
+            setShowModal(false);
+            setUsuarioSelecionado(null);
+        })
+        .catch(err => console.error(err));
+    }
+
     if (loading) {
         return <p>Carregando...</p>
     }
@@ -71,7 +87,11 @@ export default function UsuariosCrud() {
                                             <td>{registro.cargo}</td>
                                         </th>
                                         <th scope='row'>
-                                            <button className='btn btn-warning me-2' onClick={() => setShowModal(true)}><i className='fa-trash fa-solid me-2'></i>Excluir</button>
+                                            <button className='btn btn-warning me-2' onClick={() => {
+                                                setUsuarioSelecionado(registro.id);
+                                                setShowModal(true);
+                                            }}>
+                                                <i className='fa-trash fa-solid me-2'></i>Excluir</button>
                                             <button className='btn btn-warning'><i className='fa-pen fa-solid me-2'></i>Editar</button>
                                         </th>
                                     </tr>
@@ -98,8 +118,8 @@ export default function UsuariosCrud() {
                                 <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
                                     Cancelar
                                 </button>
-                                <button type="button" className="btn btn-warning">
-                                    Sair
+                                <button type="button" className="btn btn-warning" onClick={() => excluirUsuario(usuarioSelecionado)}>
+                                    Excluir
                                 </button>
                             </div>
                         </div>
