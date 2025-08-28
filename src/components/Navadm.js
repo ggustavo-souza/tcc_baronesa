@@ -25,14 +25,15 @@ function Navadm() {
     return (
         <nav className="navbar navbar-expand-lg CorNavbar navbarNav d-flex">
             <div className="container-fluid">
+            {!isNavCollapsed ? null : (
                 <img
                     src="/logo_nav.png"
                     alt="Logo"
                     className="logo-navbar"
                     width="150px"
                     height="70px"
-                    style={{ position: "absolute" }}
                 />
+            )}
                 <button
                     className="navbar-toggler"
                     type="button"
@@ -42,11 +43,12 @@ function Navadm() {
                     aria-expanded={!isNavCollapsed}
                     aria-label="Toggle navigation"
                     onClick={handleToggle}
+                    style={{backgroundColor: '#FFD230'}}
                 >
                     <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className={`collapse navbar-collapse${isNavCollapsed ? "" : " show"}`} id="navbarAdmin">
-                    <ul className="navbar-nav subir mx-auto w-100 justify-content-center ms-5">
+                    <ul className="navbar-nav subir mx-auto w-100 justify-content-center me-5">
                         <li className="nav-item">
                             <Link className="nav-link fw-bold fs-5 m-1" to="/crud" style={{ color: '#FFD230' }}>
                                 <i className="fa-solid fa-home me-2"></i>Home
