@@ -87,12 +87,12 @@ export default function UsuariosCrud() {
                                             <td>{registro.cargo}</td>
                                         </th>
                                         <th scope='row'>
-                                            <button className='btn btn-warning me-2' onClick={() => {
+                                            <button className='btn btn-warning me-2 col-10 col-sm-3' onClick={() => {
                                                 setUsuarioSelecionado(registro.id);
                                                 setShowModal(true);
                                             }}>
                                                 <i className='fa-trash fa-solid me-2'></i>Excluir</button>
-                                            <button className='btn btn-warning'><i className='fa-pen fa-solid me-2'></i>Editar</button>
+                                            <button className='btn btn-warning col-10 col-sm-3'><i className='fa-pen fa-solid me-2'></i>Editar</button>
                                         </th>
                                     </tr>
                                 </tbody>
