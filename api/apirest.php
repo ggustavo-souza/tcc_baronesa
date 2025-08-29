@@ -19,7 +19,6 @@ $parts = explode('/', $path);
 $last = $parts[count($parts) - 1] ?? null;
 $prev = $parts[count($parts) - 2] ?? null;
 
-// Se o último for numérico → é id, se não → é tabela
 if (is_numeric($last)) {
     $id = $last;
     $tabela = $prev;
