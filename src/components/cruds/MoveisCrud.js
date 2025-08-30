@@ -1,9 +1,10 @@
 import Navadm from '../Navadm';
 import { useState, useEffect } from 'react';
 import Aos from 'aos';
+import { useNavigate } from 'react-router-dom';
 
 export default function MoveisCrud() {
-
+    const navigate = useNavigate();
     const [registros, setRegistros] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -32,10 +33,10 @@ export default function MoveisCrud() {
     }, []);
 
     if (loading) {
-        return <p>Carregando...</p>
+        return <h3 className='mt-5' style={{color: '#FFD230'}}>Carregando...</h3>
     }
     if (error) {
-        return <p>Ocorreu algum erro...</p>
+        return  <div><h3 className='mt-5' style={{color: '#FFD230'}}>Ocorreu algum erro...   <i className='fa-regular fa-face-dizzy' style={{color: 'crimson'}}></i></h3>      <button className='btn btn-warning mt-4 col-5 align-self-center' onClick={() => navigate(-1)}>Voltar</button></div>
     }
 
     async function deletarUsuario(id) {

@@ -2,8 +2,10 @@ import Navadm from '../Navadm';
 import "../../App.css";
 import Aos from 'aos';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function UsuariosCrud() {
+    const navigate = useNavigate();
     const [registros, setRegistros] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -85,8 +87,8 @@ export default function UsuariosCrud() {
         .catch(err => console.error(err));
     }
 
-    if (loading) return <p>Carregando...</p>;
-    if (error) return <p>Ocorreu algum erro: {error}</p>;
+    if (loading) return <h3 className='mt-5' style={{color: '#FFD230'}}>Carregando...</h3>;
+    if (error) return <div><h3 className='mt-5' style={{color: '#FFD230'}}>Ocorreu algum erro...   <i className='fa-regular fa-face-dizzy' style={{color: 'crimson'}}></i></h3>      <button className='btn btn-warning mt-4 col-5 align-self-center' onClick={() => navigate(-1)}>Voltar</button></div>
 
     return (
         <>
