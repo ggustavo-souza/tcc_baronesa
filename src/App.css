@@ -255,5 +255,57 @@
   transition: transform 0.3s ease-in-out;
 }
 
+@media screen and (max-width: 768px) {
+  /* 1. Esconde o cabeçalho original da tabela */
+  .table-responsive-cards thead {
+    display: none;
+  }
+
+  /* 2. Faz com que os elementos da tabela se comportem como blocos */
+  .table-responsive-cards, 
+  .table-responsive-cards tbody, 
+  .table-responsive-cards tr, 
+  .table-responsive-cards td {
+    display: block;
+    width: 100%;
+  }
+
+  /* 3. Estiliza cada linha (tr) como um card separado */
+  .table-responsive-cards tr {
+    margin-bottom: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem; /* 6px */
+    padding: 1rem;
+  }
+  
+  /* 4. Remove a borda das células e as posiciona para o rótulo */
+  .table-responsive-cards td {
+    border: none;
+    text-align: right; /* Alinha o valor à direita */
+    padding-left: 50%; /* Deixa espaço para o rótulo à esquerda */
+    position: relative;
+    margin-bottom: 0.5rem;
+  }
+  
+  .table-responsive-cards td:last-child {
+      margin-bottom: 0;
+  }
+
+  /* 5. Cria o rótulo (Ex: "Nome:") usando o atributo 'data-label' que adicionaremos no HTML */
+  .table-responsive-cards td:before {
+    content: attr(data-label); /* Pega o texto do atributo */
+    position: absolute;
+    left: 0.75rem;
+    font-weight: bold;
+    text-align: left;
+    white-space: nowrap; /* Impede que o rótulo quebre a linha */
+  }
+
+  /* 6. Centraliza os botões de ação */
+  .table-responsive-cards td:last-child {
+    text-align: center;
+    padding-left: 0;
+  }
+}
 
 

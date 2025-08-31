@@ -33,14 +33,14 @@ export default function MoveisCrud() {
     }, []);
 
     if (loading) {
-        return <h3 className='mt-5' style={{color: '#FFD230'}}>Carregando...</h3>
+        return <h3 className='mt-5' style={{ color: '#FFD230' }}>Carregando...</h3>
     }
     if (error) {
-        return  <div><h3 className='mt-5' style={{color: '#FFD230'}}>Ocorreu algum erro...   <i className='fa-regular fa-face-dizzy' style={{color: 'crimson'}}></i></h3>      <button className='btn btn-warning mt-4 col-5 align-self-center' onClick={() => navigate(-1)}>Voltar</button></div>
+        return <div><h3 className='mt-5' style={{ color: '#FFD230' }}>Ocorreu algum erro...   <i className='fa-regular fa-face-dizzy' style={{ color: 'crimson' }}></i></h3>      <button className='btn btn-warning mt-4 col-5 align-self-center' onClick={() => navigate(-1)}>Voltar</button></div>
     }
 
     async function deletarUsuario(id) {
-        const url = `http://localhost/tcc_baronesa/api/usuarios/${id}` 
+        const url = `http://localhost/tcc_baronesa/api/usuarios/${id}`
         console.log(url)
     }
 
@@ -51,39 +51,29 @@ export default function MoveisCrud() {
             <div className='container mt-5'>
                 <div className="card p-4 table-responsive " data-aos="fade-up">
                     {registros.length > 0 ? (
-                        <table className='table table-hover table-bordered border-dark table-align-middle'>
+                        <table className='table table-hover table-bordered border-dark table-align-middle table-responsive-cards'>
                             <thead className='table-warning' >
                                 <tr>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">Nome</th>
-                                    <th scope="col">Valor</th>
-                                    <th scope="col">Descrição</th>
-                                    <th scope='col'>Categoria</th>
-                                    <th scope='col'>Opções</th>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Valor</th>
+                                    <th>Descrição</th>
+                                    <th>Categoria</th>
+                                    <th>Opções</th>
                                 </tr>
                             </thead>
                             {registros.map(registro => (
                                 <tbody>
                                     <tr key={registro.id}>
-                                        <th scope="row">
-                                            <td>{registro.id}</td>
-                                        </th>
-                                        <th scope="row">
-                                            <td>{registro.nome}</td>
-                                        </th>
-                                        <th scope="row">
-                                            <td>R$ {registro.valor},00</td>
-                                        </th>
-                                        <th scope="row">
-                                            <td>{registro.descricao}</td>
-                                        </th>
-                                        <th>
-                                            <td>{registro.categoria}</td>
-                                        </th>
-                                        <th scope='row'>
+                                        <td data-label="ID:">{registro.id}</td>
+                                        <td data-label="Nome:">{registro.nome}</td>
+                                        <td data-label="Valor:">R$ {registro.valor},00</td>
+                                        <td data-label="Descrição:">{registro.descricao}</td>
+                                        <td data-label="Categoria:">{registro.categoria}</td>
+                                        <div className="d-flex flex-wrap justify-content-center gap-2">
                                             <button className='btn btn-warning me-2' onClick={() => setShowModal(true)}><i className='fa-trash fa-solid me-2'></i>Excluir</button>
                                             <button className='btn btn-warning'><i className='fa-pen fa-solid me-2'></i>Editar</button>
-                                        </th>
+                                        </div>
                                     </tr>
                                 </tbody>
                             ))}

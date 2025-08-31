@@ -76,19 +76,19 @@ export default function UsuariosCrud() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(dados)
         })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
-            setRegistros(registros.map(u => u.id === id ? { ...u, ...usuarioSelecionado, senha: undefined } : u));
-            setShowModalEditar(false);
-            setUsuarioSelecionado(null);
-            setMostrarSenhaEditar(false);
-        })
-        .catch(err => console.error(err));
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                setRegistros(registros.map(u => u.id === id ? { ...u, ...usuarioSelecionado, senha: undefined } : u));
+                setShowModalEditar(false);
+                setUsuarioSelecionado(null);
+                setMostrarSenhaEditar(false);
+            })
+            .catch(err => console.error(err));
     }
 
-    if (loading) return <h3 className='mt-5' style={{color: '#FFD230'}}>Carregando...</h3>;
-    if (error) return <div><h3 className='mt-5' style={{color: '#FFD230'}}>Ocorreu algum erro...   <i className='fa-regular fa-face-dizzy' style={{color: 'crimson'}}></i></h3>      <button className='btn btn-warning mt-4 col-5 align-self-center' onClick={() => navigate(-1)}>Voltar</button></div>
+    if (loading) return <h3 className='mt-5' style={{ color: '#FFD230' }}>Carregando...</h3>;
+    if (error) return <div><h3 className='mt-5' style={{ color: '#FFD230' }}>Ocorreu algum erro...   <i className='fa-regular fa-face-dizzy' style={{ color: 'crimson' }}></i></h3>      <button className='btn btn-warning mt-4 col-5 align-self-center' onClick={() => navigate(-1)}>Voltar</button></div>
 
     return (
         <>
@@ -100,7 +100,7 @@ export default function UsuariosCrud() {
                 </div>
                 <div className="card p-4 table-responsive" data-aos="fade-up">
                     {registros.length > 0 ? (
-                        <table className='table table-hover table-bordered border-dark table-align-middle'>
+                        <table className='table table-hover table-bordered border-dark table-align-middle table-responsive-cards'>
                             <thead className='table-warning'>
                                 <tr>
                                     <th>ID</th>
@@ -113,21 +113,23 @@ export default function UsuariosCrud() {
                             <tbody>
                                 {registros.map(registro => (
                                     <tr key={registro.id}>
-                                        <td>{registro.id}</td>
-                                        <td>{registro.nome}</td>
-                                        <td>{registro.email}</td>
-                                        <td>{registro.cargo}</td>
-                                        <td>
-                                            <button className='btn btn-warning me-2 col-10 col-sm-3' 
-                                                onClick={() => { setUsuarioSelecionado(registro.id); setShowModalExcluir(true); }}>
-                                                <i className='fa-trash fa-solid me-2'></i>Excluir
-                                            </button>
-                                            <button className='btn btn-warning col-10 col-sm-3' onClick={() => {
-                                                setUsuarioSelecionado({ ...registro, senha: '' });
-                                                setShowModalEditar(true);
-                                            }}>
-                                                <i className='fa-pen fa-solid me-2'></i>Editar
-                                            </button>
+                                        <td data-label="ID:">{registro.id}</td>
+                                        <td data-label="Nome:">{registro.nome}</td>
+                                        <td data-label="Email:">{registro.email}</td>
+                                        <td data-label="Cargo:">{registro.cargo}</td>
+                                        <td data-label="Opções:">
+                                            <div className="d-flex flex-wrap justify-content-center gap-2">
+                                                <button className='btn btn-warning'
+                                                    onClick={() => { setUsuarioSelecionado(registro.id); setShowModalExcluir(true); }}>
+                                                    <i className='fa-trash fa-solid me-2'></i>Excluir
+                                                </button>
+                                                <button className='btn btn-warning' onClick={() => {
+                                                    setUsuarioSelecionado({ ...registro, senha: '' });
+                                                    setShowModalEditar(true);
+                                                }}>
+                                                    <i className='fa-pen fa-solid me-2'></i>Editar
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
@@ -136,6 +138,7 @@ export default function UsuariosCrud() {
                     ) : <p>Nenhum registro encontrado.</p>}
                 </div>
             </div>
+
 
             {/* Modal de Exclusão */}
             {showModalExcluir && (
@@ -173,8 +176,8 @@ export default function UsuariosCrud() {
                                     value={novoUsuario.nome} onChange={e => setNovoUsuario({ ...novoUsuario, nome: e.target.value })} />
                                 <input type="email" className="form-control mb-2" placeholder="Email"
                                     value={novoUsuario.email} onChange={e => setNovoUsuario({ ...novoUsuario, email: e.target.value })} />
-                                <select className="form-select mb-2" 
-                                    value={novoUsuario.cargo} 
+                                <select className="form-select mb-2"
+                                    value={novoUsuario.cargo}
                                     onChange={e => setNovoUsuario({ ...novoUsuario, cargo: e.target.value })}>
                                     <option value="">Selecione o cargo</option>
                                     <option value="admin">Admin</option>
@@ -204,13 +207,13 @@ export default function UsuariosCrud() {
                             </div>
                             <div className="modal-body">
                                 <input type="text" className="form-control mb-2" placeholder="Nome"
-                                    value={usuarioSelecionado.nome} 
+                                    value={usuarioSelecionado.nome}
                                     onChange={e => setUsuarioSelecionado({ ...usuarioSelecionado, nome: e.target.value })} />
                                 <input type="email" className="form-control mb-2" placeholder="Email"
-                                    value={usuarioSelecionado.email} 
+                                    value={usuarioSelecionado.email}
                                     onChange={e => setUsuarioSelecionado({ ...usuarioSelecionado, email: e.target.value })} />
                                 <select className="form-select mb-2"
-                                    value={usuarioSelecionado.cargo} 
+                                    value={usuarioSelecionado.cargo}
                                     onChange={e => setUsuarioSelecionado({ ...usuarioSelecionado, cargo: e.target.value })}>
                                     <option value="">Selecione o cargo</option>
                                     <option value="admin">Admin</option>
@@ -219,7 +222,7 @@ export default function UsuariosCrud() {
 
                                 <div className="input-group mb-2">
                                     <input type={mostrarSenhaEditar ? "text" : "password"} className="form-control" placeholder="Nova senha (opcional)"
-                                        value={usuarioSelecionado.senha || ''} 
+                                        value={usuarioSelecionado.senha || ''}
                                         onChange={e => setUsuarioSelecionado({ ...usuarioSelecionado, senha: e.target.value })} />
                                     <button className="btn btn-outline-secondary" type="button"
                                         onClick={() => setMostrarSenhaEditar(!mostrarSenhaEditar)}>
