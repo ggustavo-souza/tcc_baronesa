@@ -26,7 +26,6 @@ if (is_numeric($last)) {
     $tabela = $last;
 }
 
-// tabelas que a API permite manipular
 $tabelasPermitidas = ['usuarios', 'moveis'];
 
 if (!in_array($tabela, $tabelasPermitidas)) {
@@ -55,6 +54,41 @@ try {
         }
 
     } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // 🔹 Upload especial para móveis
+        if ($tabela === 'moveis' && !empty($_FILES)) {
+            $nome = $_POST['nome'] ?? null;
+            $valor = $_POST['valor'] ?? null;
+            $descricao = $_POST['descricao'] ?? null;
+            $categoria = $_POST['categoria'] ?? null;
+
+            $sql = "INSERT INTO moveis (nome, valor, descricao, categoria) VALUES (?, ?, ?, ?)";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$nome, $valor, $descricao, $categoria]);
+            $idMovel = $pdo->lastInsertId();
+
+            $uploadDir = "uploads/";
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            foreach ($_FILES['fotos']['tmp_name'] as $i => $tmpName) {
+                if ($_FILES['fotos']['error'][$i] === UPLOAD_ERR_OK) {
+                    $fileName = uniqid() . "_" . basename($_FILES['fotos']['name'][$i]);
+                    $destino = $uploadDir . $fileName;
+
+                    if (move_uploaded_file($tmpName, $destino)) {
+                        $principal = ($i === 0) ? 1 : 0;
+                        $stmt = $pdo->prepare("INSERT INTO moveis_fotos (id_movel, foto, principal) VALUES (?, ?, ?)");
+                        $stmt->execute([$idMovel, $fileName, $principal]);
+                    }
+                }
+            }
+
+            echo json_encode(["message" => "Móvel criado com sucesso", "id" => $idMovel]);
+            exit;
+        }
+
+        // 🔹 Padrão para JSON
         $dados = json_decode(file_get_contents("php://input"), true);
         if (!$dados || !is_array($dados)) {
             http_response_code(400);
@@ -62,12 +96,10 @@ try {
             exit();
         }
 
-        // se for usuários, tratar senha com hash
         if ($tabela === 'usuarios' && isset($dados['senha'])) {
             $dados['senha'] = password_hash($dados['senha'], PASSWORD_DEFAULT);
         }
 
-        // gerar dinamicamente SQL
         $colunas = array_keys($dados);
         $placeholders = implode(',', array_fill(0, count($colunas), '?'));
         $sql = "INSERT INTO $tabela (" . implode(',', $colunas) . ") VALUES ($placeholders)";
@@ -77,6 +109,40 @@ try {
         echo json_encode(["message" => "Registro criado com sucesso", "id" => $pdo->lastInsertId()]);
 
     } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT' && $id) {
+        // 🔹 Atualizar móveis com fotos
+        if ($tabela === 'moveis' && !empty($_FILES)) {
+            $nome = $_POST['nome'] ?? null;
+            $valor = $_POST['valor'] ?? null;
+            $descricao = $_POST['descricao'] ?? null;
+            $categoria = $_POST['categoria'] ?? null;
+
+            $sql = "UPDATE moveis SET nome = ?, valor = ?, descricao = ?, categoria = ? WHERE id = ?";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$nome, $valor, $descricao, $categoria, $id]);
+
+            $uploadDir = "uploads/";
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            foreach ($_FILES['fotos']['tmp_name'] as $i => $tmpName) {
+                if ($_FILES['fotos']['error'][$i] === UPLOAD_ERR_OK) {
+                    $fileName = uniqid() . "_" . basename($_FILES['fotos']['name'][$i]);
+                    $destino = $uploadDir . $fileName;
+
+                    if (move_uploaded_file($tmpName, $destino)) {
+                        $principal = 0; // não sobrescreve a principal antiga
+                        $stmt = $pdo->prepare("INSERT INTO moveis_fotos (id_movel, foto, principal) VALUES (?, ?, ?)");
+                        $stmt->execute([$id, $fileName, $principal]);
+                    }
+                }
+            }
+
+            echo json_encode(["message" => "Móvel atualizado com sucesso"]);
+            exit;
+        }
+
+        // 🔹 Padrão para JSON
         $dados = json_decode(file_get_contents("php://input"), true);
         if (!$dados || !is_array($dados)) {
             http_response_code(400);

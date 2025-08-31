@@ -1,40 +1,29 @@
-# Getting Started with Create React App
+# Projeto de Aplicação Web - À Baronesa Movelaria 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Projeto de Conclusão de Curso, que consiste em uma aplicação que permite o usuário:
 
-## Available Scripts
+- **Analisar produtos do catálogo;**
+- **Enviar um orçamento da sua preferência;**
+- **Conferir todos os seus pedidos e orçamentos através da sua própria conta;**
+- **Entrar em contato diretamente com o fabricante.**
 
-In the project directory, you can run:
+Em paralelo às funções do usuário, o usuário admnistrador pode:
 
-### `npm start`
+- **Gerenciar usuários;**
+- **Monitorar produtos;**
+- **Analisar todos os orçamentos feitos;**
+- **Destacar, adicionar ou remover determinados produtos;**
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+**Front-End**: A aplicação foi construída utilizando React.js no front-end, devido sua dinâmica de funcionamento, e suas funcionalidades.
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+**Back-End**: O sistema e a API da aplicação foram inteiramente construídos utilizando PHP, e MySQL, pois ambos apresentam facilidade de trabalho e um conhecimento mais avançado dos desenvolvedores.
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
