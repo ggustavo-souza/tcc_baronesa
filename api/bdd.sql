@@ -1,40 +1,63 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
-CREATE DATABASE `baronesa_bd`;
-USE baronesa_bd;
+CREATE DATABASE IF NOT EXISTS `baronesa_bd`;
+USE `baronesa_bd`;
 
-CREATE TABLE `moveis` (
-  `id` int(11) NOT NULL,
-  `nome` varchar(60) NOT NULL,
-  `valor` int(6) NOT NULL,
-  `descricao` varchar(200) DEFAULT NULL,
-  `categoria` varchar(15) NOT NULL,
-  `foto` varchar(50) DEFAULT NULL 
+-- Tabela de categorias
+CREATE TABLE IF NOT EXISTS `categorias` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(30) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-
-CREATE TABLE `usuarios` (
-  `id` int(11) NOT NULL,
-  `nome` varchar(15) NOT NULL,
-  `email` varchar(50) NOT NULL,
-  `senha` varchar(65) NOT NULL,
-  `cargo` enum('admin','usuario') NOT NULL DEFAULT 'usuario',
-  `foto` varchar(50) DEFAULT NULL
+-- Tabela de móveis
+CREATE TABLE IF NOT EXISTS `moveis` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(60) NOT NULL,
+  `valor` INT(6) NOT NULL,
+  `descricao` VARCHAR(200) DEFAULT NULL,
+  `foto` VARCHAR(50) DEFAULT NULL,
+  `categoria_id` INT(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`categoria_id`) REFERENCES `categorias`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `moveis` (`id`, `nome`, `valor`, `descricao`, `categoria`,`foto`) VALUES (1, 'Armário Uma porta', 200, 'Armário simples de cor marrom, ideal para cozinhas', 'cozinha', 'armáriosimples.jpg');
+-- Tabela de fotos extras dos móveis
+CREATE TABLE IF NOT EXISTS `moveis_fotos` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `id_movel` INT(11) NOT NULL,
+  `foto` VARCHAR(100) NOT NULL,
+  `principal` TINYINT(1) DEFAULT 0,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`id_movel`) REFERENCES `moveis` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `usuarios` (`id`, `nome`, `email`, `senha`, `cargo`, `foto`) VALUES
-(1, 'Admin', 'cavalogames1231@gmail.com', '2aAnwG7BO/.7I', 'admin', 'admin.jpg'), (2, 'adminTeste', 'teste@gmail.com', '2aAnwG7BO/.7I', 'usuario', 'admin.jpg');
+-- Tabela de usuários
+CREATE TABLE IF NOT EXISTS `usuarios` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(15) NOT NULL,
+  `email` VARCHAR(50) NOT NULL,
+  `senha` VARCHAR(65) NOT NULL,
+  `cargo` ENUM('admin','usuario') NOT NULL DEFAULT 'usuario',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- Inserir categorias
+INSERT INTO `categorias` (`nome`) VALUES 
+  ('Mesas'),
+  ('Cadeiras'),
+  ('Cômodas'),
+  ('Armários'),
+  ('Planejados');
 
-ALTER TABLE `moveis`
-  ADD PRIMARY KEY (`id`);
+-- Inserir móveis (ajustando categoria_id)
+INSERT INTO `moveis` (`nome`, `valor`, `descricao`, `categoria_id`, `foto`) VALUES
+('Armário Uma porta', 200, 'Armário simples de cor marrom, ideal para cozinhas', 4, 'armariosimples.jpg');
 
-ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`id`);
+-- Inserir usuários
+INSERT INTO `usuarios` (`nome`, `email`, `senha`, `cargo`) VALUES
+('Admin', 'cavalogames1231@gmail.com', '$2y$10$e0NRnOe/5l6PTTXqJwEjqu5QbC0ExVCPPRmZyL77r1l6lXW6cZp9a', 'admin'),
+('adminTeste', 'teste@gmail.com', '$2y$10$J4uGkjV1QdlITa8fGJYcu.KyA9OjBq6TzE3cA6F2i3vDCYqH7rrIe', 'usuario');
 
-ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;

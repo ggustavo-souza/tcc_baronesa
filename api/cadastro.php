@@ -23,8 +23,8 @@ if ($verifica->rowCount() > 0) {
 }
 
 try {
-    $stmt = $pdo->prepare("INSERT INTO usuarios (nome, email, senha, foto, cargo) VALUES (?, ?, ?, ?, ?)");
-    $stmt->execute([$nome, $email, $senha, $foto, $cargo]);
+    $stmt = $pdo->prepare("INSERT INTO usuarios (nome, email, senha, cargo) VALUES (?, ?, ?, ?)");
+    $stmt->execute([$nome, $email, $senha, $cargo]);
 
     echo json_encode(["mensagem" => "Cadastro realizado com sucesso"]);
 } catch (PDOException $e) {
