@@ -87,39 +87,17 @@ export default function MoveisCrud() {
         return <h3 className='mt-5' style={{ color: '#FFD230' }}>Carregando...</h3>
     }
     if (error) {
-<<<<<<< HEAD
         return <div><h3 className='mt-5' style={{ color: '#FFD230' }}>Ocorreu algum erro...   <i className='fa-regular fa-face-dizzy' style={{ color: 'crimson' }}></i></h3>      <button className='btn btn-warning mt-4 col-5 align-self-center' onClick={() => navigate(-1)}>Voltar</button></div>
     }
 
-    async function deletarUsuario(id) {
-        const url = `http://localhost/tcc_baronesa/api/usuarios/${id}`
-        console.log(url)
-    }
-
-
-=======
-        return <div>
-            <h3 className='mt-5' style={{ color: '#FFD230' }}>
-                Ocorreu algum erro...   <i className='fa-regular fa-face-dizzy' style={{ color: 'crimson' }}></i>
-            </h3>
-            <button className='btn btn-warning mt-4 col-5 align-self-center' onClick={() => navigate(-1)}>Voltar</button>
-        </div>
-    }
-
->>>>>>> c052751d375251c87598ed1c112b530e9595791d
     return (
         <>
             <Navadm />
             <div className='container mt-5'>
                 <div className="card p-4 table-responsive" data-aos="fade-up">
                     {registros.length > 0 ? (
-<<<<<<< HEAD
                         <table className='table table-hover table-bordered border-dark table-align-middle table-responsive-cards'>
                             <thead className='table-warning' >
-=======
-                        <table className='table table-hover table-bordered border-dark table-align-middle'>
-                            <thead className='table-warning'>
->>>>>>> c052751d375251c87598ed1c112b530e9595791d
                                 <tr>
                                     <th>ID</th>
                                     <th>Nome</th>
@@ -132,43 +110,15 @@ export default function MoveisCrud() {
                             <tbody>
                                 {registros.map(registro => (
                                     <tr key={registro.id}>
-<<<<<<< HEAD
                                         <td data-label="ID:">{registro.id}</td>
                                         <td data-label="Nome:">{registro.nome}</td>
                                         <td data-label="Valor:">R$ {registro.valor},00</td>
                                         <td data-label="Descrição:">{registro.descricao}</td>
                                         <td data-label="Categoria:">{registro.categoria}</td>
                                         <div className="d-flex flex-wrap justify-content-center gap-2">
-                                            <button className='btn btn-warning me-2' onClick={() => setShowModal(true)}><i className='fa-trash fa-solid me-2'></i>Excluir</button>
+                                            <button className='btn btn-warning me-2' onClick={() => setShowModalDelete(true)}><i className='fa-trash fa-solid me-2'></i>Excluir</button>
                                             <button className='btn btn-warning'><i className='fa-pen fa-solid me-2'></i>Editar</button>
                                         </div>
-=======
-                                        <td>{registro.id}</td>
-                                        <td>{registro.nome}</td>
-                                        <td>R$ {registro.valor},00</td>
-                                        <td>{registro.descricao}</td>
-                                        <td>{registro.categoria}</td>
-                                        <td>
-                                            <button
-                                                className='btn btn-warning me-2'
-                                                onClick={() => {
-                                                    setIdSelecionado(registro.id);
-                                                    setShowModalDelete(true);
-                                                }}
-                                            >
-                                                <i className='fa-trash fa-solid me-2'></i>Excluir
-                                            </button>
-                                            <button
-                                                className='btn btn-warning'
-                                                onClick={() => {
-                                                    setFormData(registro);
-                                                    setShowModalEditar(true);
-                                                }}
-                                            >
-                                                <i className='fa-pen fa-solid me-2'></i>Editar
-                                            </button>
-                                        </td>
->>>>>>> c052751d375251c87598ed1c112b530e9595791d
                                     </tr>
                                 ))}
                             </tbody>
