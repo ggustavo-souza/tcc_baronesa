@@ -119,7 +119,7 @@ export default function UsuariosCrud() {
                                         <td data-label="Nome:">{registro.nome}</td>
                                         <td data-label="Email:">{registro.email}</td>
                                         <td data-label="Cargo:">{registro.cargo}</td>
-                                        <td data-label="Opções:">
+                                        <td>
                                             <div className="d-flex flex-wrap justify-content-center gap-2">
                                                 <button className='btn btn-warning'
                                                     onClick={() => { setUsuarioSelecionado(registro.id); setShowModalExcluir(true); }}>
