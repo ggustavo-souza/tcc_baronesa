@@ -48,8 +48,8 @@ INSERT INTO `categorias` (`nome`) VALUES
   ('Mesas'),
   ('Cadeiras'),
   ('Cômodas'),
-  ('Armários'),
-  ('Planejados');
+  ('Armários');
+
 
 -- Inserir móveis (ajustando categoria_id)
 INSERT INTO `moveis` (`nome`, `valor`, `descricao`, `categoria_id`, `foto`) VALUES

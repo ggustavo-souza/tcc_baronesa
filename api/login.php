@@ -30,10 +30,10 @@ try {
                 ]
             ]);
         } else {
-            echo json_encode(["erro" => "Email ou senha incorretos"]);
+            echo json_encode(["erro" => "Usuário ou senha incorretos"]);
         }
     } else {
-        echo json_encode(["erro" => "Email ou senha incorretos"]);
+        echo json_encode(["erro" => "Usuário ou senha incorretos"]);
     }
 } catch (PDOException $e) {
     echo json_encode(["erro" => "Erro no servidor: " . $e->getMessage()]);

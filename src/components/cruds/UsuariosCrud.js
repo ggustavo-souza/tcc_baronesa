@@ -71,6 +71,8 @@ export default function UsuariosCrud() {
             dados.senha = usuarioSelecionado.senha;
         }
 
+        console.log(dados);
+
         fetch(`http://localhost/tcc_baronesa/api/usuarios/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },

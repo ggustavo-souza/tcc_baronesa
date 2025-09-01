@@ -157,6 +157,9 @@ try {
         $colunas = array_keys($dados);
         $sets = implode(',', array_map(fn($c) => "$c = ?", $colunas));
         $sql = "UPDATE $tabela SET $sets WHERE id = ?";
+        var_dump($sql);
+        var_dump(array_values($dados));
+        var_dump($id);
         $stmt = $pdo->prepare($sql);
         $stmt->execute([...array_values($dados), $id]);
 
