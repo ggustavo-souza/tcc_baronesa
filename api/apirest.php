@@ -96,7 +96,8 @@ try {
             exit();
         }
 
-        if ($tabela === 'usuarios' && isset($dados['senha'])) {
+        // 👉 Criptografa senha no cadastro de usuário
+        if ($tabela === 'usuarios' && !empty($dados['senha'])) {
             $dados['senha'] = password_hash($dados['senha'], PASSWORD_DEFAULT);
         }
 
@@ -150,16 +151,18 @@ try {
             exit();
         }
 
-        if ($tabela === 'usuarios' && isset($dados['senha'])) {
-            $dados['senha'] = password_hash($dados['senha'], PASSWORD_DEFAULT);
+        // 👉 Só altera senha se realmente foi enviada
+        if ($tabela === 'usuarios') {
+            if (isset($dados['senha']) && !empty($dados['senha'])) {
+                $dados['senha'] = password_hash($dados['senha'], PASSWORD_DEFAULT);
+            } else {
+                unset($dados['senha']); // não mexe na senha
+            }
         }
 
         $colunas = array_keys($dados);
         $sets = implode(',', array_map(fn($c) => "$c = ?", $colunas));
         $sql = "UPDATE $tabela SET $sets WHERE id = ?";
-        var_dump($sql);
-        var_dump(array_values($dados));
-        var_dump($id);
         $stmt = $pdo->prepare($sql);
         $stmt->execute([...array_values($dados), $id]);
 

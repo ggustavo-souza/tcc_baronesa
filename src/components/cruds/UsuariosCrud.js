@@ -60,33 +60,40 @@ export default function UsuariosCrud() {
     }
 
     function atualizarUsuario(id) {
+        if (!usuarioSelecionado) return; // segurança
+
         const dados = {
             nome: usuarioSelecionado.nome,
             email: usuarioSelecionado.email,
             cargo: usuarioSelecionado.cargo
         };
 
-        // Só envia a senha se o admin digitou algo
         if (usuarioSelecionado.senha && usuarioSelecionado.senha.trim() !== '') {
             dados.senha = usuarioSelecionado.senha;
         }
-
-        console.log(dados);
 
         fetch(`http://localhost/tcc_baronesa/api/usuarios/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(dados)
         })
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error("Erro ao atualizar usuário");
+                return res.json();
+            })
             .then(data => {
                 console.log(data);
                 setRegistros(registros.map(u => u.id === id ? { ...u, ...usuarioSelecionado, senha: undefined } : u));
+
+                // fecha modal e limpa estado
                 setShowModalEditar(false);
                 setUsuarioSelecionado(null);
                 setMostrarSenhaEditar(false);
             })
-            .catch(err => console.error(err));
+            .catch(err => {
+                console.error(err);
+                alert("Erro ao salvar usuário.");
+            });
     }
 
     if (loading) return <h3 className='mt-5' style={{ color: '#FFD230' }}>Carregando...</h3>;
