@@ -61,7 +61,7 @@ function Navadm() {
                         </li>
                         <li className="nav-item">
                             <Link className="nav-link fw-bold fs-5 m-1" to="/admin-produtos" style={{ color: '#FFD230' }}>
-                                <i className="fa-solid fa-cart-shopping me-2"></i>Produtos
+                                <i className="fa-solid fa-cart-shopping me-2"></i>Móveis
                             </Link>
                         </li>
                         <li className="nav-item">

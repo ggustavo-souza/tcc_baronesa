@@ -26,7 +26,7 @@ if (is_numeric($last)) {
     $tabela = $last;
 }
 
-$tabelasPermitidas = ['usuarios', 'moveis'];
+$tabelasPermitidas = ['usuarios', 'moveis', 'categorias'];
 
 if (!in_array($tabela, $tabelasPermitidas)) {
     http_response_code(400);
@@ -35,51 +35,78 @@ if (!in_array($tabela, $tabelasPermitidas)) {
 }
 
 try {
+    // ====================== GET ======================
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        if ($id) {
-            $stmt = $pdo->prepare("SELECT * FROM $tabela WHERE id = ?");
-            $stmt->execute([$id]);
-            $registro = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($tabela === 'moveis') {
+            if ($id) {
+                // GET por id, incluindo fotos
+                $stmt = $pdo->prepare("SELECT * FROM moveis WHERE id = ?");
+                $stmt->execute([$id]);
+                $movel = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($registro) {
-                echo json_encode($registro);
+                if ($movel) {
+                    $stmt2 = $pdo->prepare("SELECT id, foto, principal FROM moveis_fotos WHERE id_movel = ?");
+                    $stmt2->execute([$id]);
+                    $movel['fotos'] = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+                    echo json_encode($movel);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(["message" => "Móvel não encontrado"]);
+                }
             } else {
-                http_response_code(404);
-                echo json_encode(["message" => "Registro não encontrado"]);
-            }
-        } else {
-            $stmt = $pdo->query("SELECT * FROM $tabela");
-            $registros = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            echo json_encode($registros);
-        }
+                // GET lista de móveis
+                $stmt = $pdo->query("SELECT * FROM moveis ORDER BY id DESC");
+                $moveis = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // 🔹 Upload especial para móveis
-        if ($tabela === 'moveis' && !empty($_FILES)) {
+                foreach ($moveis as &$m) {
+                    $stmt2 = $pdo->prepare("SELECT id, foto, principal FROM moveis_fotos WHERE id_movel = ?");
+                    $stmt2->execute([$m['id']]);
+                    $m['fotos'] = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+                }
+
+                echo json_encode($moveis);
+            }
+            exit;
+        } else {
+            // GET padrão para usuarios/categorias
+            if ($id) {
+                $stmt = $pdo->prepare("SELECT * FROM $tabela WHERE id = ?");
+                $stmt->execute([$id]);
+                $registro = $stmt->fetch(PDO::FETCH_ASSOC);
+                echo json_encode($registro ?: []);
+            } else {
+                $stmt = $pdo->query("SELECT * FROM $tabela");
+                echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+            }
+        }
+    }
+
+    // ====================== POST ======================
+    elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($tabela === 'moveis') {
             $nome = $_POST['nome'] ?? null;
             $valor = $_POST['valor'] ?? null;
             $descricao = $_POST['descricao'] ?? null;
-            $categoria = $_POST['categoria'] ?? null;
+            $categoria_id = $_POST['categoria_id'] ?? null;
 
-            $sql = "INSERT INTO moveis (nome, valor, descricao, categoria) VALUES (?, ?, ?, ?)";
+            $sql = "INSERT INTO moveis (nome, valor, descricao, categoria_id) VALUES (?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$nome, $valor, $descricao, $categoria]);
+            $stmt->execute([$nome, $valor, $descricao, $categoria_id]);
             $idMovel = $pdo->lastInsertId();
 
             $uploadDir = "uploads/";
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0777, true);
-            }
+            if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 
-            foreach ($_FILES['fotos']['tmp_name'] as $i => $tmpName) {
-                if ($_FILES['fotos']['error'][$i] === UPLOAD_ERR_OK) {
-                    $fileName = uniqid() . "_" . basename($_FILES['fotos']['name'][$i]);
-                    $destino = $uploadDir . $fileName;
-
-                    if (move_uploaded_file($tmpName, $destino)) {
-                        $principal = ($i === 0) ? 1 : 0;
-                        $stmt = $pdo->prepare("INSERT INTO moveis_fotos (id_movel, foto, principal) VALUES (?, ?, ?)");
-                        $stmt->execute([$idMovel, $fileName, $principal]);
+            if (!empty($_FILES['fotos'])) {
+                foreach ($_FILES['fotos']['tmp_name'] as $i => $tmpName) {
+                    if ($_FILES['fotos']['error'][$i] === UPLOAD_ERR_OK) {
+                        $fileName = uniqid() . "_" . basename($_FILES['fotos']['name'][$i]);
+                        $destino = $uploadDir . $fileName;
+                        if (move_uploaded_file($tmpName, $destino)) {
+                            $principal = ($i === 0) ? 1 : 0;
+                            $stmt = $pdo->prepare("INSERT INTO moveis_fotos (id_movel, foto, principal) VALUES (?, ?, ?)");
+                            $stmt->execute([$idMovel, $fileName, $principal]);
+                        }
                     }
                 }
             }
@@ -88,7 +115,7 @@ try {
             exit;
         }
 
-        // 🔹 Padrão para JSON
+        // Padrão JSON para outras tabelas
         $dados = json_decode(file_get_contents("php://input"), true);
         if (!$dados || !is_array($dados)) {
             http_response_code(400);
@@ -96,7 +123,6 @@ try {
             exit();
         }
 
-        // 👉 Criptografa senha no cadastro de usuário
         if ($tabela === 'usuarios' && !empty($dados['senha'])) {
             $dados['senha'] = password_hash($dados['senha'], PASSWORD_DEFAULT);
         }
@@ -108,33 +134,36 @@ try {
         $stmt->execute(array_values($dados));
 
         echo json_encode(["message" => "Registro criado com sucesso", "id" => $pdo->lastInsertId()]);
+    }
 
-    } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT' && $id) {
-        // 🔹 Atualizar móveis com fotos
-        if ($tabela === 'moveis' && !empty($_FILES)) {
-            $nome = $_POST['nome'] ?? null;
-            $valor = $_POST['valor'] ?? null;
-            $descricao = $_POST['descricao'] ?? null;
-            $categoria = $_POST['categoria'] ?? null;
+    // ====================== PUT ======================
+    elseif ($_SERVER['REQUEST_METHOD'] === 'PUT' && $id) {
+        parse_str(file_get_contents("php://input"), $putData);
 
-            $sql = "UPDATE moveis SET nome = ?, valor = ?, descricao = ?, categoria = ? WHERE id = ?";
+        if ($tabela === 'moveis') {
+            // Se houver $_FILES, atualizar campos e fotos
+            $nome = $_POST['nome'] ?? $putData['nome'] ?? null;
+            $valor = $_POST['valor'] ?? $putData['valor'] ?? null;
+            $descricao = $_POST['descricao'] ?? $putData['descricao'] ?? null;
+            $categoria_id = $_POST['categoria_id'] ?? $putData['categoria_id'] ?? null;
+
+            $sql = "UPDATE moveis SET nome = ?, valor = ?, descricao = ?, categoria_id = ? WHERE id = ?";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$nome, $valor, $descricao, $categoria, $id]);
+            $stmt->execute([$nome, $valor, $descricao, $categoria_id, $id]);
 
             $uploadDir = "uploads/";
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0777, true);
-            }
+            if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 
-            foreach ($_FILES['fotos']['tmp_name'] as $i => $tmpName) {
-                if ($_FILES['fotos']['error'][$i] === UPLOAD_ERR_OK) {
-                    $fileName = uniqid() . "_" . basename($_FILES['fotos']['name'][$i]);
-                    $destino = $uploadDir . $fileName;
-
-                    if (move_uploaded_file($tmpName, $destino)) {
-                        $principal = 0; // não sobrescreve a principal antiga
-                        $stmt = $pdo->prepare("INSERT INTO moveis_fotos (id_movel, foto, principal) VALUES (?, ?, ?)");
-                        $stmt->execute([$id, $fileName, $principal]);
+            if (!empty($_FILES['fotos'])) {
+                foreach ($_FILES['fotos']['tmp_name'] as $i => $tmpName) {
+                    if ($_FILES['fotos']['error'][$i] === UPLOAD_ERR_OK) {
+                        $fileName = uniqid() . "_" . basename($_FILES['fotos']['name'][$i]);
+                        $destino = $uploadDir . $fileName;
+                        if (move_uploaded_file($tmpName, $destino)) {
+                            $principal = 0; // não sobrescreve a principal
+                            $stmt = $pdo->prepare("INSERT INTO moveis_fotos (id_movel, foto, principal) VALUES (?, ?, ?)");
+                            $stmt->execute([$id, $fileName, $principal]);
+                        }
                     }
                 }
             }
@@ -143,7 +172,7 @@ try {
             exit;
         }
 
-        // 🔹 Padrão para JSON
+        // PUT padrão para JSON
         $dados = json_decode(file_get_contents("php://input"), true);
         if (!$dados || !is_array($dados)) {
             http_response_code(400);
@@ -151,13 +180,9 @@ try {
             exit();
         }
 
-        // 👉 Só altera senha se realmente foi enviada
         if ($tabela === 'usuarios') {
-            if (isset($dados['senha']) && !empty($dados['senha'])) {
-                $dados['senha'] = password_hash($dados['senha'], PASSWORD_DEFAULT);
-            } else {
-                unset($dados['senha']); // não mexe na senha
-            }
+            if (!empty($dados['senha'])) $dados['senha'] = password_hash($dados['senha'], PASSWORD_DEFAULT);
+            else unset($dados['senha']);
         }
 
         $colunas = array_keys($dados);
@@ -167,13 +192,16 @@ try {
         $stmt->execute([...array_values($dados), $id]);
 
         echo json_encode(["message" => "Registro atualizado com sucesso"]);
+    }
 
-    } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE' && $id) {
+    // ====================== DELETE ======================
+    elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE' && $id) {
         $stmt = $pdo->prepare("DELETE FROM $tabela WHERE id = ?");
         $stmt->execute([$id]);
         echo json_encode(["message" => "Registro excluído com sucesso"]);
+    }
 
-    } else {
+    else {
         http_response_code(405);
         echo json_encode(["message" => "Método não permitido"]);
     }
@@ -182,3 +210,4 @@ try {
     http_response_code(500);
     echo json_encode(["message" => "Erro: " . $e->getMessage()]);
 }
+ 
