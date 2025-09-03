@@ -128,6 +128,7 @@ export default function MoveisCrud() {
                     <h2 style={{ color: '#FFD230' }}>Móveis</h2>
                     <button className='btn btn-warning' onClick={() => {
                         setFormData({ id: null, nome: '', valor: '', descricao: '', categoria_id: '', fotos: null });
+                        setMovelSelecionado(null);
                         setShowModalEditar(true);
                     }}>
                         Adicionar Móvel
@@ -136,7 +137,7 @@ export default function MoveisCrud() {
 
                 <div className="card p-4 table-responsive" data-aos="fade-up">
                     {registros.length > 0 ? (
-                        <table className='table table-hover table-bordered border-dark table-align-middle'>
+                        <table className='table table-hover table-bordered border-dark table-align-middle table-responsive-cards'>
                             <thead className='table-warning'>
                                 <tr>
                                     <th>ID</th>
@@ -151,20 +152,28 @@ export default function MoveisCrud() {
                             <tbody>
                                 {registros.map(m => (
                                     <tr key={m.id}>
-                                        <td>{m.id}</td>
-                                        <td>{m.nome}</td>
-                                        <td>R$ {m.valor},00</td>
-                                        <td>{m.descricao}</td>
-                                        <td>{categorias.find(c => c.id === m.categoria_id)?.nome || '—'}</td>
-                                        <td>
+                                        <td data-label="ID:">{m.id}</td>
+                                        <td data-label="Nome:">{m.nome}</td>
+                                        <td data-label="Valor:">R$ {m.valor},00</td>
+                                        <td data-label="Descrição:">{m.descricao}</td>
+                                        <td data-label="Categoria">{categorias.find(c => c.id === m.categoria_id)?.nome || '—'}</td>
+                                        <td data-label="Foto:">
                                             {m.fotos?.length > 0 && (
                                                 <img src={`http://localhost/tcc_baronesa/api/uploads/${m.fotos.find(f => f.principal)?.foto || m.fotos[0].foto}`} alt={m.nome} width="50" />
                                             )}
                                         </td>
                                         <td>
-                                            <div className="d-flex flex-wrap gap-2">
-                                                <button className='btn btn-warning' onClick={() => { setMovelSelecionado(m.id); setShowModalExcluir(true); }}>Excluir</button>
-                                                <button className='btn btn-warning' onClick={() => abrirModalEditar(m)}>Editar</button>
+                                            <div className="d-flex flex-wrap justify-content-center gap-2">
+                                                <button className='btn btn-warning'
+                                                    onClick={() => { setMovelSelecionado(m.id); setShowModalExcluir(true); }}>
+                                                    <i className='fa-trash fa-solid me-2'></i>Excluir
+                                                </button>
+                                                <button className='btn btn-warning' onClick={() => {
+                                                    setMovelSelecionado(m.id);
+                                                    abrirModalEditar(true);
+                                                }}>
+                                                    <i className='fa-pen fa-solid me-2'></i>Editar
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -203,7 +212,7 @@ export default function MoveisCrud() {
                     <div className="modal-dialog modal-lg modal-dialog-centered">
                         <div className="modal-content CorNavbar">
                             <div className="modal-header">
-                                <h5 className="modal-title" style={{ color: '#FFD230' }}>{formData.id ? "Editar Móvel" : "Adicionar Móvel"}</h5>
+                                <h5 className="modal-title" style={{ color: '#FFD230' }}>{movelSelecionado ? "Editar Móvel" : "Adicionar Móvel"}</h5>
                                 <button className="btn-close" onClick={() => setShowModalEditar(false)}></button>
                             </div>
                             <form onSubmit={salvarMovel}>
