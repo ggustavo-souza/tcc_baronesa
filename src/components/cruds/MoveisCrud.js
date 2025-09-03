@@ -1,6 +1,7 @@
 import Navadm from '../Navadm';
-import { useState, useEffect } from 'react';
+import "../../App.css";
 import Aos from 'aos';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function MoveisCrud() {
@@ -8,11 +9,12 @@ export default function MoveisCrud() {
     const [registros, setRegistros] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
-    const [showModalDelete, setShowModalDelete] = useState(false);
-    const [idSelecionado, setIdSelecionado] = useState(null);
-
+    const [showModalExcluir, setShowModalExcluir] = useState(false);
+    const [showModalNovo, setShowModalNovo] = useState(false);
     const [showModalEditar, setShowModalEditar] = useState(false);
+    const [movelSelecionado, setMovelSelecionado] = useState(null);
+    const [novoMovel, setNovoMovel] = useState({ nome: '', valor: '', descricao: '', categoria_id: '' });
+    const [mostrarSenhaEditar, setMostrarSenhaEditar] = useState(false);
     const [formData, setFormData] = useState({
         nome: '',
         valor: '',
@@ -40,21 +42,20 @@ export default function MoveisCrud() {
     }
 
     async function deletarMovel(id) {
-        try {
-            await fetch(`http://localhost/tcc_baronesa/api/moveis/${id}`, {
-                method: "DELETE",
-            });
-            setRegistros(registros.filter(r => r.id !== id));
-            setShowModalDelete(false);
-        } catch (err) {
-            console.error(err);
-        }
+        fetch(`http://localhost/tcc_baronesa/api/moveis/${id}`, { method: "DELETE" })
+            .then(res => res.json())
+            .then(() => {
+                setRegistros(registros.filter(u => u.id !== id));
+                setShowModalExcluir(false);
+                setMovelSelecionado(null);
+            })
+            .catch(err => console.error(err));
     }
 
     async function salvarMovel(e) {
         e.preventDefault();
 
-        const url = formData.id 
+        const url = formData.id
             ? `http://localhost/tcc_baronesa/api/moveis/${formData.id}`
             : "http://localhost/tcc_baronesa/api/moveis";
 
@@ -94,6 +95,10 @@ export default function MoveisCrud() {
         <>
             <Navadm />
             <div className='container mt-5'>
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                    <h2 style={{ color: '#FFD230' }}>Móveis</h2>
+                    <button className='btn btn-warning' onClick={() => setShowModalNovo(true)}>Adicionar Móvel</button>
+                </div>
                 <div className="card p-4 table-responsive" data-aos="fade-up">
                     {registros.length > 0 ? (
                         <table className='table table-hover table-bordered border-dark table-align-middle table-responsive-cards'>
@@ -116,8 +121,16 @@ export default function MoveisCrud() {
                                         <td data-label="Descrição:">{registro.descricao}</td>
                                         <td data-label="Categoria:">{registro.categoria}</td>
                                         <div className="d-flex flex-wrap justify-content-center gap-2">
-                                            <button className='btn btn-warning me-2' onClick={() => setShowModalDelete(true)}><i className='fa-trash fa-solid me-2'></i>Excluir</button>
-                                            <button className='btn btn-warning'><i className='fa-pen fa-solid me-2'></i>Editar</button>
+                                            <button className='btn btn-warning'
+                                                onClick={() => { setMovelSelecionado(registro.id); setShowModalExcluir(true); }}>
+                                                <i className='fa-trash fa-solid me-2'></i>Excluir
+                                            </button>
+                                            <button className='btn btn-warning' onClick={() => {
+                                                setMovelSelecionado({ ...registro });
+                                                setShowModalEditar(true);
+                                            }}>
+                                                <i className='fa-pen fa-solid me-2'></i>Editar
+                                            </button>
                                         </div>
                                     </tr>
                                 ))}
@@ -130,22 +143,22 @@ export default function MoveisCrud() {
             </div>
 
             {/* Modal Excluir */}
-            {showModalDelete && (
+            {showModalExcluir && (
                 <div className="modal" tabIndex="-1" style={{ display: 'block' }}>
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content CorNavbar">
                             <div className="modal-header">
                                 <h5 className="modal-title" style={{ color: '#FFD230' }}>Confirmar Exclusão</h5>
-                                <button type="button" className="btn-close" onClick={() => setShowModalDelete(false)}></button>
+                                <button type="button" className="btn-close" onClick={() => setShowModalExcluir(false)}></button>
                             </div>
                             <div className="modal-body">
-                                <h3 style={{ color: '#FFD230' }}>Tem certeza de que deseja excluir o registro #{idSelecionado}?</h3>
+                                <h3 style={{ color: '#FFD230' }}>Tem certeza de que deseja excluir o registro #{movelSelecionado}?</h3>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" onClick={() => setShowModalDelete(false)}>
+                                <button type="button" className="btn btn-secondary" onClick={() => setShowModalExcluir(false)}>
                                     Cancelar
                                 </button>
-                                <button type="button" className="btn btn-warning" onClick={() => deletarMovel(idSelecionado)}>
+                                <button type="button" className="btn btn-warning" onClick={() => deletarMovel(movelSelecionado)}>
                                     Excluir
                                 </button>
                             </div>
@@ -153,7 +166,7 @@ export default function MoveisCrud() {
                     </div>
                 </div>
             )}
-            {showModalDelete && <div className="modal-backdrop fade show"></div>}
+            {showModalExcluir && <div className="modal-backdrop fade show"></div>}
 
             {/* Modal Editar/Adicionar */}
             {showModalEditar && (
@@ -212,6 +225,42 @@ export default function MoveisCrud() {
                 </div>
             )}
             {showModalEditar && <div className="modal-backdrop fade show"></div>}
+
+            {/* Modal de Novo Movel */}
+            {showModalNovo && (
+                <div className="modal" data-aos="fade-up" tabIndex="-1" style={{ display: 'block' }}>
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content CorNavbar">
+                            <div className="modal-header">
+                                <h5 className="modal-title" style={{ color: '#FFD230' }}>Adicionar Móvel</h5>
+                                <button type="button" className="btn-close" onClick={() => setShowModalNovo(false)}></button>
+                            </div>
+                            <div className="modal-body">
+                                <input type="text" className="form-control mb-2" placeholder="Nome"
+                                    value={novoMovel.nome} onChange={e => setNovoMovel({ ...novoMovel, nome: e.target.value })} />
+                                <input type="valor" className="form-control mb-2" placeholder="Valor (R$)"
+                                    value={novoMovel.valor} onChange={e => setNovoMovel({ ...novoMovel, valor: e.target.value })} />
+                                <input type="descricao" className="form-control mb-2" placeholder="Descrição"
+                                    value={novoMovel.descricao} onChange={e => setNovoMovel({ ...novoMovel, descricao: e.target.value })} />
+                                <select className="form-select mb-2"
+                                    value={novoMovel.categoria_id}
+                                    onChange={e => setNovoMovel({ ...novoMovel, categoria_id: e.target.value })}>
+                                    <option value="">Selecione a Categoria</option>
+                                    <option value="1">Mesas</option>
+                                    <option value="2">Cadeiras</option>
+                                    <option value="3">Cômodas</option>
+                                    <option value="4">Armários</option>
+                                </select>
+                            </div>
+                            <div className="modal-footer">
+                                <button className="btn btn-secondary" onClick={() => setShowModalNovo(false)}>Cancelar</button>
+                                <button className="btn btn-warning" onClick={salvarMovel}>Adicionar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {showModalNovo && <div className="modal-backdrop fade show"></div>}
         </>
     )
 }

@@ -56,8 +56,9 @@ INSERT INTO `moveis` (`nome`, `valor`, `descricao`, `categoria_id`, `foto`) VALU
 ('Armário Uma porta', 200, 'Armário simples de cor marrom, ideal para cozinhas', 4, 'armariosimples.jpg');
 
 -- Inserir usuários
+-- senha admin: 123
 INSERT INTO `usuarios` (`nome`, `email`, `senha`, `cargo`) VALUES
-('Admin', 'cavalogames1231@gmail.com', '$2y$10$e0NRnOe/5l6PTTXqJwEjqu5QbC0ExVCPPRmZyL77r1l6lXW6cZp9a', 'admin'),
+('admin', 'cavalogames1231@gmail.com', '$2y$10$Luy8bujm8OuVkqImHFKNiOqmS5dmZSlFQ4LqPVqUPvvQvOgPw8rg.', 'admin'),
 ('adminTeste', 'teste@gmail.com', '$2y$10$J4uGkjV1QdlITa8fGJYcu.KyA9OjBq6TzE3cA6F2i3vDCYqH7rrIe', 'usuario');
 
 COMMIT;
