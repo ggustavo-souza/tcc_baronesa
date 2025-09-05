@@ -66,7 +66,7 @@ function SobreNos() {
           />
         </div>
         <h2 className="sobre-nos-title">Nossa História</h2>
-        <p>
+        <p style={{ margin_top: '1rem',}}>
           Fundada com a paixão por sabores autênticos e o desejo de criar momentos inesquecíveis, <strong>A Baronesa</strong> nasceu do sonho de resgatar receitas de família e apresentá-las com um toque de sofisticação e modernidade. Cada produto que oferecemos é um elo entre o passado e o presente, carregando a herança e o cuidado que só o tempo e a dedicação podem oferecer.
         </p>
         
