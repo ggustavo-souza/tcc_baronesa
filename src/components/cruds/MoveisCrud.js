@@ -13,6 +13,7 @@ export default function MoveisCrud() {
     const [showModalExcluir, setShowModalExcluir] = useState(false);
     const [showModalEditar, setShowModalEditar] = useState(false);
     const [movelSelecionado, setMovelSelecionado] = useState(null);
+    const [showModalAdicionar, setShowModalAdicionar] = useState(false);
     const [formData, setFormData] = useState({
         id: null,
         nome: '',
@@ -129,7 +130,7 @@ export default function MoveisCrud() {
                     <button className='btn btn-warning' onClick={() => {
                         setFormData({ id: null, nome: '', valor: '', descricao: '', categoria_id: '', fotos: null });
                         setMovelSelecionado(null);
-                        setShowModalEditar(true);
+                        setShowModalAdicionar(true);
                     }}>
                         Adicionar Móvel
                     </button>
@@ -186,7 +187,7 @@ export default function MoveisCrud() {
 
             {/* Modal Excluir */}
             {showModalExcluir && (
-                <div className="modal" style={{ display: 'block' }}>
+                <div className="modal" data-aos="fade-up" style={{ display: 'block' }}>
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content CorNavbar">
                             <div className="modal-header">
@@ -206,38 +207,38 @@ export default function MoveisCrud() {
             )}
             {showModalExcluir && <div className="modal-backdrop fade show"></div>}
 
-            {/* Modal Adicionar/Editar */}
+            {/* Modal Editar */}
             {showModalEditar && (
-                <div className="modal" style={{ display: 'block' }}>
+                <div className="modal" data-aos="fade-up" style={{ display: 'block' }}>
                     <div className="modal-dialog modal-lg modal-dialog-centered">
                         <div className="modal-content CorNavbar">
                             <div className="modal-header">
-                                <h5 className="modal-title" style={{ color: '#FFD230' }}>{movelSelecionado ? "Editar Móvel" : "Adicionar Móvel"}</h5>
+                                <h5 className="modal-title" style={{ color: '#FFD230' }}>Editar Móvel</h5>
                                 <button className="btn-close" onClick={() => setShowModalEditar(false)}></button>
                             </div>
                             <form onSubmit={salvarMovel}>
                                 <div className="modal-body">
                                     <div className="mb-3">
-                                        <label>Nome</label>
+                                        <label style={{color: '#FFD230'}}>Nome</label>
                                         <input type="text" className="form-control" value={formData.nome} onChange={e => setFormData({ ...formData, nome: e.target.value })} required />
                                     </div>
                                     <div className="mb-3">
-                                        <label>Valor</label>
+                                        <label style={{color: '#FFD230'}}>Valor</label>
                                         <input type="number" className="form-control" value={formData.valor} onChange={e => setFormData({ ...formData, valor: e.target.value })} required />
                                     </div>
                                     <div className="mb-3">
-                                        <label>Descrição</label>
+                                        <label style={{color: '#FFD230'}}>Descrição</label>
                                         <textarea className="form-control" value={formData.descricao} onChange={e => setFormData({ ...formData, descricao: e.target.value })}></textarea>
                                     </div>
                                     <div className="mb-3">
-                                        <label>Categoria</label>
+                                        <label style={{color: '#FFD230'}}>Categoria</label>
                                         <select className="form-select" value={formData.categoria_id} onChange={e => setFormData({ ...formData, categoria_id: e.target.value })} required>
                                             <option value="">Selecione</option>
                                             {categorias.map(c => <option key={c.id} value={c.id}>{c.nome}</option>)}
                                         </select>
                                     </div>
                                     <div className="mb-3">
-                                        <label>Fotos</label>
+                                        <label style={{color: '#FFD230'}}>Fotos</label>
                                         <input type="file" className="form-control" multiple onChange={e => setFormData({ ...formData, fotos: e.target.files })} />
                                     </div>
                                 </div>
@@ -251,6 +252,52 @@ export default function MoveisCrud() {
                 </div>
             )}
             {showModalEditar && <div className="modal-backdrop fade show"></div>}
+
+            {/* Modal Adicionar */}
+            {showModalAdicionar && (
+                <div className="modal" data-aos="fade-up" style={{ display: 'block' }}>
+                    <div className="modal-dialog modal-lg modal-dialog-centered">
+                        <div className="modal-content CorNavbar">
+                            <div className="modal-header">
+                                <h5 className="modal-title" style={{ color: '#FFD230' }}>Adicionar Móvel</h5>
+                                <button className="btn-close" onClick={() => setShowModalAdicionar(false)}></button>
+                            </div>
+                            <form onSubmit={salvarMovel}>
+                                <div className="modal-body">
+                                    <div className="mb-3">
+                                        <label style={{color: '#FFD230'}}>Nome</label>
+                                        <input type="text" className="form-control" value={formData.nome} onChange={e => setFormData({ ...formData, nome: e.target.value })} required />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label style={{color: '#FFD230'}}>Valor</label>
+                                        <input type="number" className="form-control" value={formData.valor} onChange={e => setFormData({ ...formData, valor: e.target.value })} required />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label style={{color: '#FFD230'}}>Descrição</label>
+                                        <textarea className="form-control" value={formData.descricao} onChange={e => setFormData({ ...formData, descricao: e.target.value })}></textarea>
+                                    </div>
+                                    <div className="mb-3">
+                                        <label style={{color: '#FFD230'}}>Categoria</label>
+                                        <select className="form-select" value={formData.categoria_id} onChange={e => setFormData({ ...formData, categoria_id: e.target.value })} required>
+                                            <option value="">Selecione</option>
+                                            {categorias.map(c => <option key={c.id} value={c.id}>{c.nome}</option>)}
+                                        </select>
+                                    </div>
+                                    <div className="mb-3">
+                                        <label style={{color: '#FFD230'}}>Fotos</label>
+                                        <input type="file" className="form-control" multiple onChange={e => setFormData({ ...formData, fotos: e.target.files })} />
+                                    </div>
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" onClick={() => setShowModalAdicionar(false)}>Cancelar</button>
+                                    <button type="submit" className="btn btn-warning">Salvar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {showModalAdicionar && <div className="modal-backdrop fade show"></div>}
         </>
     );
 }
