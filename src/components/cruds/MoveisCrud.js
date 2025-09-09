@@ -171,7 +171,7 @@ export default function MoveisCrud() {
                                                 </button>
                                                 <button className='btn btn-warning' onClick={() => {
                                                     setMovelSelecionado(m.id);
-                                                    abrirModalEditar(true);
+                                                    abrirModalEditar(m);
                                                 }}>
                                                     <i className='fa-pen fa-solid me-2'></i>Editar
                                                 </button>
@@ -220,11 +220,11 @@ export default function MoveisCrud() {
                                 <div className="modal-body">
                                     <div className="mb-3">
                                         <label style={{color: '#FFD230'}}>Nome</label>
-                                        <input type="text" className="form-control" value={formData.nome} onChange={e => setFormData({ ...formData, nome: e.target.value })} required />
+                                        <input type="text" className="form-control" value={formData.nome} onChange={e => setFormData({ ...formData, nome: e.target.value })}  />
                                     </div>
                                     <div className="mb-3">
                                         <label style={{color: '#FFD230'}}>Valor</label>
-                                        <input type="number" className="form-control" value={formData.valor} onChange={e => setFormData({ ...formData, valor: e.target.value })} required />
+                                        <input type="number" className="form-control" value={formData.valor} onChange={e => setFormData({ ...formData, valor: e.target.value })}  />
                                     </div>
                                     <div className="mb-3">
                                         <label style={{color: '#FFD230'}}>Descrição</label>
@@ -232,7 +232,7 @@ export default function MoveisCrud() {
                                     </div>
                                     <div className="mb-3">
                                         <label style={{color: '#FFD230'}}>Categoria</label>
-                                        <select className="form-select" value={formData.categoria_id} onChange={e => setFormData({ ...formData, categoria_id: e.target.value })} required>
+                                        <select className="form-select" value={formData.categoria_id} onChange={e => setFormData({ ...formData, categoria_id: e.target.value })} >
                                             <option value="">Selecione</option>
                                             {categorias.map(c => <option key={c.id} value={c.id}>{c.nome}</option>)}
                                         </select>
