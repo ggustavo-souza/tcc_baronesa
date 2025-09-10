@@ -1,6 +1,6 @@
 <?php
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -81,18 +81,28 @@ try {
         }
     }
 
-    // ====================== POST ======================
+    // ====================== POST (create or update) ======================
     elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($tabela === 'moveis') {
+            $idMovel = $_POST['id'] ?? null;  // pega id se for edição
+
             $nome = $_POST['nome'] ?? null;
             $valor = $_POST['valor'] ?? null;
             $descricao = $_POST['descricao'] ?? null;
             $categoria_id = $_POST['categoria_id'] ?? null;
 
-            $sql = "INSERT INTO moveis (nome, valor, descricao, categoria_id) VALUES (?, ?, ?, ?)";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([$nome, $valor, $descricao, $categoria_id]);
-            $idMovel = $pdo->lastInsertId();
+            if ($idMovel) {
+                // Atualiza móvel existente
+                $sql = "UPDATE moveis SET nome = ?, valor = ?, descricao = ?, categoria_id = ? WHERE id = ?";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([$nome, $valor, $descricao, $categoria_id, $idMovel]);
+            } else {
+                // Cria novo móvel
+                $sql = "INSERT INTO moveis (nome, valor, descricao, categoria_id) VALUES (?, ?, ?, ?)";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([$nome, $valor, $descricao, $categoria_id]);
+                $idMovel = $pdo->lastInsertId();
+            }
 
             $uploadDir = "uploads/";
             if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
@@ -103,7 +113,8 @@ try {
                         $fileName = uniqid() . "_" . basename($_FILES['fotos']['name'][$i]);
                         $destino = $uploadDir . $fileName;
                         if (move_uploaded_file($tmpName, $destino)) {
-                            $principal = ($i === 0) ? 1 : 0;
+                            // Só marca principal se for novo móvel e a primeira foto
+                            $principal = (!$idMovel && $i === 0) ? 1 : 0;
                             $stmt = $pdo->prepare("INSERT INTO moveis_fotos (id_movel, foto, principal) VALUES (?, ?, ?)");
                             $stmt->execute([$idMovel, $fileName, $principal]);
                         }
@@ -111,7 +122,8 @@ try {
                 }
             }
 
-            echo json_encode(["message" => "Móvel criado com sucesso", "id" => $idMovel]);
+            $msg = $idMovel ? "Móvel atualizado com sucesso" : "Móvel criado com sucesso";
+            echo json_encode(["message" => $msg, "id" => $idMovel]);
             exit;
         }
 
@@ -136,64 +148,6 @@ try {
         echo json_encode(["message" => "Registro criado com sucesso", "id" => $pdo->lastInsertId()]);
     }
 
-    // ====================== PUT ======================
-    elseif ($_SERVER['REQUEST_METHOD'] === 'PUT' && $id) {
-        parse_str(file_get_contents("php://input"), $putData);
-
-        if ($tabela === 'moveis') {
-            // Se houver $_FILES, atualizar campos e fotos
-            $nome = $_POST['nome'] ?? $putData['nome'] ?? null;
-            $valor = $_POST['valor'] ?? $putData['valor'] ?? null;
-            $descricao = $_POST['descricao'] ?? $putData['descricao'] ?? null;
-            $categoria_id = $_POST['categoria_id'] ?? $putData['categoria_id'] ?? null;
-
-            $sql = "UPDATE moveis SET nome = ?, valor = ?, descricao = ?, categoria_id = ? WHERE id = ?";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([$nome, $valor, $descricao, $categoria_id, $id]);
-
-            $uploadDir = "uploads/";
-            if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
-
-            if (!empty($_FILES['fotos'])) {
-                foreach ($_FILES['fotos']['tmp_name'] as $i => $tmpName) {
-                    if ($_FILES['fotos']['error'][$i] === UPLOAD_ERR_OK) {
-                        $fileName = uniqid() . "_" . basename($_FILES['fotos']['name'][$i]);
-                        $destino = $uploadDir . $fileName;
-                        if (move_uploaded_file($tmpName, $destino)) {
-                            $principal = 0; // não sobrescreve a principal
-                            $stmt = $pdo->prepare("INSERT INTO moveis_fotos (id_movel, foto, principal) VALUES (?, ?, ?)");
-                            $stmt->execute([$id, $fileName, $principal]);
-                        }
-                    }
-                }
-            }
-
-            echo json_encode(["message" => "Móvel atualizado com sucesso"]);
-            exit;
-        }
-
-        // PUT padrão para JSON
-        $dados = json_decode(file_get_contents("php://input"), true);
-        if (!$dados || !is_array($dados)) {
-            http_response_code(400);
-            echo json_encode(["message" => "Dados inválidos"]);
-            exit();
-        }
-
-        if ($tabela === 'usuarios') {
-            if (!empty($dados['senha'])) $dados['senha'] = password_hash($dados['senha'], PASSWORD_DEFAULT);
-            else unset($dados['senha']);
-        }
-
-        $colunas = array_keys($dados);
-        $sets = implode(',', array_map(fn($c) => "$c = ?", $colunas));
-        $sql = "UPDATE $tabela SET $sets WHERE id = ?";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([...array_values($dados), $id]);
-
-        echo json_encode(["message" => "Registro atualizado com sucesso"]);
-    }
-
     // ====================== DELETE ======================
     elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE' && $id) {
         $stmt = $pdo->prepare("DELETE FROM $tabela WHERE id = ?");
@@ -210,4 +164,3 @@ try {
     http_response_code(500);
     echo json_encode(["message" => "Erro: " . $e->getMessage()]);
 }
- 

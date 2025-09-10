@@ -69,16 +69,16 @@ export default function MoveisCrud() {
     async function salvarMovel(e) {
         e.preventDefault();
 
-        const url = formData.id
-            ? `http://localhost/tcc_baronesa/api/moveis/${formData.id}`
-            : "http://localhost/tcc_baronesa/api/moveis";
-        const metodo = formData.id ? "POST" : "POST"; // sempre enviar via POST para FormData
+        const categoriaConv = parseInt(formData.categoria_id);
+
+        const url = "http://localhost/tcc_baronesa/api/moveis"; // sempre POST
 
         const form = new FormData();
+        if (formData.id) form.append("id", formData.id); // envia id para edição
         form.append("nome", formData.nome);
         form.append("valor", formData.valor);
         form.append("descricao", formData.descricao);
-        form.append("categoria_id", formData.categoria_id);
+        form.append("categoria_id", categoriaConv);
 
         if (formData.fotos) {
             for (let i = 0; i < formData.fotos.length; i++) {
@@ -88,7 +88,7 @@ export default function MoveisCrud() {
 
         try {
             const res = await fetch(url, {
-                method: formData.id ? "PUT" : "POST",
+                method: "POST",
                 body: form
             });
 
@@ -98,6 +98,7 @@ export default function MoveisCrud() {
             }
 
             setShowModalEditar(false);
+            setShowModalAdicionar(false);
             setFormData({ id: null, nome: '', valor: '', descricao: '', categoria_id: '', fotos: null });
             carregarMoveis();
         } catch (err) {
@@ -105,6 +106,7 @@ export default function MoveisCrud() {
             alert(err.message);
         }
     }
+
 
     function abrirModalEditar(movel) {
         setFormData({
@@ -233,7 +235,7 @@ export default function MoveisCrud() {
                                     <div className="mb-3">
                                         <label style={{color: '#FFD230'}}>Categoria</label>
                                         <select className="form-select" value={formData.categoria_id} onChange={e => setFormData({ ...formData, categoria_id: e.target.value })} >
-                                            <option value="">Selecione</option>
+                                            <option value="" disabled>Selecione</option>1
                                             {categorias.map(c => <option key={c.id} value={c.id}>{c.nome}</option>)}
                                         </select>
                                     </div>
@@ -279,7 +281,7 @@ export default function MoveisCrud() {
                                     <div className="mb-3">
                                         <label style={{color: '#FFD230'}}>Categoria</label>
                                         <select className="form-select" value={formData.categoria_id} onChange={e => setFormData({ ...formData, categoria_id: e.target.value })} required>
-                                            <option value="">Selecione</option>
+                                            <option value="" disabled>Selecione</option>
                                             {categorias.map(c => <option key={c.id} value={c.id}>{c.nome}</option>)}
                                         </select>
                                     </div>
