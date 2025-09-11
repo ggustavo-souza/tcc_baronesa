@@ -12,6 +12,7 @@ import Crud from './components/Crud';
 import UsuariosCrud from './components/cruds/UsuariosCrud';
 import MoveisCrud from './components/cruds/MoveisCrud';
 import AuthAcess from './components/auths/AuthAcess';
+import AdminOrcamentos from './components/cruds/Orcamentos';
 import { useEffect } from 'react';
 
 
@@ -48,6 +49,12 @@ function App() {
           <Route path="/admin-produtos" element={
             <AuthAcess >
               <MoveisCrud />
+            </AuthAcess>
+          }>
+          </Route>
+          <Route path="/admin-orcamentos" element={
+            <AuthAcess >
+              <AdminOrcamentos />
             </AuthAcess>
           }>
           </Route>
