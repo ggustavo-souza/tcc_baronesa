@@ -26,7 +26,7 @@ if (is_numeric($last)) {
     $tabela = $last;
 }
 
-$tabelasPermitidas = ['usuarios', 'moveis', 'categorias'];
+$tabelasPermitidas = ['usuarios', 'moveis', 'categorias', 'orcamentos'];
 
 if (!in_array($tabela, $tabelasPermitidas)) {
     http_response_code(400);
@@ -80,6 +80,8 @@ try {
             }
         }
     }
+
+
 
     // ====================== POST (create or update) ======================
     elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -153,13 +155,10 @@ try {
         $stmt = $pdo->prepare("DELETE FROM $tabela WHERE id = ?");
         $stmt->execute([$id]);
         echo json_encode(["message" => "Registro excluído com sucesso"]);
-    }
-
-    else {
+    } else {
         http_response_code(405);
         echo json_encode(["message" => "Método não permitido"]);
     }
-
 } catch (PDOException $e) {
     http_response_code(500);
     echo json_encode(["message" => "Erro: " . $e->getMessage()]);
