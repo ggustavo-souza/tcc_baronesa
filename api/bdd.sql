@@ -46,10 +46,12 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
 CREATE TABLE IF NOT EXISTS `orcamentos` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `id_usuario` INT(11) NOT NULL,
+  `id_categoria` INT(11) NOT NULL, 
   `mensagem` VARCHAR(200) NOT NULL,
   `aprovacao` ENUM('aprovado', 'desaprovado', 'naoLido') NOT NULL DEFAULT 'naoLido',
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON UPDATE CASCADE
+  FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON UPDATE CASCADE,
+  FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Inserir categorias
@@ -70,6 +72,6 @@ INSERT INTO `usuarios` (`nome`, `email`, `senha`, `cargo`) VALUES
 ('admin', 'cavalogames1231@gmail.com', '$2y$10$Luy8bujm8OuVkqImHFKNiOqmS5dmZSlFQ4LqPVqUPvvQvOgPw8rg.', 'admin'),
 ('adminTeste', 'teste@gmail.com', '$2y$10$J4uGkjV1QdlITa8fGJYcu.KyA9OjBq6TzE3cA6F2i3vDCYqH7rrIe', 'usuario');
 
-INSERT INTO `orcamentos` (`id_usuario`, `mensagem`) VALUES ('1', 'quero um armario 9081 portas feito de mármore suiço tratado com urina de unicórnios castrados.');
+INSERT INTO `orcamentos` (`id_usuario`, `id_categoria`, `mensagem`) VALUES ('1', '4', 'quero um armario 9081 portas feito de mármore suiço tratado com urina de unicórnios castrados.');
 
 COMMIT;

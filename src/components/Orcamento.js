@@ -2,11 +2,12 @@ import "../App.css";
 import "../awesome/all.min.css";
 import Navbar from "./Navbar"; 
 import Footer from "./Footer";
+import { useAuthUser } from './auths/useAuthUser'
 import { useEffect } from "react";
 import Aos from "aos";
 
 function HomeOrcamento() {
-
+    useAuthUser();
     useEffect(() => {
         Aos.init({ duration: 1000, once: true });
     }, []);
@@ -27,10 +28,6 @@ function HomeOrcamento() {
                                 <div className="mb-3">
                                     <label htmlFor="name" className="form-label">Nome</label>
                                     <input type="text" className="form-control" id="name" required />
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="email" className="form-label">Email</label>
-                                    <input type="email" className="form-control" id="email" required />
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="message" className="form-label">Mensagem</label>
