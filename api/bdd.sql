@@ -6,18 +6,18 @@ USE `baronesa_bd`;
 
 -- Tabela de categorias
 CREATE TABLE IF NOT EXISTS `categorias` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `nome` VARCHAR(30) NOT NULL,
+  `id`        INT(11) NOT NULL AUTO_INCREMENT,
+  `nome`      VARCHAR(30) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Tabela de móveis
 CREATE TABLE IF NOT EXISTS `moveis` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `nome` VARCHAR(60) NOT NULL,
-  `valor` INT(6) NOT NULL,
+  `id`        INT(11) NOT NULL AUTO_INCREMENT,
+  `nome`      VARCHAR(60) NOT NULL,
+  `valor`     INT(6) NOT NULL,
   `descricao` VARCHAR(200) DEFAULT NULL,
-  `foto` VARCHAR(50) DEFAULT NULL,
+  `foto`      VARCHAR(50) DEFAULT NULL,
   `categoria_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`categoria_id`) REFERENCES `categorias`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE
@@ -26,28 +26,28 @@ CREATE TABLE IF NOT EXISTS `moveis` (
 -- Tabela de fotos extras dos móveis
 CREATE TABLE IF NOT EXISTS `moveis_fotos` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `id_movel` INT(11) NOT NULL,
-  `foto` VARCHAR(100) NOT NULL,
-  `principal` TINYINT(1) DEFAULT 0,
+  `id_movel`    INT(11) NOT NULL,
+  `foto`        VARCHAR(100) NOT NULL,
+  `principal`   TINYINT(1) DEFAULT 0,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`id_movel`) REFERENCES `moveis` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Tabela de usuários
 CREATE TABLE IF NOT EXISTS `usuarios` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `nome` VARCHAR(15) NOT NULL,
-  `email` VARCHAR(50) NOT NULL,
-  `senha` VARCHAR(65) NOT NULL,
-  `cargo` ENUM('admin','usuario') NOT NULL DEFAULT 'usuario',
+  `id`      INT(11) NOT NULL AUTO_INCREMENT,
+  `nome`    VARCHAR(15) NOT NULL,
+  `email`   VARCHAR(50) NOT NULL,
+  `senha`   VARCHAR(65) NOT NULL,
+  `cargo`   ENUM('admin','usuario') NOT NULL DEFAULT 'usuario',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `orcamentos` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `id_usuario` INT(11) NOT NULL,
-  `id_categoria` INT(11) NOT NULL, 
-  `mensagem` VARCHAR(200) NOT NULL,
+  `id`            INT(11) NOT NULL AUTO_INCREMENT,
+  `id_usuario`    INT(11) NOT NULL,
+  `id_categoria`  INT(11) NOT NULL, 
+  `mensagem`      VARCHAR(200) NOT NULL,
   `aprovacao` ENUM('aprovado', 'desaprovado', 'naoLido') NOT NULL DEFAULT 'naoLido',
   PRIMARY KEY (`id`),
   FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON UPDATE CASCADE,

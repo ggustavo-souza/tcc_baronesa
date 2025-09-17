@@ -10,7 +10,9 @@ function Crud() {
 
   const [contador, setContador] = useState({
     usuarios: 0,
-    moveis: 0
+    moveis: 0,
+    orcamentos: 0
+
   });
 
   const [loading, setLoading] = useState(true); // flag de carregamento
@@ -43,6 +45,12 @@ function Crud() {
       route: "/admin-produtos",
       count: contador.moveis,
     },
+    {
+      title: "Orçamentos",
+      icon: "fa-solid fa-clipboard-list",
+      route: "/admin-orcamentos",
+      count: contador.orcamentos,
+    },
   ];
 
   return (
@@ -52,7 +60,7 @@ function Crud() {
         <h1 className="text-center corAmarela mb-4" style={{color: "#FFD230"}}>Painel Administrativo</h1>
         <div className="row g-4" data-aos="fade-up">
           {cards.map((card, index) => (
-            <div className="col-md-6" key={index}>
+            <div className={index === 2 ? "col-md-12" : "col-md-6"}>
               <div
                 className="card text-center p-4 shadow"
                 style={{

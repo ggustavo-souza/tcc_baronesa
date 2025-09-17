@@ -1,6 +1,6 @@
 import "../App.css";
 import "../awesome/all.min.css";
-import Navbar from "./Navbar"; 
+import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useAuthUser } from './auths/useAuthUser'
 import { useEffect } from "react";
@@ -25,10 +25,6 @@ function HomeOrcamento() {
                                 Preencha o formulário abaixo e solicite um orçamento personalizado para o seu projeto!
                             </p>
                             <form>
-                                <div className="mb-3">
-                                    <label htmlFor="name" className="form-label">Nome</label>
-                                    <input type="text" className="form-control" id="name" required />
-                                </div>
                                 <div className="mb-3">
                                     <label htmlFor="message" className="form-label">Mensagem</label>
                                     <textarea className="form-control" id="message" rows="3" required></textarea>

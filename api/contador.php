@@ -14,6 +14,8 @@
         $stmt = $pdo->query("SELECT COUNT(*) as total FROM moveis");
         $contador["moveis"] = $stmt->fetch(PDO::FETCH_ASSOC)["total"];
         //subsequentes
+        $stmt = $pdo->query("SELECT COUNT(*) as total FROM orcamentos");
+        $contador["orcamentos"] = $stmt->fetch(PDO::FETCH_ASSOC)["total"];
 
         echo json_encode($contador);
     } catch (PDOException $e) {
