@@ -25,18 +25,35 @@ function HomeOrcamento() {
                                 Preencha o formulário abaixo e solicite um orçamento personalizado para o seu projeto!
                             </p>
                             <form>
-                                <div className="mb-3">
-                                    <label htmlFor="message" className="form-label">Mensagem</label>
-                                    <textarea className="form-control" id="message" rows="3" required></textarea>
+                                <div class="row justify-content-center">
+                                    <div class="col-md-6">
+                                        <label for="selectCategoria" className="form-label mb-2">Selecione a Categoria</label>
+                                        <select className="form-select mb-4" id="selectCategoria">
+                                            <option selected disabled>Selecione uma opção...</option>
+                                            <option value="1" >Mesas</option>
+                                            <option value="2">Cadeiras</option>
+                                            <option value="3">Cômodas</option>
+                                            <option value="4">Armários</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <button type="submit" className="btn btn-warning mt-3 corBotao">Enviar</button>
+                                <div class="row justify-content-center">
+                                    <div class="col-md-6">
+                                        <label for="message" className="form-label">Mensagem</label>
+                                        <textarea className="form-control" id="message" rows="3" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="text-center mt-3">
+                                    <button type="submit" class="btn btn-warning mt-3 corBotao">Enviar</button>
+                                </div>
                             </form>
+
                         </div>
                     </div>
                 </div>
             </div>
             <Footer />
-        </main>
+        </main >
     )
 }
 

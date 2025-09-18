@@ -60,7 +60,7 @@ function Crud() {
         <h1 className="text-center corAmarela mb-4" style={{color: "#FFD230"}}>Painel Administrativo</h1>
         <div className="row g-4" data-aos="fade-up">
           {cards.map((card, index) => (
-            <div className={index === 2 ? "col-md-12" : "col-md-6"}>
+            <div className={index === 2 ? "col-md-12 mb-5" : "col-md-6"}>
               <div
                 className="card text-center p-4 shadow"
                 style={{
