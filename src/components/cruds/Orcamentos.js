@@ -69,7 +69,7 @@ export default function AdminOrcamentos() {
                     className="card text-center p-4 shadow mt-4"
                     data-aos="fade-up"
                     style={{
-                        backgroundColor: "#503325",
+
                         color: "#FFD230",
                         borderRadius: "15px",
                         cursor: "pointer",
@@ -80,18 +80,26 @@ export default function AdminOrcamentos() {
                     onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
                 >
                     {registros.length > 0 ? (
-                    <div>
-                        {registros.map(registro => (
-                            <div key={registro.id}>
-                                <h3 data-label="ID:"><strong>Id:</strong> <i>{registro.id}</i></h3>
-                                <h3 data-label="usuario:"><strong>Usuário:</strong> <i>{usuarios.find(u => u.id === registro.id_usuario)?.nome || '—'}</i></h3>
-                                <h3 data-label="categoria"><strong>Categoria:</strong> <i>{categorias.find(u => u.id === registro.id_categoria)?.nome || '—'}</i></h3>
-                                <h3 data-label="mensagem:"><strong>Descrição:</strong> <i>{registro.mensagem}</i></h3>
+                        <div className=''>
+                            {registros.map(registro => (
+                            <div className='card mt-3'>
+                                <div key={registro.id}>
+                                    <h3 data-label="ID:"><strong>Id:</strong> <i>{registro.id}</i></h3>
+                                    <h3 data-label="usuario:"><strong>Usuário:</strong> <i>{usuarios.find(u => u.id === registro.id_usuario)?.nome || '—'}</i></h3>
+                                    <h3 data-label="categoria"><strong>Categoria:</strong> <i>{categorias.find(u => u.id === registro.id_categoria)?.nome || '—'}</i></h3>
+                                    <h3 data-label="mensagem:"><strong>Descrição:</strong> <i>{registro.mensagem}</i></h3>
+                                    <h3 data-label="situacao:">
+                                        <strong>Situação: </strong>
+                                        <i style={{ color: '#fff' }}>
+                                            {registro.aprovacao === 'naoLido' ? 'Pendente' : 'Aprovado'}
+                                        </i>
+                                    </h3>
+                                </div>
                             </div>
-                        ))}
-            </div>
-            ) : <p>Nenhum registro encontrado.</p>}
-        </div >
+                            ))}
+                        </div>
+                    ) : <p>Nenhum registro encontrado.</p>}
+                </div >
             </div >
         </>
     )
