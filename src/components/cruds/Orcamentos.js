@@ -12,6 +12,7 @@ export default function AdminOrcamentos() {
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(true)
     const [showModalExcluir, setShowModalExcluir] = useState(false);
+    const [showModalAprovar, setShowModalAprovar] = useState(false);
     const [orcamentoSelecionado, setOrcamentoSelecionado] = useState(null);
     const navigate = useNavigate();
 
@@ -68,6 +69,35 @@ export default function AdminOrcamentos() {
             .catch(err => console.error(err));
     }
 
+    function aprovarOrcamento(id, aprovado) {
+        if (!orcamentoSelecionado) return; // segurança
+
+        const dados = {
+            aprovacao: aprovado
+        };
+
+        fetch(`http://localhost/tcc_baronesa/api/orcamentos/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(dados)
+        })
+            .then(res => {
+                if (!res.ok) throw new Error("Erro ao atualizar usuário");
+                return res.json();
+            })
+            .then(data => {
+                console.log(data);
+                setRegistros(registros.map(u => u.id === id ? { ...u, ...orcamentoSelecionado } : u));
+
+                setShowModalAprovar(false);
+                setOrcamentoSelecionado(null);
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Erro ao aprovar orçamento.");
+            });
+    }
+
     if (loading) return <h3 className='mt-5' style={{ color: '#FFD230' }}>Carregando...</h3>;
     if (error) return <div><h3 className='mt-5' style={{ color: '#FFD230' }}>Ocorreu algum erro... <i className='fa-regular fa-face-dizzy' style={{ color: 'crimson' }}></i></h3><button className='btn btn-warning mt-4 col-5' onClick={() => navigate(-1)}>Voltar</button></div>;
 
@@ -111,7 +141,10 @@ export default function AdminOrcamentos() {
                                             </i>
                                         </h3>
                                         <div>
-                                            <button className="btn btn-warning m-3">Aprovar</button>
+                                            <button className="btn btn-warning m-3" onClick={() => {
+                                                setShowModalAprovar(true);
+                                                setOrcamentoSelecionado(registro.id);
+                                            }}>Aprovar</button>
                                             <button className="btn btn-danger m-3" onClick={() => {
                                                 setShowModalExcluir(true);
                                                 setOrcamentoSelecionado(registro.id);
@@ -145,6 +178,27 @@ export default function AdminOrcamentos() {
                 </div>
             )}
             {showModalExcluir && <div className="modal-backdrop fade show"></div>}
+            
+            {showModalAprovar && (
+                 <div className="modal" data-aos="fade-up" tabIndex="-1" style={{ display: 'block' }}>
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content CorNavbar">
+                            <div className="modal-header">
+                                <h5 className="modal-title" style={{ color: '#FFD230' }}>Aprovar Orçamento</h5>
+                                <button type="button" className="btn-close" onClick={() => setShowModalAprovar(false)}></button>
+                            </div>
+                            <div className="modal-body">
+                                <h3 style={{ color: '#FFD230' }}>Tem certeza que deseja aprovar este orçamento?</h3>
+                            </div>
+                            <div className="modal-footer">
+                                <button className="btn btn-secondary" onClick={() => setShowModalAprovar(false)}>Cancelar</button>
+                                <button className="btn btn-warning" onClick={() => aprovarOrcamento(orcamentoSelecionado, "aprovado")}>Aprovar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {showModalAprovar && <div className="modal-backdrop fade show"></div>}
         </>
     )
 }
