@@ -42,7 +42,9 @@ function FormLogin() {
 
             if (data.sucesso) {
                 setAlertMessage({ type: 'success', message: 'Login realizado com sucesso!' });
+                // salvando o ID do usuário também
                 localStorage.setItem("usuarioLogado", JSON.stringify({
+                    id: data.usuario.id,
                     nome: data.usuario.nome,
                     email: data.usuario.email,
                     cargo: data.usuario.cargo,

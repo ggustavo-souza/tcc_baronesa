@@ -15,7 +15,7 @@ $nome = $data["nome"];
 $senha = $data["password"];
 
 try {
-    $stmt = $pdo->prepare("SELECT id, nome, email, senha, cargo FROM usuarios WHERE nome = ?");
+    $stmt = $pdo->prepare("SELECT id, nome, email, senha, cargo FROM usuarios WHERE nome = ?"); 
     $stmt->execute([$nome]);
 
     if ($stmt->rowCount() === 1) {
@@ -24,6 +24,7 @@ try {
             echo json_encode([
                 "sucesso" => true,
                 "usuario" => [
+                    "id" => $usuario["id"],
                     "nome" => $usuario["nome"],
                     "email" => $usuario["email"],
                     "cargo" => $usuario["cargo"]

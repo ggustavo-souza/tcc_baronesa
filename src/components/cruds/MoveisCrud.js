@@ -226,7 +226,7 @@ export default function MoveisCrud() {
                                     </div>
                                     <div className="mb-3">
                                         <label style={{color: '#FFD230'}}>Valor</label>
-                                        <input type="number" className="form-control" value={formData.valor} onChange={e => setFormData({ ...formData, valor: e.target.value })}  />
+                                        <input type="number" className="form-control" step="0.01" value={formData.valor} onChange={e => setFormData({ ...formData, valor: e.target.value })}  />
                                     </div>
                                     <div className="mb-3">
                                         <label style={{color: '#FFD230'}}>Descrição</label>
@@ -272,7 +272,7 @@ export default function MoveisCrud() {
                                     </div>
                                     <div className="mb-3">
                                         <label style={{color: '#FFD230'}}>Valor</label>
-                                        <input type="number" className="form-control" value={formData.valor} onChange={e => setFormData({ ...formData, valor: e.target.value })} required />
+                                        <input type="number" className="form-control" step="0.01" value={formData.valor} onChange={e => setFormData({ ...formData, valor: e.target.value })} required />
                                     </div>
                                     <div className="mb-3">
                                         <label style={{color: '#FFD230'}}>Descrição</label>
