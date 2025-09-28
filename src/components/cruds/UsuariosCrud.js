@@ -73,12 +73,13 @@ export default function UsuariosCrud() {
         }
 
         fetch(`http://localhost/tcc_baronesa/api/usuarios/${id}`, {
-            method: "PUT",
+            method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(dados)
         })
             .then(res => {
                 if (!res.ok) throw new Error("Erro ao atualizar usuário");
+                console.log()
                 return res.json();
             })
             .then(data => {
