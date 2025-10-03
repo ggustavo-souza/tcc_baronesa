@@ -110,14 +110,40 @@ try {
             if (!is_dir($uploadDir))
                 mkdir($uploadDir, 0777, true);
 
-            if (!empty($_FILES['fotos'])) {
+            // Verifica se NOVAS fotos foram enviadas
+            if (!empty($_FILES['fotos']['name'][0])) {
+
+                // ================== NOVA LÓGICA DE EDIÇÃO ==================
+                // Se estamos editando um móvel, apague as fotos antigas primeiro.
+                if ($id && !empty($idMovel)) { // Usamos o $id da URL também por segurança
+                    // 1. Buscar fotos antigas no DB
+                    $stmt_old_fotos = $pdo->prepare("SELECT foto FROM moveis_fotos WHERE id_movel = ?");
+                    $stmt_old_fotos->execute([$idMovel]);
+                    $fotos_antigas = $stmt_old_fotos->fetchAll(PDO::FETCH_ASSOC);
+
+                    foreach ($fotos_antigas as $foto) {
+                        // 2. Deletar arquivo antigo do servidor
+                        $caminho_arquivo = $uploadDir . $foto['foto'];
+                        if (file_exists($caminho_arquivo)) {
+                            unlink($caminho_arquivo);
+                        }
+                    }
+                    
+                    // 3. Deletar referências antigas do DB
+                    $stmt_delete = $pdo->prepare("DELETE FROM moveis_fotos WHERE id_movel = ?");
+                    $stmt_delete->execute([$idMovel]);
+                }
+                // ================== FIM DA NOVA LÓGICA ==================
+
+
+                // 4. Agora, insira as novas fotos (sua lógica original)
                 foreach ($_FILES['fotos']['tmp_name'] as $i => $tmpName) {
                     if ($_FILES['fotos']['error'][$i] === UPLOAD_ERR_OK) {
                         $fileName = uniqid() . "_" . basename($_FILES['fotos']['name'][$i]);
                         $destino = $uploadDir . $fileName;
                         if (move_uploaded_file($tmpName, $destino)) {
-                            // Só marca principal se for novo móvel e a primeira foto
-                            $principal = (!$idMovel && $i === 0) ? 1 : 0;
+                            // Para o primeiro upload, marcamos como principal.
+                            $principal = ($i === 0) ? 1 : 0;
                             $stmt = $pdo->prepare("INSERT INTO moveis_fotos (id_movel, foto, principal) VALUES (?, ?, ?)");
                             $stmt->execute([$idMovel, $fileName, $principal]);
                         }
@@ -125,62 +151,23 @@ try {
                 }
             }
 
-            $msg = $idMovel ? "Móvel atualizado com sucesso" : "Móvel criado com sucesso";
+            $msg = ($id || $idMovel) ? "Móvel atualizado com sucesso" : "Móvel criado com sucesso";
             echo json_encode(["message" => $msg, "id" => $idMovel]);
             exit;
-        } else if ($tabela === 'orcamentos') {
-            $dados = json_decode(file_get_contents("php://input"), true);
-            $idOrcamento = $dados["id"];
-            if(!$idOrcamento) {
-                if (!$dados || !is_array($dados)) {
-                    http_response_code(400);
-                    echo json_encode(["message" => "Dados inválidos"]);
-                    exit();
-                }
-
-                $id_usuario = $dados['id_usuario'] ?? null;
-                $id_categoria = $dados['id_categoria'] ?? null;
-                $mensagem = $dados['mensagem'] ?? null;
-                $telefone = $dados['telefone'] ?? null;
-
-                if (!$id_usuario || !$id_categoria || !$mensagem || !$telefone) {
-                    http_response_code(400);
-                    echo json_encode(["message" => "Campos obrigatórios ausentes"]);
-                    exit();
-                }
-
-                $sql = "INSERT INTO orcamentos (id_usuario, id_categoria, mensagem, telefone) 
-                        VALUES (?, ?, ?, ?)";
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute([$id_usuario, $id_categoria, $mensagem, $telefone]);
-
-                echo json_encode(["message" => "Orçamento criado com sucesso", "id" => $pdo->lastInsertId()]);
-                exit;
-            } elseif ($idOrcamento) {
-                $sql = "UPDATE orcamentos SET aprovacao = 'aprovado' WHERE id = ?";
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute([$idOrcamento]);
-
-                json_encode(["message" => "Orçamento aprovado com sucesso!"]);
-            }
         }
 
-        // Pega os dados do corpo da requisição
         $dados = json_decode(file_get_contents("php://input"), true);
         if (!$dados || !is_array($dados)) {
             http_response_code(400);
-            echo json_encode(["message" => "Dados inválidos"]);
+            echo json_encode(["message" => "Dados inválidos ou corpo da requisição vazio"]);
             exit();
         }
 
-        // NOVA LÓGICA PARA ATUALIZAR OU CRIAR
         if ($id) {
-            // =========== ATUALIZAR (UPDATE) ===========
-            // Se a senha foi enviada e não está vazia, criptografa
+            // =========== ATUALIZAR (UPDATE) - VAI FUNCIONAR AGORA! ===========
             if ($tabela === 'usuarios' && isset($dados['senha']) && !empty(trim($dados['senha']))) {
                 $dados['senha'] = password_hash($dados['senha'], PASSWORD_DEFAULT);
             } else {
-                // Se a senha estiver vazia, remove do array para não atualizar
                 unset($dados['senha']);
             }
 
@@ -192,7 +179,7 @@ try {
             }
 
             if (count($setParts) > 0) {
-                $values[] = $id; // Adiciona o ID para a cláusula WHERE
+                $values[] = $id;
                 $sql = "UPDATE $tabela SET " . implode(', ', $setParts) . " WHERE id = ?";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute($values);
@@ -203,9 +190,55 @@ try {
             }
 
         } else {
-            // =========== CRIAR (INSERT) - Lógica original ===========
+            // =========== CRIAR (INSERT) ===========
+            // Esta lógica agora cuidará da criação de 'orcamentos' também
             if ($tabela === 'usuarios' && !empty($dados['senha'])) {
                 $dados['senha'] = password_hash($dados['senha'], PASSWORD_DEFAULT);
+            } else if ($tabela === 'orcamentos') {
+                $dados = json_decode(file_get_contents("php://input"), true);
+                $idOrcamento = $dados["id"] ?? null;
+                if (!$idOrcamento) {
+                    if (!$dados || !is_array($dados)) {
+                        http_response_code(400);
+                        echo json_encode(["message" => "Dados inválidos"]);
+                        exit();
+                    }
+
+                    $id_usuario = $dados['id_usuario'] ?? null;
+                    $id_categoria = $dados['id_categoria'] ?? null;
+                    $mensagem = $dados['mensagem'] ?? null;
+                    $telefone = $dados['telefone'] ?? null;
+
+                    if (!$id_usuario || !$id_categoria || !$mensagem || !$telefone) {
+                        http_response_code(400);
+                        echo json_encode(["message" => "Campos obrigatórios ausentes"]);
+                        exit();
+                    }
+
+                    $sql = "INSERT INTO orcamentos (id_usuario, id_categoria, mensagem, telefone) 
+                        VALUES (?, ?, ?, ?)";
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->execute([$id_usuario, $id_categoria, $mensagem, $telefone]);
+
+                    echo json_encode(["message" => "Orçamento criado com sucesso", "id" => $pdo->lastInsertId()]);
+                    exit;
+                } elseif ($idOrcamento) {
+                    $sql = "UPDATE orcamentos SET aprovacao = 'aprovado' WHERE id = ?";
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->execute([$idOrcamento]);
+
+                    echo json_encode(["message" => "Orçamento aprovado com sucesso!"]);
+                    exit;
+                }
+            }
+
+            // Pega os dados do corpo da requisição
+            if ($tabela === 'orcamentos') {
+                if (empty($dados['id_usuario']) || empty($dados['id_categoria']) || empty($dados['mensagem']) || empty($dados['telefone'])) {
+                    http_response_code(400);
+                    echo json_encode(["message" => "Para criar um orçamento, todos os campos são obrigatórios"]);
+                    exit();
+                }
             }
 
             $colunas = array_keys($dados);

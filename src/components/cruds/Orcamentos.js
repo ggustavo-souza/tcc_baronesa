@@ -96,7 +96,7 @@ export default function AdminOrcamentos() {
                 setOrcamentoSelecionado(null);
             })
             .catch(err => {
-                console.error(err);
+                console.error(err.message);
                 alert("Erro ao aprovar orçamento.");
             });
     }
@@ -142,6 +142,7 @@ export default function AdminOrcamentos() {
                 <div key={registro.id}>
                     <h3 style={{ color: '#FFD230' }} data-label="ID:"><strong>Id:</strong> <i>{registro.id}</i></h3>
                     <h3 style={{ color: '#FFD230' }} data-label="usuario:"><strong>Usuário:</strong> <i>{usuarioNome}</i></h3>
+                    <h3 style={{ color: '#FFD230' }} data-label="telefone:"><strong>Tel:</strong><i>{registro.telefone}</i></h3>
                     <h3 style={{ color: '#FFD230' }} data-label="categoria"><strong>Categoria:</strong> <i>{categoriaNome}</i></h3>
                     <h3 style={{ color: '#FFD230' }} data-label="mensagem:"><strong>Descrição:</strong> <i>{registro.mensagem}</i></h3>
                     <h3 style={{ color: '#FFD230' }} data-label="situacao:">

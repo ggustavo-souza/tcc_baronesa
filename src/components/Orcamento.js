@@ -52,7 +52,7 @@ function HomeOrcamento() {
             setMensagem("");
             setTelefone("");
         } catch (err) {
-            console.error(err);
+            console.error(err.message);
             alert("Falha ao enviar orçamento: " + err.message);
         }
     };
