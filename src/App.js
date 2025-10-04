@@ -14,6 +14,7 @@ import UsuariosCrud from './components/cruds/UsuariosCrud';
 import MoveisCrud from './components/cruds/MoveisCrud';
 import AuthAcess from './components/auths/AuthAcess';
 import AdminOrcamentos from './components/cruds/Orcamentos';
+import MeusOrcamentos from './components/MeusOrcamentos';
 import { useEffect } from 'react';
 
 
@@ -36,6 +37,7 @@ function App() {
           <Route path="/login" element={<FormLogin />}></Route>
           <Route path="/registrar" element={<FormRegistrar />}></Route>
           <Route path="/minhaconta" element={<MinhaConta />}></Route>
+          <Route path="/meusorcamentos" element={<MeusOrcamentos />}></Route>
           <Route path="/crud" element={
             <AuthAcess >
               <Crud />
