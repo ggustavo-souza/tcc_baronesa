@@ -81,7 +81,7 @@ export default function MoveisCrud() {
         form.append("categoria_id", categoriaConv);
 
         if (formData.fotos) {
-            for (let i = 0; i < formData.fotos.length; i++) {
+            for (let i = 0; i < formData.fotos.length; i++) { // < corrige o loop
                 form.append("fotos[]", formData.fotos[i]);
             }
         }
@@ -106,7 +106,6 @@ export default function MoveisCrud() {
             alert(err.message);
         }
     }
-
 
     function abrirModalEditar(movel) {
         setFormData({
@@ -235,14 +234,31 @@ export default function MoveisCrud() {
                                     <div className="mb-3">
                                         <label style={{color: '#FFD230'}}>Categoria</label>
                                         <select className="form-select" value={formData.categoria_id} onChange={e => setFormData({ ...formData, categoria_id: e.target.value })} >
-                                            <option value="" disabled>Selecione</option>1
+                                            <option value="" disabled>Selecione</option>
                                             {categorias.map(c => <option key={c.id} value={c.id}>{c.nome}</option>)}
                                         </select>
                                     </div>
                                     <div className="mb-3">
                                         <label style={{color: '#FFD230'}}>Fotos</label>
-                                        <input type="file" className="form-control" multiple onChange={e => setFormData({ ...formData, fotos: e.target.files })} />
+                                        <input type="file" name="fotos[]" className="form-control" multiple onChange={e => setFormData({ ...formData, fotos: e.target.files })} />
                                     </div>
+
+                                    {/* Preview de imagens */}
+                                    {formData.fotos && formData.fotos.length > 0 && (
+                                        <div className="d-flex flex-wrap gap-3 mt-3 justify-content-center">
+                                            {Array.from(formData.fotos).map((file, i) => (
+                                                <img
+                                                    key={i}
+                                                    src={URL.createObjectURL(file)}
+                                                    alt={`preview-${i}`}
+                                                    width="120"
+                                                    height="120"
+                                                    className="rounded shadow-sm border border-warning"
+                                                    style={{ objectFit: 'cover' }}
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" onClick={() => setShowModalEditar(false)}>Cancelar</button>
@@ -287,8 +303,25 @@ export default function MoveisCrud() {
                                     </div>
                                     <div className="mb-3">
                                         <label style={{color: '#FFD230'}}>Fotos</label>
-                                        <input type="file" className="form-control" multiple onChange={e => setFormData({ ...formData, fotos: e.target.files })} />
+                                        <input type="file" name="fotos[]" className="form-control" multiple onChange={e => setFormData({ ...formData, fotos: e.target.files })} />
                                     </div>
+
+                                    {/* Preview de imagens */}
+                                    {formData.fotos && formData.fotos.length > 0 && (
+                                        <div className="d-flex flex-wrap gap-3 mt-3 justify-content-center">
+                                            {Array.from(formData.fotos).map((file, i) => (
+                                                <img
+                                                    key={i}
+                                                    src={URL.createObjectURL(file)}
+                                                    alt={`preview-${i}`}
+                                                    width="120"
+                                                    height="120"
+                                                    className="rounded shadow-sm border border-warning"
+                                                    style={{ objectFit: 'cover' }}
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" onClick={() => setShowModalAdicionar(false)}>Cancelar</button>

@@ -4,6 +4,7 @@ import Aos from 'aos';
 import { BrowserRouter as Router, Routes, Route, BrowserRouter, useNavigate } from 'react-router-dom';
 import Home from './components/Home';
 import HomeProdutos from './components/produtos/Produtos';
+import VerProduto from './components/produtos/Verproduto';
 import HomeOrcamento from './components/Orcamento';
 import FormLogin from './components/Login';
 import FormRegistrar from './components/Registrar';
@@ -31,6 +32,7 @@ function App() {
           <Route path="/orcamento" element={<HomeOrcamento />}></Route>
           <Route path='/produtos' element={<HomeProdutos />}></Route>
           <Route path="/produtos/:categoria" element={<HomeProdutos />}></Route>
+          <Route path="/produto/:id" element={<VerProduto />} />
           <Route path="/login" element={<FormLogin />}></Route>
           <Route path="/registrar" element={<FormRegistrar />}></Route>
           <Route path="/minhaconta" element={<MinhaConta />}></Route>
