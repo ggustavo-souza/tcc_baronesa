@@ -29,14 +29,14 @@ function HomeProdutos() {
     return (
         <main>
             <Navbar />
-            <div className="container mt-5">
+            <div className="container mt-4">
                 <div className="col-12">
-                    <h1 className="text-center fw-bold" style={{ color: "#FFD230" }}>
+                    <h1 className="text-center fw-bold mb-3" style={{ color: "#FFD230" }}>
                         Produtos
                     </h1>
                 </div>
 
-                <div className="grid" style={{ backgroundColor: "#503325c1", borderRadius: "10px" }}>
+                <div className="grid p-3 mb-4" style={{ backgroundColor: "#503325c1", borderRadius: "10px" }}>
                     {loading ? (
                         <p className="text-center text-light py-5">Carregando produtos...</p>
                     ) : erro ? (
@@ -50,8 +50,8 @@ function HomeProdutos() {
                                     <div
                                         className="card card-produto p-3 m-2"
                                         style={{ backgroundColor: "#503325c1", borderRadius: "10px" }}
-                                    >
-                                        <h2 className="text-center" style={{ color: "#FFD230" }}>
+                                    >   
+                                        <h2 className="text-center titulo-produto" style={{ color: "#FFD230" }}>
                                             {movel.nome}
                                         </h2>
 

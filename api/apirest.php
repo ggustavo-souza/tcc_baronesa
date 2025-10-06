@@ -67,6 +67,17 @@ try {
                 echo json_encode($moveis);
             }
             exit;
+        } elseif ($tabela === 'orcamentos' && $id) {
+            if ($id) {
+                $stmt = $pdo->prepare("SELECT * FROM $tabela WHERE id = ?");
+                $stmt->execute([$id]);
+                $registro = $stmt->fetch(PDO::FETCH_ASSOC);
+                echo json_encode($registro ?: []);
+            } else {
+                $stmt = $pdo->query("SELECT * FROM $tabela");
+                echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+            }
+            
         } else {
             // GET padrão para usuarios/categorias
             if ($id) {
@@ -128,7 +139,7 @@ try {
                             unlink($caminho_arquivo);
                         }
                     }
-                    
+
                     // 3. Deletar referências antigas do DB
                     $stmt_delete = $pdo->prepare("DELETE FROM moveis_fotos WHERE id_movel = ?");
                     $stmt_delete->execute([$idMovel]);

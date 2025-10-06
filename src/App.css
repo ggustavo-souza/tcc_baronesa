@@ -10,6 +10,12 @@
   font-family: RocaOne, sans-serif;
 }
 
+.titulo-produto {
+  overflow-wrap: break-word;
+  word-wrap: break-word; 
+  word-break: break-word;
+}
+
 .CorNavbar {
   background-color: #503325;
 }
