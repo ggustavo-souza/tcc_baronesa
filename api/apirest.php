@@ -18,10 +18,23 @@ $parts = explode('/', $path);
 $last = $parts[count($parts) - 1] ?? null;
 $prev = $parts[count($parts) - 2] ?? null;
 
-if (is_numeric($last)) {
+$tabela = null;
+$id = null;
+$acao = null;
+
+// Ex: /api/orcamentos/usuario/5
+if (isset($parts[count($parts) - 3]) && $parts[count($parts) - 3] === 'orcamentos' && $parts[count($parts) - 2] === 'usuario') {
+    $tabela = 'orcamentos';
+    $acao = 'getByUser';
+    $id = $parts[count($parts) - 1]; // ID do usuário
+} 
+// Ex: /api/moveis/1
+else if (is_numeric($last)) {
     $id = $last;
     $tabela = $prev;
-} else {
+} 
+// Ex: /api/moveis
+else {
     $id = null;
     $tabela = $last;
 }
@@ -37,6 +50,16 @@ if (!in_array($tabela, $tabelasPermitidas)) {
 try {
     // ====================== GET ======================
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+
+        if ($tabela === 'orcamentos' && $acao === 'getByUser' && is_numeric($id)) {
+            // $id aqui é o id_usuario
+            $stmt = $pdo->prepare("SELECT * FROM orcamentos WHERE id_usuario = ? ORDER BY id DESC");
+            $stmt->execute([$id]);
+            $orcamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            echo json_encode($orcamentos ?: []);
+            exit; // Importante para não continuar a execução
+        }
+        
         if ($tabela === 'moveis') {
             if ($id) {
                 // GET por id, incluindo fotos
@@ -67,17 +90,6 @@ try {
                 echo json_encode($moveis);
             }
             exit;
-        } elseif ($tabela === 'orcamentos' && $id) {
-            if ($id) {
-                $stmt = $pdo->prepare("SELECT * FROM $tabela WHERE id = ?");
-                $stmt->execute([$id]);
-                $registro = $stmt->fetch(PDO::FETCH_ASSOC);
-                echo json_encode($registro ?: []);
-            } else {
-                $stmt = $pdo->query("SELECT * FROM $tabela");
-                echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
-            }
-            
         } else {
             // GET padrão para usuarios/categorias
             if ($id) {
