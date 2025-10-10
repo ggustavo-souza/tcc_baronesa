@@ -26,7 +26,7 @@ if (is_numeric($last)) {
     $tabela = $last;
 }
 
-$tabelasPermitidas = ['usuarios', 'moveis', 'categorias', 'orcamentos'];
+$tabelasPermitidas = ['usuarios', 'moveis', 'categorias', 'orcamentos', 'pedidos'];
 
 if (!in_array($tabela, $tabelasPermitidas)) {
     http_response_code(400);
@@ -155,6 +155,43 @@ try {
             echo json_encode(["message" => $msg, "id" => $idMovel]);
             exit;
         }
+                // ====================== PEDIDOS ======================
+        if ($tabela === 'pedidos') {
+            $dados = json_decode(file_get_contents("php://input"), true);
+
+            if (!$dados || !isset($dados['id_usuario']) || !isset($dados['id_movel'])) {
+                http_response_code(400);
+                echo json_encode(["message" => "Campos obrigatórios ausentes (id_usuario, id_movel)"]);
+                exit();
+            }
+
+            $id_usuario = $dados['id_usuario'];
+            $id_movel = $dados['id_movel'];
+            $quantidade = $dados['quantidade'] ?? 1;
+            $status = 'pendente';
+            $data_pedido = date('Y-m-d H:i:s');
+
+            // Verifica se o móvel existe
+            $stmt = $pdo->prepare("SELECT id FROM moveis WHERE id = ?");
+            $stmt->execute([$id_movel]);
+            if (!$stmt->fetch()) {
+                http_response_code(404);
+                echo json_encode(["message" => "Móvel não encontrado"]);
+                exit();
+            }
+
+            // Cria o pedido
+            $sql = "INSERT INTO pedidos (id_usuario, id_movel, quantidade, status, data_pedido) VALUES (?, ?, ?, ?, ?)";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$id_usuario, $id_movel, $quantidade, $status, $data_pedido]);
+
+            echo json_encode([
+                "message" => "Pedido criado com sucesso",
+                "id" => $pdo->lastInsertId()
+            ]);
+            exit();
+        }
+
 
         $dados = json_decode(file_get_contents("php://input"), true);
         if (!$dados || !is_array($dados)) {
@@ -164,7 +201,7 @@ try {
         }
 
         if ($id) {
-            // =========== ATUALIZAR (UPDATE) - VAI FUNCIONAR AGORA! ===========
+            // =========== ATUALIZAR (UPDATE) ===========
             if ($tabela === 'usuarios' && isset($dados['senha']) && !empty(trim($dados['senha']))) {
                 $dados['senha'] = password_hash($dados['senha'], PASSWORD_DEFAULT);
             } else {

@@ -43,6 +43,39 @@ export default function VerMovel() {
         }
     }
 
+    // =============================
+    // Função para adicionar pedido
+    // =============================
+    async function adicionarPedido() {
+        const usuarioId = localStorage.getItem("idUsuario"); // ou pegue de onde você armazena o ID do usuário
+        if (!usuarioId) {
+            alert("Você precisa estar logado para adicionar um pedido!");
+            navigate("/login");
+            return;
+        }
+
+        try {
+            const res = await fetch("http://localhost/tcc_baronesa/api/apirest.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    requisicao: "add_pedido",
+                    usuario_id: usuarioId,
+                    produto_id: id
+                }),
+            });
+            const data = await res.json();
+            if (data.sucesso) {
+                alert("Pedido adicionado com sucesso!");
+            } else {
+                alert("Erro ao adicionar pedido.");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Falha na comunicação com o servidor.");
+        }
+    }
+
     if (loading) return <h3 className='mt-5' style={{ color: '#FFD230' }}>Carregando...</h3>;
     if (error) return <div className="container mt-5">
         <h3 style={{ color: '#FFD230' }}>Ocorreu algum erro: {error}</h3>
@@ -54,7 +87,6 @@ export default function VerMovel() {
         <>
             <Navadm />
             <div className="container my-5" data-aos="fade-up">
-                {/* Botão voltar fora do card */}
                 <div className="mb-3">
                     <button 
                         className='btn btn-warning corBotao' 
@@ -97,6 +129,12 @@ export default function VerMovel() {
                             <h4>R$ {movel.valor},00</h4>
                             <p><strong>Categoria:</strong> {categoria || '—'}</p>
                             <p><strong>Descrição:</strong> {movel.descricao}</p>
+                            <button 
+                                className="btn btn-warning corBotao mt-3"
+                                onClick={adicionarPedido}
+                            >
+                                Adicionar Pedido
+                            </button>
                         </div>
                     </div>
                 </div>

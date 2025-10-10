@@ -55,6 +55,17 @@ CREATE TABLE IF NOT EXISTS `orcamentos` (
   FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+CREATE TABLE pedidos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    id_movel INT NOT NULL,
+    data_pedido DATETIME DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('pendente', 'aprovado', 'pago', 'cancelado') DEFAULT 'pendente',
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_movel) REFERENCES moveis(id) ON DELETE CASCADE
+);
+
+
 
 -- Inserir categorias
 INSERT INTO `categorias` (`nome`) VALUES 
