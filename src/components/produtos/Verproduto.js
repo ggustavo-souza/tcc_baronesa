@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Navadm from '../Navadm';
+import Navbar from '../Navbar';
 import "../../App.css";
 import Aos from 'aos';
 
@@ -14,6 +14,10 @@ export default function VerMovel() {
     const [imagemPrincipal, setImagemPrincipal] = useState('');
 
     useEffect(() => {
+        const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'))
+        if (usuarioLogado) {
+            const usuarioId = usuarioLogado.id;
+        }
         Aos.init({ duration: 500 });
         carregarMovel();
     }, []);
@@ -47,24 +51,21 @@ export default function VerMovel() {
     // Função para adicionar pedido
     // =============================
     async function adicionarPedido() {
-        const usuarioId = localStorage.getItem("idUsuario"); // ou pegue de onde você armazena o ID do usuário
-        if (!usuarioId) {
-            alert("Você precisa estar logado para adicionar um pedido!");
-            navigate("/login");
-            return;
-        }
+        const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado")); 
+        if (usuarioLogado) {
+            const usuarioId = usuarioLogado.id;
 
-        try {
-            const res = await fetch("http://localhost/tcc_baronesa/api/apirest.php", {
+            try {
+            const res = await fetch(`http://localhost/tcc_baronesa/api/pedidos`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    requisicao: "add_pedido",
-                    usuario_id: usuarioId,
-                    produto_id: id
+                    id_usuario: usuarioId,
+                    id_movel: id
                 }),
             });
             const data = await res.json();
+            console.log(data);
             if (data.sucesso) {
                 alert("Pedido adicionado com sucesso!");
             } else {
@@ -73,6 +74,11 @@ export default function VerMovel() {
         } catch (err) {
             console.error(err);
             alert("Falha na comunicação com o servidor.");
+        }
+        }else {
+            alert("Você precisa estar logado para adicionar um pedido!");
+            navigate("/login");
+            return;
         }
     }
 
@@ -85,7 +91,7 @@ export default function VerMovel() {
 
     return (
         <>
-            <Navadm />
+            <Navbar />
             <div className="container my-5" data-aos="fade-up">
                 <div className="mb-3">
                     <button 

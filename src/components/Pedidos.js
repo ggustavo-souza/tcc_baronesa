@@ -5,18 +5,27 @@ import Footer from './Footer';
 import Aos from 'aos';
 import 'aos/dist/aos.css';
 import React, { useEffect, useState } from 'react';
+import { useAuthUser } from "./auths/useAuthUser";
 
 function MeusPedidos() {
+  useAuthUser();
   const [pedidos, setPedidos] = useState([]);
-  const [carregando, setCarregando] = useState(true);
+
+  const [erro, setErro] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'))
+    if (usuarioLogado){
+      carregarPedidos(usuarioLogado.id);
+    } else {
+      setErro("Usuário não autenticado. Faça o login para ver seus orçamentos.");
+      setLoading(false);
+    }
     Aos.init({ duration: 850 });
-    carregarPedidos();
   }, []);
 
-  const carregarPedidos = async () => {
-    const idUsuario = localStorage.getItem("idUsuario");
+  async function carregarPedidos (idUsuario) {
     if (!idUsuario) {
       alert("Você precisa estar logado para ver seus pedidos!");
       window.location.href = "/login";
@@ -24,13 +33,14 @@ function MeusPedidos() {
     }
 
     try {
-      const resposta = await fetch(`http://localhost/api/meus_pedidos.php?usuario_id=${idUsuario}`);
+      const resposta = await fetch(`http://localhost/tcc_baronesa/api/pedidos/${idUsuario}`);
+      console.log(await resposta.text());
       const data = await resposta.json();
       setPedidos(data);
-    } catch (erro) {
-      console.error("Erro ao carregar pedidos:", erro);
+    } catch (error) {
+      console.error("Erro ao carregar pedidos:", error.message);
     } finally {
-      setCarregando(false);
+      setLoading(false);
     }
   };
 
@@ -67,7 +77,7 @@ function MeusPedidos() {
           Meus Pedidos
         </h1>
 
-        {carregando ? (
+        {loading ? (
           <p className="text-center text-light">Carregando pedidos...</p>
         ) : pedidos.length === 0 ? (
           <p className="text-center text-light mt-3">Nenhum pedido encontrado.</p>

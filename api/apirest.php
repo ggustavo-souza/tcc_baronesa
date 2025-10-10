@@ -57,7 +57,7 @@ try {
             $stmt->execute([$id]);
             $orcamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             echo json_encode($orcamentos ?: []);
-            exit; // Importante para não continuar a execução
+            exit; 
         }
         
         if ($tabela === 'moveis') {
@@ -88,6 +88,22 @@ try {
                 }
 
                 echo json_encode($moveis);
+            }
+            exit;
+        } elseif ($tabela === "pedidos") {
+            if ($id) {
+                $stmt = $pdo->prepare("SELECT * FROM pedidos WHERE id_usuario = ?");
+                $stmt->execute([$id]);
+                $pedido = $stmt->fetch(PDO::FETCH_ASSOC);
+                echo json_encode($pedido);
+
+                if ($pedido) {
+                    $stmt2 = $pdo->prepare("SELECT * FROM moveis WHERE id = ?");
+                    $stmt2->execute([$pedido["id_movel"]]);
+                    $pedidos = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+
+                    echo json_encode($pedidos);
+                }
             }
             exit;
         } else {
@@ -135,31 +151,22 @@ try {
 
             // Verifica se NOVAS fotos foram enviadas
             if (!empty($_FILES['fotos']['name'][0])) {
-
-                // ================== NOVA LÓGICA DE EDIÇÃO ==================
-                // Se estamos editando um móvel, apague as fotos antigas primeiro.
-                if ($id && !empty($idMovel)) { // Usamos o $id da URL também por segurança
-                    // 1. Buscar fotos antigas no DB
+                if ($id && !empty($idMovel)) { 
                     $stmt_old_fotos = $pdo->prepare("SELECT foto FROM moveis_fotos WHERE id_movel = ?");
                     $stmt_old_fotos->execute([$idMovel]);
                     $fotos_antigas = $stmt_old_fotos->fetchAll(PDO::FETCH_ASSOC);
 
                     foreach ($fotos_antigas as $foto) {
-                        // 2. Deletar arquivo antigo do servidor
                         $caminho_arquivo = $uploadDir . $foto['foto'];
                         if (file_exists($caminho_arquivo)) {
                             unlink($caminho_arquivo);
                         }
                     }
 
-                    // 3. Deletar referências antigas do DB
                     $stmt_delete = $pdo->prepare("DELETE FROM moveis_fotos WHERE id_movel = ?");
                     $stmt_delete->execute([$idMovel]);
                 }
-                // ================== FIM DA NOVA LÓGICA ==================
 
-
-                // 4. Agora, insira as novas fotos (sua lógica original)
                 foreach ($_FILES['fotos']['tmp_name'] as $i => $tmpName) {
                     if ($_FILES['fotos']['error'][$i] === UPLOAD_ERR_OK) {
                         $fileName = uniqid() . "_" . basename($_FILES['fotos']['name'][$i]);
@@ -190,7 +197,6 @@ try {
 
             $id_usuario = $dados['id_usuario'];
             $id_movel = $dados['id_movel'];
-            $quantidade = $dados['quantidade'] ?? 1;
             $status = 'pendente';
             $data_pedido = date('Y-m-d H:i:s');
 
@@ -204,9 +210,10 @@ try {
             }
 
             // Cria o pedido
-            $sql = "INSERT INTO pedidos (id_usuario, id_movel, quantidade, status, data_pedido) VALUES (?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO pedidos (id_usuario, id_movel, data_pedido, status) VALUES (?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$id_usuario, $id_movel, $quantidade, $status, $data_pedido]);
+            $stmt->execute([$id_usuario, $id_movel, $data_pedido, $status]);
+            echo $stmt;
 
             echo json_encode([
                 "message" => "Pedido criado com sucesso",
