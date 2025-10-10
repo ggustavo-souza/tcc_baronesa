@@ -1,10 +1,9 @@
 import "../App.css";
 import "../awesome/all.min.css";
 import Navbar from './Navbar'
-import { Link, Router, Routes } from "react-router-dom";
 import Aos from "aos";
 import "aos/dist/aos.css";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useAuthUser } from "./auths/useAuthUser";
 
