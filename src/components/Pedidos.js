@@ -11,7 +11,6 @@ function MeusPedidos() {
   useAuthUser();
   const [pedidos, setPedidos] = useState([]);
 
-  const [erro, setErro] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,7 +18,6 @@ function MeusPedidos() {
     if (usuarioLogado){
       carregarPedidos(usuarioLogado.id);
     } else {
-      setErro("Usuário não autenticado. Faça o login para ver seus orçamentos.");
       setLoading(false);
     }
     Aos.init({ duration: 850 });
