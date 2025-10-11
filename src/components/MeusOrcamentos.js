@@ -108,7 +108,7 @@ export default function MeusOrcamentos() {
                                             <h2 className="text-center titulo-produto" style={{ color: "#FFD230" }}>
                                                 Orçamento #{orcamento.id}
                                             </h2>
-                                            <p className="text-center mt-2" style={{ color: "#FFD230" }}>
+                                            <p className="text-center mt-2 titulo-produto" style={{ color: "#FFD230" }}>
                                                 <strong>Mensagem:</strong> {orcamento.mensagem || "Sem mensagem disponível."}
                                             </p>
                                             <p className="text-center mt-2" style={{ color: "#FFD230" }}>
