@@ -39,7 +39,7 @@ function App() {
           <Route path="/registrar" element={<FormRegistrar />}></Route>
           <Route path="/minhaconta" element={<MinhaConta />}></Route>
           <Route path="/meusorcamentos" element={<MeusOrcamentos />}></Route>
-          <Route path="/pedidos" element={<Pedidos />}></Route>
+          <Route path="/meuspedidos" element={<Pedidos />}></Route>
           <Route path="/crud" element={
             <AuthAcess >
               <Crud />
