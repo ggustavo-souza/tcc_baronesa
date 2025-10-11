@@ -188,19 +188,45 @@ export default function MoveisCrud() {
 
             {/* Modal Excluir */}
             {showModalExcluir && (
-                <div className="modal" data-aos="fade-up" style={{ display: 'block' }}>
+                <div
+                    className="modal"
+                    data-aos="fade-up"
+                    style={{ display: 'block' }}
+                >
                     <div className="modal-dialog modal-dialog-centered">
-                        <div className="modal-content CorNavbar">
-                            <div className="modal-header">
-                                <h5 className="modal-title" style={{ color: '#FFD230' }}>Confirmar Exclusão</h5>
-                                <button className="btn-close" onClick={() => setShowModalExcluir(false)}></button>
+                        <div className="modal-content border-0 shadow-lg" style={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}>
+
+                            <div className="modal-header border-0 pb-2" style={{ backgroundColor: '#FFD230' }}>
+                                <h5 className="modal-title text-dark fw-bold">Confirmar Saída</h5>
+                                <button
+                                    type="button"
+                                    className="btn-close"
+                                    aria-label="Close"
+                                    onClick={() => setShowModalExcluir(false)}
+                                ></button>
                             </div>
-                            <div className="modal-body">
-                                <h5 style={{ color: '#FFD230' }}>Deseja realmente excluir o móvel #{movelSelecionado}?</h5>
+
+                            <div className="modal-body pt-4 pb-4">
+                                <h5 className="">Deseja realmente Excluir da sua conta?</h5>
                             </div>
-                            <div className="modal-footer">
-                                <button className="btn btn-secondary" onClick={() => setShowModalExcluir(false)}>Cancelar</button>
-                                <button className="btn btn-warning" onClick={() => deletarMovel(movelSelecionado)}>Excluir</button>
+
+                            <div className="modal-footer border-0 pt-0">
+                                <button
+                                    type="button"
+                                    className="btn btn-light text-dark fw-bold px-4"
+                                    onClick={() => setShowModalExcluir(false)}
+                                    style={{ border: '1px solid #ced4da' }}
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-danger fw-bold px-4"
+                                    onClick={() => deletarMovel(movelSelecionado)}
+                                    style={{ backgroundColor: '#dc3545', borderColor: '#dc3545' }}
+                                >
+                                    Excluir
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -220,26 +246,26 @@ export default function MoveisCrud() {
                             <form onSubmit={salvarMovel}>
                                 <div className="modal-body">
                                     <div className="mb-3">
-                                        <label style={{color: '#FFD230'}}>Nome</label>
-                                        <input type="text" className="form-control" value={formData.nome} onChange={e => setFormData({ ...formData, nome: e.target.value })}  />
+                                        <label style={{ color: '#FFD230' }}>Nome</label>
+                                        <input type="text" className="form-control" value={formData.nome} onChange={e => setFormData({ ...formData, nome: e.target.value })} />
                                     </div>
                                     <div className="mb-3">
-                                        <label style={{color: '#FFD230'}}>Valor</label>
-                                        <input type="number" className="form-control" step="0.01" value={formData.valor} onChange={e => setFormData({ ...formData, valor: e.target.value })}  />
+                                        <label style={{ color: '#FFD230' }}>Valor</label>
+                                        <input type="number" className="form-control" step="0.01" value={formData.valor} onChange={e => setFormData({ ...formData, valor: e.target.value })} />
                                     </div>
                                     <div className="mb-3">
-                                        <label style={{color: '#FFD230'}}>Descrição</label>
+                                        <label style={{ color: '#FFD230' }}>Descrição</label>
                                         <textarea className="form-control" value={formData.descricao} onChange={e => setFormData({ ...formData, descricao: e.target.value })}></textarea>
                                     </div>
                                     <div className="mb-3">
-                                        <label style={{color: '#FFD230'}}>Categoria</label>
+                                        <label style={{ color: '#FFD230' }}>Categoria</label>
                                         <select className="form-select" value={formData.categoria_id} onChange={e => setFormData({ ...formData, categoria_id: e.target.value })} >
                                             <option value="" disabled>Selecione</option>
                                             {categorias.map(c => <option key={c.id} value={c.id}>{c.nome}</option>)}
                                         </select>
                                     </div>
                                     <div className="mb-3">
-                                        <label style={{color: '#FFD230'}}>Fotos</label>
+                                        <label style={{ color: '#FFD230' }}>Fotos</label>
                                         <input type="file" name="fotos[]" className="form-control" multiple onChange={e => setFormData({ ...formData, fotos: e.target.files })} />
                                     </div>
 
@@ -283,26 +309,26 @@ export default function MoveisCrud() {
                             <form onSubmit={salvarMovel}>
                                 <div className="modal-body">
                                     <div className="mb-3">
-                                        <label style={{color: '#FFD230'}}>Nome</label>
+                                        <label style={{ color: '#FFD230' }}>Nome</label>
                                         <input type="text" className="form-control" value={formData.nome} onChange={e => setFormData({ ...formData, nome: e.target.value })} required />
                                     </div>
                                     <div className="mb-3">
-                                        <label style={{color: '#FFD230'}}>Valor</label>
+                                        <label style={{ color: '#FFD230' }}>Valor</label>
                                         <input type="number" className="form-control" step="0.01" value={formData.valor} onChange={e => setFormData({ ...formData, valor: e.target.value })} required />
                                     </div>
                                     <div className="mb-3">
-                                        <label style={{color: '#FFD230'}}>Descrição</label>
+                                        <label style={{ color: '#FFD230' }}>Descrição</label>
                                         <textarea className="form-control" value={formData.descricao} onChange={e => setFormData({ ...formData, descricao: e.target.value })}></textarea>
                                     </div>
                                     <div className="mb-3">
-                                        <label style={{color: '#FFD230'}}>Categoria</label>
+                                        <label style={{ color: '#FFD230' }}>Categoria</label>
                                         <select className="form-select" value={formData.categoria_id} onChange={e => setFormData({ ...formData, categoria_id: e.target.value })} required>
                                             <option value="" disabled>Selecione</option>
                                             {categorias.map(c => <option key={c.id} value={c.id}>{c.nome}</option>)}
                                         </select>
                                     </div>
                                     <div className="mb-3">
-                                        <label style={{color: '#FFD230'}}>Fotos</label>
+                                        <label style={{ color: '#FFD230' }}>Fotos</label>
                                         <input type="file" name="fotos[]" className="form-control" multiple onChange={e => setFormData({ ...formData, fotos: e.target.files })} />
                                     </div>
 
