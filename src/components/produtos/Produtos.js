@@ -36,7 +36,7 @@ function HomeProdutos() {
                     </h1>
                 </div>
 
-                <div className="grid p-3 mb-4" style={{ backgroundColor: "#503325c1", borderRadius: "10px" }}>
+                <div className="grid p-3 mb-4" style={{ backgroundColor: "#503325c1", borderRadius: "10px" }} data-aos='fade-up'>
                     {loading ? (
                         <p className="text-center text-light py-5">Carregando produtos...</p>
                     ) : erro ? (

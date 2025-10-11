@@ -1,9 +1,10 @@
 import {  useEffect, useState } from "react";
 import Navbar from './Navbar';
 import Aos from "aos";
+import { useAuthUser } from "./auths/useAuthUser";
 
-export default function MeusOrcamentos() {
-
+export default function MeusOrcamentos() {  
+    useAuthUser();
     const [orcamentos, setOrcamentos] = useState([]);
     const [erro, setErro] = useState(null);
     const [loading, setLoading] = useState(true);

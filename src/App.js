@@ -1,7 +1,7 @@
 import './App.css';
 import './awesome/all.min.css';
 import Aos from 'aos';
-import { BrowserRouter as Router, Routes, Route, BrowserRouter, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import Home from './components/Home';
 import HomeProdutos from './components/produtos/Produtos';
 import VerProduto from './components/produtos/Verproduto';
@@ -39,7 +39,7 @@ function App() {
           <Route path="/registrar" element={<FormRegistrar />}></Route>
           <Route path="/minhaconta" element={<MinhaConta />}></Route>
           <Route path="/meusorcamentos" element={<MeusOrcamentos />}></Route>
-          <Route path="/meuspedidos" element={<Pedidos />}></Route>
+          <Route path="/pedidos" element={<Pedidos />}></Route>
           <Route path="/crud" element={
             <AuthAcess >
               <Crud />
