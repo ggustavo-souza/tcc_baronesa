@@ -68,7 +68,7 @@ function FormLogin() {
         <main>
             <Navbar />
             <div className="container">
-                <div className="row justify-content-center mt-4" data-aos="fade-up">
+                <div className="row justify-content-center mt-5" data-aos="fade-up">
                     <div className="col-md-6 card p-5" style={{ backgroundColor: '#503325c1', borderRadius: '10px' }} >
                         {alertMessage.message && (
                             <div className={`alert alert-${alertMessage.type} alert-dismissible fade show`} role="alert">

@@ -25,20 +25,21 @@ function Navbar() {
 
 
     return (
-        <nav className="navbar navbar-expand-lg CorNavbar navbarNav ">
+        <nav className="navbar navbar-expand-lg CorNavbar navbarNav">
+            {/* CONTAINER MAIS GERAL */}
             <div className="container-fluid">
-                {!isNavCollapsed ? null : (
+                {/* LOGO (mantido à esquerda) */}
+                <Link className={`navbar-brand ${!isNavCollapsed ? 'invisible' : ''}`} to="/">
                     <img
                         src="/logo_nav.png"
                         alt="Logo"
                         className="logo-navbar"
-                        width="150px"
-                        height="70px"
-                        style={{ position: 'absolute' }}
-                    
+                        width="150"
+                        height="70"
                     />
-                )}
-                <div className="d-flex"></div>
+                </Link>
+
+                {/* BOTÃO TOGGLER (HAMBÚRGUER) */}
                 <button
                     className="navbar-toggler"
                     type="button"
@@ -48,12 +49,13 @@ function Navbar() {
                     aria-expanded={!isNavCollapsed}
                     aria-label="Toggle navigation"
                     onClick={handleToggle}
-                    style={{backgroundColor: '#FFD230'}}
+                    style={{ backgroundColor: '#FFD230' }}
                 >
-                    <span className="navbar-toggler-icon" ></span>
+                    <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className={`collapse navbar-collapse${isNavCollapsed ? '' : ' show'}`} id="navbarNav">
-                    <ul className="navbar-nav subir mx-auto w-100 justify-content-center">
+
+                    <ul className="navbar-nav subir ms-auto me-auto">
                         <li className="nav-item">
                             <Link className="nav-link fw-bold fs-5 m-1" to="/" style={{ color: '#FFD230' }}>Home</Link>
                         </li>
@@ -64,15 +66,16 @@ function Navbar() {
                             <Link className="nav-link fw-bold fs-5 m-1" to="/produtos" style={{ color: '#FFD230' }}>Produtos</Link>
                         </li>
                         <li className="nav-item d-lg-none">
-                             <Link className="nav-link fw-bold fs-5 " to={usuarioLogado ? "/minhaconta" : "/login"} style={{ color: '#FFD230' }}>
+                            <Link className="nav-link fw-bold fs-5 " to={usuarioLogado ? "/minhaconta" : "/login"} style={{ color: '#FFD230' }}>
                                 <i className="fa-solid fa-user-plus me-2"></i>
                                 {usuarioLogado ? "Minha Conta" : "Login"}
                             </Link>
                         </li>
                     </ul>
-                    <ul className="navbar-nav ms-auto d-none d-lg-flex position-absolute end-0 me-4 subir" >
+
+                    <ul className="navbar-nav d-none d-lg-flex subir" >
                         <li className="nav-item">
-                             <Link className="nav-link fw-bold fs-5 " to={usuarioLogado ? "/minhaconta" : "/login"} style={{ color: '#FFD230' }}>
+                            <Link className="nav-link fw-bold fs-5 " to={usuarioLogado ? "/minhaconta" : "/login"} style={{ color: '#FFD230' }}>
                                 <i className="fa-solid fa-user-plus me-2"></i>
                                 {usuarioLogado ? "Minha Conta" : "Login"}
                             </Link>
