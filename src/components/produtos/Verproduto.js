@@ -14,10 +14,6 @@ export default function VerMovel() {
     const [imagemPrincipal, setImagemPrincipal] = useState('');
 
     useEffect(() => {
-        const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'))
-        if (usuarioLogado) {
-            const usuarioId = usuarioLogado.id;
-        }
         Aos.init({ duration: 500 });
         carregarMovel();
     }, []);

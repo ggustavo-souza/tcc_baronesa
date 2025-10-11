@@ -10,7 +10,6 @@ import { useAuthUser } from "./auths/useAuthUser";
 function MeusPedidos() {
   useAuthUser();
   const [pedidos, setPedidos] = useState([]);
-
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,7 +22,7 @@ function MeusPedidos() {
     Aos.init({ duration: 850 });
   }, []);
 
-  async function carregarPedidos (idUsuario) {
+  async function carregarPedidos(idUsuario) {
     if (!idUsuario) {
       alert("Você precisa estar logado para ver seus pedidos!");
       window.location.href = "/login";
@@ -32,7 +31,6 @@ function MeusPedidos() {
 
     try {
       const resposta = await fetch(`http://localhost/tcc_baronesa/api/pedidos/${idUsuario}`);
-      console.log(await resposta.text());
       const data = await resposta.json();
       setPedidos(data);
     } catch (error) {
@@ -42,25 +40,37 @@ function MeusPedidos() {
     }
   };
 
-  const pagarPedido = async (idPedido) => {
+  async function pagarPedido (pedido) {
     try {
-      const resposta = await fetch("http://localhost/api/pagar_pedido.php", {
+      const resposta = await fetch("http://localhost/tcc_baronesa/api/criar_preferencia.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: idPedido }),
+        body: JSON.stringify({
+          id_pedido: pedido.id,
+          titulo: `Pedido #${pedido.id}`,
+          valor: pedido.preco
+        }),
       });
+
       const data = await resposta.json();
 
-      if (data.sucesso) {
-        alert("Pagamento realizado com sucesso!");
-        setPedidos((p) =>
-          p.map((pedido) =>
-            pedido.id === idPedido ? { ...pedido, status: "Pago" } : pedido
-          )
-        );
-      } else {
-        alert("Erro ao processar pagamento.");
+      if (!data.id) {
+        alert("Erro ao criar preferência de pagamento.");
+        return;
       }
+
+      const script = document.createElement("script");
+      script.src = "https://sdk.mercadopago.com/js/v2";
+      script.onload = () => {
+        const mp = new window.MercadoPago(data.public_key, { locale: "pt-BR" });
+
+        mp.checkout({
+          preference: { id: data.id },
+          autoOpen: true
+        });
+      };
+      document.body.appendChild(script);
+
     } catch (erro) {
       console.error("Erro:", erro);
       alert("Falha na conexão com o servidor.");
@@ -110,10 +120,10 @@ function MeusPedidos() {
                     </span>
                   </p>
 
-                  {pedido.status !== "Pago" && (
+                  {pedido.status !== "pago" && (
                     <button
                       className="btn btn-success w-100 mt-2"
-                      onClick={() => pagarPedido(pedido.id)}
+                      onClick={() => pagarPedido(pedido)}
                     >
                       Pagar agora
                     </button>

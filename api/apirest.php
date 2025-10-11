@@ -53,7 +53,7 @@ try {
 
         if ($tabela === 'orcamentos' && $acao === 'getByUser' && is_numeric($id)) {
             // $id aqui é o id_usuario
-            $stmt = $pdo->prepare("SELECT * FROM orcamentos WHERE id_usuario = ? ORDER BY id DESC");
+            $stmt = $pdo->prepare("SELECT * FROM orcamentos WHERE id_usuario = ? ORDER BY id ASC");
             $stmt->execute([$id]);
             $orcamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             echo json_encode($orcamentos ?: []);
@@ -78,7 +78,7 @@ try {
                 }
             } else {
                 // GET lista de móveis
-                $stmt = $pdo->query("SELECT * FROM moveis ORDER BY id DESC");
+                $stmt = $pdo->query("SELECT * FROM moveis ORDER BY id ASC");
                 $moveis = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 foreach ($moveis as &$m) {
@@ -90,23 +90,24 @@ try {
                 echo json_encode($moveis);
             }
             exit;
-        } elseif ($tabela === "pedidos") {
+        }elseif ($tabela === "pedidos") {
             if ($id) {
-                $stmt = $pdo->prepare("SELECT * FROM pedidos WHERE id_usuario = ?");
+                // Pega todos os pedidos do usuário + info do móvel
+                $stmt = $pdo->prepare("
+                    SELECT p.id, p.id_usuario, p.id_movel, p.data_pedido, p.status,
+                        m.nome, m.valor AS preco
+                    FROM pedidos p
+                    JOIN moveis m ON p.id_movel = m.id
+                    WHERE p.id_usuario = ?
+                    ORDER BY p.data_pedido ASC
+                ");
                 $stmt->execute([$id]);
-                $pedido = $stmt->fetch(PDO::FETCH_ASSOC);
-                echo json_encode($pedido);
+                $pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                if ($pedido) {
-                    $stmt2 = $pdo->prepare("SELECT * FROM moveis WHERE id = ?");
-                    $stmt2->execute([$pedido["id_movel"]]);
-                    $pedidos = $stmt2->fetchAll(PDO::FETCH_ASSOC);
-
-                    echo json_encode($pedidos);
-                }
+                echo json_encode($pedidos ?: []);
             }
             exit;
-        } else {
+        }else {
             // GET padrão para usuarios/categorias
             if ($id) {
                 $stmt = $pdo->prepare("SELECT * FROM $tabela WHERE id = ?");
@@ -213,9 +214,9 @@ try {
             $sql = "INSERT INTO pedidos (id_usuario, id_movel, data_pedido, status) VALUES (?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id_usuario, $id_movel, $data_pedido, $status]);
-            echo $stmt;
 
             echo json_encode([
+                "sucesso" => true,
                 "message" => "Pedido criado com sucesso",
                 "id" => $pdo->lastInsertId()
             ]);
