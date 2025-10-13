@@ -9,248 +9,271 @@ export default function UsuariosCrud() {
     const [registros, setRegistros] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    // --- ESTADOS PARA OS MODAIS ---
     const [showModalExcluir, setShowModalExcluir] = useState(false);
-    const [showModalNovo, setShowModalNovo] = useState(false);
-    const [showModalEditar, setShowModalEditar] = useState(false);
-    const [usuarioSelecionado, setUsuarioSelecionado] = useState(null);
-    const [novoUsuario, setNovoUsuario] = useState({ nome: '', email: '', senha: '', cargo: '' });
-    const [mostrarSenhaEditar, setMostrarSenhaEditar] = useState(false);
+    const [usuarioIdParaExcluir, setUsuarioIdParaExcluir] = useState(null);
+
+    // Estado unificado para o modal de formulário (Adicionar/Editar)
+    const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+    
+    // Estado unificado para os dados do formulário
+    const [formData, setFormData] = useState({
+        id: null,
+        nome: '',
+        email: '',
+        senha: '',
+        cargo: ''
+    });
+    const [mostrarSenha, setMostrarSenha] = useState(false);
 
     useEffect(() => {
         Aos.init({ duration: 500 });
         fetchUsuarios();
     }, []);
 
-    function fetchUsuarios() {
-        const url = "http://localhost/tcc_baronesa/api/usuarios";
-        fetch(url)
-            .then(res => {
-                if (!res.ok) throw new Error("Erro ao carregar usuários");
-                return res.json();
-            })
-            .then(data => setRegistros(data))
-            .catch(err => setError(err.message))
-            .finally(() => setLoading(false));
+    async function fetchUsuarios() {
+        try {
+            const res = await fetch("http://localhost/tcc_baronesa/api/usuarios");
+            if (!res.ok) throw new Error("Erro ao carregar usuários");
+            const data = await res.json();
+            setRegistros(data);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
     }
 
-    function excluirUsuario(id) {
-        fetch(`http://localhost/tcc_baronesa/api/usuarios/${id}`, { method: "DELETE" })
-            .then(res => res.json())
-            .then(() => {
-                setRegistros(registros.filter(u => u.id !== id));
-                setShowModalExcluir(false);
-                setUsuarioSelecionado(null);
-            })
-            .catch(err => console.error(err));
+    async function excluirUsuario() {
+        if (!usuarioIdParaExcluir) return;
+        try {
+            const res = await fetch(`http://localhost/tcc_baronesa/api/usuarios/${usuarioIdParaExcluir}`, { method: "DELETE" });
+            if (!res.ok) throw new Error("Erro ao excluir usuário");
+            await res.json(); // Consumir a resposta da API
+            setRegistros(registros.filter(u => u.id !== usuarioIdParaExcluir));
+            setShowModalExcluir(false);
+            setUsuarioIdParaExcluir(null);
+        } catch (err) {
+            console.error(err);
+            alert("Falha ao excluir o usuário.");
+        }
     }
 
-    function adicionarUsuario() {
-        fetch("http://localhost/tcc_baronesa/api/usuarios", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(novoUsuario)
-        })
-            .then(res => res.json())
-            .then(data => {
-                setRegistros([...registros, { ...novoUsuario, id: data.id }]);
-                setNovoUsuario({ nome: '', email: '', senha: '', cargo: '' });
-                setShowModalNovo(false);
-            })
-            .catch(err => console.error(err));
-    }
+    // --- FUNÇÃO UNIFICADA PARA SALVAR (ADICIONAR E EDITAR) ---
+    async function salvarUsuario(e) {
+        e.preventDefault();
 
-    function atualizarUsuario(id) {
-        if (!usuarioSelecionado) return; // segurança
+        const isEditing = !!formData.id;
+        const url = isEditing
+            ? `http://localhost/tcc_baronesa/api/usuarios/${formData.id}`
+            : "http://localhost/tcc_baronesa/api/usuarios";
 
-        const dados = {
-            nome: usuarioSelecionado.nome,
-            email: usuarioSelecionado.email,
-            cargo: usuarioSelecionado.cargo
-        };
-
-        if (usuarioSelecionado.senha && usuarioSelecionado.senha.trim() !== '') {
-            dados.senha = usuarioSelecionado.senha;
+        // Apenas envia a senha se ela foi preenchida
+        const dadosParaEnviar = { ...formData };
+        if (!dadosParaEnviar.senha) {
+            delete dadosParaEnviar.senha;
         }
 
-        fetch(`http://localhost/tcc_baronesa/api/usuarios/${id}`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(dados)
-        })
-            .then(res => {
-                if (!res.ok) throw new Error("Erro ao atualizar usuário");
-                console.log()
-                return res.json();
-            })
-            .then(data => {
-                console.log(data);
-                setRegistros(registros.map(u => u.id === id ? { ...u, ...usuarioSelecionado, senha: undefined } : u));
-
-                // fecha modal e limpa estado
-                setShowModalEditar(false);
-                setUsuarioSelecionado(null);
-                setMostrarSenhaEditar(false);
-            })
-            .catch(err => {
-                console.error(err);
-                alert("Erro ao salvar usuário.");
+        try {
+            const res = await fetch(url, {
+                method: "POST", // Sua API usa POST para adicionar e editar
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(dadosParaEnviar)
             });
+
+            if (!res.ok) {
+                const errData = await res.json();
+                throw new Error(errData.message || "Falha ao salvar usuário");
+            }
+            
+            fecharFormModal();
+            fetchUsuarios(); // Recarrega a lista para mostrar as alterações
+
+        } catch (err) {
+            console.error("Falha ao salvar usuário", err);
+            alert(err.message);
+        }
+    }
+
+    // --- FUNÇÕES DE CONTROLE DO MODAL DE FORMULÁRIO ---
+    function abrirModalAdicionar() {
+        setFormData({ id: null, nome: '', email: '', senha: '', cargo: '' });
+        setIsFormModalOpen(true);
+    }
+
+    function abrirModalEditar(usuario) {
+        setFormData({ ...usuario, senha: '' }); // Limpa a senha para não exibi-la
+        setIsFormModalOpen(true);
+    }
+    
+    function fecharFormModal() {
+        setIsFormModalOpen(false);
+        setMostrarSenha(false); // Garante que a senha esteja oculta na próxima vez
+        setFormData({ id: null, nome: '', email: '', senha: '', cargo: '' });
     }
 
     if (loading) return <h3 className='mt-5' style={{ color: '#FFD230' }}>Carregando...</h3>;
-    if (error) return <div><h3 className='mt-5' style={{ color: '#FFD230' }}>Ocorreu algum erro...   <i className='fa-regular fa-face-dizzy' style={{ color: 'crimson' }}></i></h3>      <button className='btn btn-warning mt-4 col-5 align-self-center' onClick={() => navigate(-1)}>Voltar</button></div>
+    if (error) return <div><h3 className='mt-5' style={{ color: '#FFD230' }}>Ocorreu algum erro... <i className='fa-regular fa-face-dizzy' style={{ color: 'crimson' }}></i></h3><button className='btn btn-warning mt-4 col-5' onClick={() => navigate(-1)}>Voltar</button></div>;
 
     return (
         <>
             <Navadm />
             <div className='container mt-5'>
-                <div className="d-flex justify-content-between align-items-center mb-3">
-                    <h2 style={{ color: '#FFD230' }}>Usuários</h2>
-                    <button className='btn btn-warning' onClick={() => setShowModalNovo(true)}>Adicionar Usuário</button>
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                    <h2 className='fw-bold' style={{ color: '#FFD230' }}>
+                        <i className="fa-solid fa-users me-2"></i>Usuários
+                    </h2>
+                    <button className='btn btn-warning fw-bold' onClick={abrirModalAdicionar}>
+                        <i className="fa-solid fa-user-plus me-2"></i>
+                        Adicionar Usuário
+                    </button>
                 </div>
-                <div className="card p-4 table-responsive" data-aos="fade-up">
+                <div className="card border-0 shadow-sm p-4" data-aos="fade-up">
                     {registros.length > 0 ? (
-                        <table className='table table-hover table-bordered border-dark table-align-middle table-responsive-cards'>
-                            <thead className='table-warning'>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Nome</th>
-                                    <th>Email</th>
-                                    <th>Cargo</th>
-                                    <th>Opções</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {registros.map(registro => (
-                                    <tr key={registro.id}>
-                                        <td data-label="ID:">{registro.id}</td>
-                                        <td data-label="Nome:">{registro.nome}</td>
-                                        <td data-label="Email:">{registro.email}</td>
-                                        <td data-label="Cargo:">{registro.cargo}</td>
-                                        <td>
-                                            <div className="d-flex flex-wrap justify-content-center gap-2">
-                                                <button className='btn btn-warning'
-                                                    onClick={() => { setUsuarioSelecionado(registro.id); setShowModalExcluir(true); }}>
-                                                    <i className='fa-trash fa-solid me-2'></i>Excluir
-                                                </button>
-                                                <button className='btn btn-warning' onClick={() => {
-                                                    setUsuarioSelecionado({ ...registro, senha: '' });
-                                                    setShowModalEditar(true);
-                                                }}>
-                                                    <i className='fa-pen fa-solid me-2'></i>Editar
-                                                </button>
-                                            </div>
-                                        </td>
+                        <div className="table-responsive">
+                            <table className='table table-hover table-bordered border-dark table-align-middle'>
+                                <thead className='table-warning'>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nome</th>
+                                        <th>Email</th>
+                                        <th>Cargo</th>
+                                        <th className='text-center'>Opções</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {registros.map(registro => (
+                                        <tr key={registro.id}>
+                                            <td>{registro.id}</td>
+                                            <td>{registro.nome}</td>
+                                            <td>{registro.email}</td>
+                                            <td>{registro.cargo}</td>
+                                            <td>
+                                                <div className="d-flex justify-content-center gap-2">
+                                                    <button className='btn btn-outline-danger btn-sm'
+                                                        onClick={() => { setUsuarioIdParaExcluir(registro.id); setShowModalExcluir(true); }}>
+                                                        <i className='fa-solid fa-trash me-2'></i>
+                                                        Excluir
+                                                    </button>
+                                                    <button className='btn btn-warning btn-sm' onClick={() => abrirModalEditar(registro)}>
+                                                        <i className='fa-solid fa-pen me-2'></i>
+                                                        Editar
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     ) : <p>Nenhum registro encontrado.</p>}
                 </div>
             </div>
 
-
-            {/* Modal de Exclusão */}
+            {/* Modal Excluir */}
             {showModalExcluir && (
-                <div className="modal" data-aos="fade-up" tabIndex="-1" style={{ display: 'block' }}>
-                    <div className="modal-dialog modal-dialog-centered">
-                        <div className="modal-content CorNavbar">
-                            <div className="modal-header">
-                                <h5 className="modal-title" style={{ color: '#FFD230' }}>Confirmar Exclusão</h5>
-                                <button type="button" className="btn-close" onClick={() => setShowModalExcluir(false)}></button>
-                            </div>
-                            <div className="modal-body">
-                                <h3 style={{ color: '#FFD230' }}>Tem certeza que deseja excluir este usuário?</h3>
-                            </div>
-                            <div className="modal-footer">
-                                <button className="btn btn-secondary" onClick={() => setShowModalExcluir(false)}>Cancelar</button>
-                                <button className="btn btn-warning" onClick={() => excluirUsuario(usuarioSelecionado)}>Excluir</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-            {showModalExcluir && <div className="modal-backdrop fade show"></div>}
-
-            {/* Modal de Novo Usuário */}
-            {showModalNovo && (
-                <div className="modal" data-aos="fade-up" tabIndex="-1" style={{ display: 'block' }}>
-                    <div className="modal-dialog modal-dialog-centered">
-                        <div className="modal-content CorNavbar">
-                            <div className="modal-header">
-                                <h5 className="modal-title" style={{ color: '#FFD230' }}>Adicionar Usuário</h5>
-                                <button type="button" className="btn-close" onClick={() => setShowModalNovo(false)}></button>
-                            </div>
-                            <div className="modal-body">
-                                <input type="text" className="form-control mb-2" placeholder="Nome"
-                                    value={novoUsuario.nome} onChange={e => setNovoUsuario({ ...novoUsuario, nome: e.target.value })} />
-                                <input type="email" className="form-control mb-2" placeholder="Email"
-                                    value={novoUsuario.email} onChange={e => setNovoUsuario({ ...novoUsuario, email: e.target.value })} />
-                                <select className="form-select mb-2"
-                                    value={novoUsuario.cargo}
-                                    onChange={e => setNovoUsuario({ ...novoUsuario, cargo: e.target.value })}>
-                                    <option value="">Selecione o cargo</option>
-                                    <option value="admin">Admin</option>
-                                    <option value="usuario">Usuário</option>
-                                </select>
-                                <input type="password" className="form-control mb-2" placeholder="Senha"
-                                    value={novoUsuario.senha} onChange={e => setNovoUsuario({ ...novoUsuario, senha: e.target.value })} />
-                            </div>
-                            <div className="modal-footer">
-                                <button className="btn btn-secondary" onClick={() => setShowModalNovo(false)}>Cancelar</button>
-                                <button className="btn btn-warning" onClick={adicionarUsuario}>Adicionar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-            {showModalNovo && <div className="modal-backdrop fade show"></div>}
-
-            {/* Modal de Edição */}
-            {showModalEditar && usuarioSelecionado && (
-                <div className="modal" data-aos="fade-up" tabIndex="-1" style={{ display: 'block' }}>
-                    <div className="modal-dialog modal-dialog-centered">
-                        <div className="modal-content CorNavbar">
-                            <div className="modal-header">
-                                <h5 className="modal-title" style={{ color: '#FFD230' }}>Editar Usuário</h5>
-                                <button type="button" className="btn-close" onClick={() => setShowModalEditar(false)}></button>
-                            </div>
-                            <div className="modal-body">
-                                <input type="text" className="form-control mb-2" placeholder="Nome"
-                                    value={usuarioSelecionado.nome}
-                                    onChange={e => setUsuarioSelecionado({ ...usuarioSelecionado, nome: e.target.value })} />
-                                <input type="email" className="form-control mb-2" placeholder="Email"
-                                    value={usuarioSelecionado.email}
-                                    onChange={e => setUsuarioSelecionado({ ...usuarioSelecionado, email: e.target.value })} />
-                                <select className="form-select mb-2"
-                                    value={usuarioSelecionado.cargo}
-                                    onChange={e => setUsuarioSelecionado({ ...usuarioSelecionado, cargo: e.target.value })}>
-                                    <option value="">Selecione o cargo</option>
-                                    <option value="admin">Admin</option>
-                                    <option value="usuario">Usuário</option>
-                                </select>
-
-                                <div className="input-group mb-2">
-                                    <input type={mostrarSenhaEditar ? "text" : "password"} className="form-control" placeholder="Nova senha (opcional)"
-                                        value={usuarioSelecionado.senha || ''}
-                                        onChange={e => setUsuarioSelecionado({ ...usuarioSelecionado, senha: e.target.value })} />
-                                    <button className="btn btn-outline-secondary" type="button"
-                                        onClick={() => setMostrarSenhaEditar(!mostrarSenhaEditar)}>
-                                        <i className={`fa ${mostrarSenhaEditar ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                <>
+                    <div className="modal" data-aos="fade-up" style={{ display: 'block' }}>
+                        <div className="modal-dialog modal-dialog-centered">
+                            <div className="modal-content border-0 shadow-lg rounded-4">
+                                <div className="modal-header border-0 pb-0">
+                                    <h5 className="modal-title text-dark fw-bold">
+                                        <i className="fa-solid fa-triangle-exclamation text-danger me-2"></i>
+                                        Confirmar Exclusão
+                                    </h5>
+                                    <button type="button" className="btn-close" onClick={() => setShowModalExcluir(false)}></button>
+                                </div>
+                                <div className="modal-body py-4">
+                                    <p className="mb-0">Deseja realmente excluir este usuário? Esta ação não pode ser desfeita.</p>
+                                </div>
+                                <div className="modal-footer border-0 bg-light">
+                                    <button type="button" className="btn btn-secondary" onClick={() => setShowModalExcluir(false)}>Cancelar</button>
+                                    <button type="button" className="btn btn-danger fw-bold" onClick={excluirUsuario}>
+                                        <i className="fa-solid fa-trash me-2"></i>
+                                        Sim, Excluir
                                     </button>
                                 </div>
                             </div>
-                            <div className="modal-footer">
-                                <button className="btn btn-secondary" onClick={() => setShowModalEditar(false)}>Cancelar</button>
-                                <button className="btn btn-warning" onClick={() => atualizarUsuario(usuarioSelecionado.id)}>
-                                    Salvar
-                                </button>
+                        </div>
+                    </div>
+                    <div className="modal-backdrop fade show"></div>
+                </>
+            )}
+
+            {/* --- MODAL UNIFICADO PARA ADICIONAR/EDITAR USUÁRIO --- */}
+            {isFormModalOpen && (
+                <>
+                    <div className="modal" data-aos="fade-up" style={{ display: 'block' }}>
+                        <div className="modal-dialog modal-lg modal-dialog-centered">
+                            <div className="modal-content border-0 shadow-lg rounded-4">
+                                <div className="modal-header border-0 pb-0">
+                                    <h5 className="modal-title fw-bold text-dark">
+                                        <i className={formData.id ? "fa-solid fa-user-pen text-warning me-2" : "fa-solid fa-user-plus text-warning me-2"}></i>
+                                        {formData.id ? 'Editar Usuário' : 'Adicionar Novo Usuário'}
+                                    </h5>
+                                    <button className="btn-close" onClick={fecharFormModal}></button>
+                                </div>
+                                <form onSubmit={salvarUsuario}>
+                                    <div className="modal-body p-4">
+                                        <div className="row g-3">
+                                            <div className="col-12">
+                                                <div className="form-floating">
+                                                    <input type="text" className="form-control" id="nomeUsuario" placeholder="Nome completo" value={formData.nome} onChange={e => setFormData({ ...formData, nome: e.target.value })} required />
+                                                    <label htmlFor="nomeUsuario">Nome completo</label>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-6">
+                                                <div className="form-floating">
+                                                    <input type="email" className="form-control" id="emailUsuario" placeholder="E-mail" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} required />
+                                                    <label htmlFor="emailUsuario">E-mail</label>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-6">
+                                                <div className="input-group">
+                                                    <span className="input-group-text"><i className="fa-solid fa-briefcase"></i></span>
+                                                    <select className="form-select p-3" value={formData.cargo} onChange={e => setFormData({ ...formData, cargo: e.target.value })} required>
+                                                        <option value="" disabled>Selecione o cargo...</option>
+                                                        <option value="admin">Admin</option>
+                                                        <option value="usuario">Usuário</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div className="col-12">
+                                                <label className="form-label text-muted small">{formData.id ? 'Nova senha (deixe em branco para não alterar)' : 'Senha'}</label>
+                                                <div className="input-group">
+                                                    <span className="input-group-text"><i className="fa-solid fa-lock"></i></span>
+                                                    <input
+                                                        type={mostrarSenha ? "text" : "password"}
+                                                        className="form-control"
+                                                        placeholder="Senha"
+                                                        value={formData.senha}
+                                                        onChange={e => setFormData({ ...formData, senha: e.target.value })}
+                                                        required={!formData.id} // Senha é obrigatória apenas ao criar
+                                                    />
+                                                    <button className="btn btn-outline-secondary" type="button" onClick={() => setMostrarSenha(!mostrarSenha)}>
+                                                        <i className={`fa-solid ${mostrarSenha ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="modal-footer bg-light border-0">
+                                        <button type="button" className="btn btn-secondary" onClick={fecharFormModal}>
+                                            <i className="fa-solid fa-xmark me-2"></i>Cancelar
+                                        </button>
+                                        <button type="submit" className="btn btn-warning fw-bold">
+                                            <i className="fa-solid fa-check me-2"></i>
+                                            {formData.id ? 'Salvar Alterações' : 'Adicionar Usuário'}
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
-                </div>
+                    <div className="modal-backdrop fade show"></div>
+                </>
             )}
-            {showModalEditar && <div className="modal-backdrop fade show"></div>}
         </>
-    )
+    );
 }

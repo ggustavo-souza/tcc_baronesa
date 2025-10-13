@@ -325,3 +325,24 @@
   align-items: center;
   justify-content: space-between;
 }
+
+.form-control:focus, .form-select:focus {
+  border-color: #FFD230;
+  box-shadow: 0 0 0 0.25rem rgba(255, 210, 48, 0.4);
+}
+
+.image-preview-item-bs {
+    width: 100px;
+    height: 100px;
+}
+
+.image-preview-item-bs img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.input-group-text {
+    width: 42px;
+    justify-content: center;
+}
