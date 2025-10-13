@@ -5,6 +5,7 @@ import Footer from "./Footer";
 import { useAuthUser } from './auths/useAuthUser';
 import { useEffect, useState } from "react";
 import Aos from "aos";
+import { Navigate, useNavigate } from "react-router-dom";
 
 function HomeOrcamento() {
     // pega o usuário logado
@@ -18,11 +19,13 @@ function HomeOrcamento() {
     const [categoria, setCategoria] = useState("");
     const [mensagem, setMensagem] = useState("");
     const [telefone, setTelefone] = useState("");
+    const [modalErro, setModalErro] = useState(false);
+    const [modalConcluido, setModalConcluido] = useState(false);
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Verifica se temos o ID do usuário
         if (!usuario?.id) {
             alert("Erro: usuário não autenticado.");
             return;
@@ -47,13 +50,13 @@ function HomeOrcamento() {
 
             if (!response.ok) throw new Error(data.message || "Erro ao enviar orçamento");
 
-            alert("Orçamento enviado com sucesso!");
+            setModalConcluido(true)
             setCategoria("");
             setMensagem("");
             setTelefone("");
         } catch (err) {
             console.error(err.message);
-            alert("Falha ao enviar orçamento: " + err.message);
+            setModalErro(true)
         }
     };
 
@@ -140,6 +143,45 @@ function HomeOrcamento() {
                 </div>
             </div>
             <Footer />
+
+            {modalConcluido && (
+                <div
+                    className="modal"
+                    data-aos="fade-up"
+                    style={{ display: 'block' }}
+                >
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content border-0 shadow-lg" style={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}>
+
+                            <div className="modal-header border-0 pb-2" style={{ backgroundColor: '#FFD230' }}>
+                                <h5 className="modal-title text-dark fw-bold">Sucesso!</h5>
+                                <button
+                                    type="button"
+                                    className="btn-close"
+                                    aria-label="Close"
+                                    onClick={() => setModalConcluido(false)}
+                                ></button>
+                            </div>
+
+                            <div className="modal-body pt-4 pb-4">
+                                <h5 className="">Seu orçamento foi enviado com sucesso!</h5>
+                            </div>
+
+                            <div className="modal-footer border-0 pt-0">
+                                <button
+                                    type="button"
+                                    className="btn btn-success fw-bold px-4"
+                                    onClick={() => navigate("/")}
+                                    style={{ backgroundColor: '#198754', borderColor: '#198710' }}
+                                >
+                                    Sair
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {modalConcluido && <div className="modal-backdrop fade show"></div>}
         </main>
     );
 }

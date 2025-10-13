@@ -42,15 +42,9 @@ export default function MeusOrcamentos() {
         }
     }
 
-    // ===================================================================
-    // FUNÇÕES PARA OS BOTÕES (LÓGICA DE EXEMPLO)
-    // ===================================================================
-
     async function handleExcluir(idOrcamento) {
-        // Pede confirmação ao usuário antes de prosseguir
         if (window.confirm("Tem certeza que deseja excluir este orçamento? Esta ação não pode ser desfeita.")) {
             console.log("Excluindo orçamento:", idOrcamento);
-            // **AQUI VOCÊ DEVE IMPLEMENTAR A CHAMADA PARA A API PARA DELETAR**
             try {
                 const resposta = await fetch(`http://localhost/tcc_baronesa/api/orcamentos/${idOrcamento}`, {
                     method: 'DELETE'
@@ -60,7 +54,6 @@ export default function MeusOrcamentos() {
                     throw new Error("Falha ao excluir o orçamento.");
                 }
 
-                // Remove o orçamento da lista na tela sem precisar recarregar a página
                 setOrcamentos(orcamentos.filter(o => o.id !== idOrcamento));
                 alert("Orçamento excluído com sucesso!");
 
@@ -74,7 +67,7 @@ export default function MeusOrcamentos() {
     function handleContato(idOrcamento) {
         // logica whatsapp
         console.log("Entrando em contato sobre o orçamento:", idOrcamento);
-        const numeroWhatsapp = "5511999999999";
+        const numeroWhatsapp = "5515997396140";
         const mensagem = `Olá! Gostaria de falar sobre meu orçamento aprovado (Nº ${idOrcamento}).`;
         window.open(`https://wa.me/${numeroWhatsapp}?text=${encodeURIComponent(mensagem)}`, '_blank');
     }
