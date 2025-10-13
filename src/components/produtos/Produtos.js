@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "../../App.css";
 import "../../awesome/all.min.css";
 import Navbar from "../Navbar";
+import Footer from '../Footer';
 import { Link } from "react-router-dom";
 
 
@@ -29,7 +30,7 @@ function HomeProdutos() {
     return (
         <main>
             <Navbar />
-            <div className="container mt-4">
+            <div className="container mt-5 mb-5">
                 <div className="col-12">
                     <h1 className="text-center fw-bold mb-3" style={{ color: "#FFD230" }}>
                         Produtos
@@ -86,6 +87,7 @@ function HomeProdutos() {
                     )}
                 </div>
             </div>
+            <Footer />
         </main>
     );
 }
