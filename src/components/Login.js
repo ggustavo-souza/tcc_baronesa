@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 
 function FormLogin() {
     useEffect(() => {
-        Aos.init({ duration: 1000});
+        Aos.init({ duration: 1000 });
 
     }, []);
 
@@ -18,7 +18,7 @@ function FormLogin() {
     const navigate = useNavigate();
 
     const handleChange = e => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+        setForm({ ...form, [e.target.name]: e.target.value });
     };
 
     const closeAlert = () => {
@@ -64,7 +64,7 @@ function FormLogin() {
     };
 
 
-    return(
+    return (
         <main>
             <Navbar />
             <div className="container">
@@ -80,11 +80,11 @@ function FormLogin() {
                             <h1 className="text-center corAmarela" style={{ color: '#FFD230' }}>Login</h1>
                             <div className="form-group mt-5">
                                 <label htmlFor="nome" style={{ color: '#FFD230' }}>Nome de Usuário</label>
-                                <input type="text" id="nome" name="nome" className="form-control mt-1" required value={form.usuario} onChange={handleChange}/>
+                                <input type="text" id="nome" name="nome" className="form-control mt-1" required value={form.usuario} onChange={handleChange} />
                             </div>
                             <div className="form-group mt-3">
                                 <label htmlFor="password" style={{ color: '#FFD230' }}>Senha</label>
-                                <input type="password" id="password" name="password" className="form-control mt-1" required value={form.password} onChange={handleChange}/>
+                                <input type="password" id="password" name="password" className="form-control mt-1" required value={form.password} onChange={handleChange} />
                             </div>
                             <div>
                                 <button type="submit" className="btn btn-warning mt-5 corBotao">Login</button>

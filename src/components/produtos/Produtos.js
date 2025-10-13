@@ -51,7 +51,7 @@ function HomeProdutos() {
                                     <div
                                         className="card card-produto p-3 m-2"
                                         style={{ backgroundColor: "#503325c1", borderRadius: "10px" }}
-                                    >   
+                                    >
                                         <h2 className="text-center titulo-produto" style={{ color: "#FFD230" }}>
                                             {movel.nome}
                                         </h2>

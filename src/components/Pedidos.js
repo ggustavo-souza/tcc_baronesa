@@ -14,7 +14,7 @@ function MeusPedidos() {
 
   useEffect(() => {
     const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'))
-    if (usuarioLogado){
+    if (usuarioLogado) {
       carregarPedidos(usuarioLogado.id);
     } else {
       setLoading(false);
@@ -40,7 +40,7 @@ function MeusPedidos() {
     }
   };
 
-  async function pagarPedido (pedido) {
+  async function pagarPedido(pedido) {
     try {
       const resposta = await fetch("http://localhost/tcc_baronesa/api/criar_preferencia.php", {
         method: "POST",

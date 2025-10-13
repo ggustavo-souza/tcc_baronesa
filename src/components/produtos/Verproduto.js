@@ -47,31 +47,31 @@ export default function VerMovel() {
     // Função para adicionar pedido
     // =============================
     async function adicionarPedido() {
-        const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado")); 
+        const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
         if (usuarioLogado) {
             const usuarioId = usuarioLogado.id;
 
             try {
-            const res = await fetch(`http://localhost/tcc_baronesa/api/pedidos`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    id_usuario: usuarioId,
-                    id_movel: id
-                }),
-            });
-            const data = await res.json();
-            console.log(data);
-            if (data.sucesso) {
-                alert("Pedido adicionado com sucesso!");
-            } else {
-                alert("Erro ao adicionar pedido.");
+                const res = await fetch(`http://localhost/tcc_baronesa/api/pedidos`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        id_usuario: usuarioId,
+                        id_movel: id
+                    }),
+                });
+                const data = await res.json();
+                console.log(data);
+                if (data.sucesso) {
+                    alert("Pedido adicionado com sucesso!");
+                } else {
+                    alert("Erro ao adicionar pedido.");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Falha na comunicação com o servidor.");
             }
-        } catch (err) {
-            console.error(err);
-            alert("Falha na comunicação com o servidor.");
-        }
-        }else {
+        } else {
             alert("Você precisa estar logado para adicionar um pedido!");
             navigate("/login");
             return;
@@ -90,8 +90,8 @@ export default function VerMovel() {
             <Navbar />
             <div className="container my-5" data-aos="fade-up">
                 <div className="mb-3">
-                    <button 
-                        className='btn btn-warning corBotao' 
+                    <button
+                        className='btn btn-warning corBotao'
                         onClick={() => navigate(-1)}
                     >
                         ← Voltar
@@ -102,22 +102,22 @@ export default function VerMovel() {
                     <div className="row">
                         <div className="col-md-6">
                             {imagemPrincipal && (
-                                <img 
-                                    src={`http://localhost/tcc_baronesa/api/uploads/${imagemPrincipal}`} 
-                                    alt={movel.nome} 
-                                    className="img-fluid rounded mb-3" 
+                                <img
+                                    src={`http://localhost/tcc_baronesa/api/uploads/${imagemPrincipal}`}
+                                    alt={movel.nome}
+                                    className="img-fluid rounded mb-3"
                                     style={{ objectFit: 'cover', width: '100%', height: '400px' }}
                                 />
                             )}
                             <div className="d-flex flex-wrap gap-2 justify-content-center">
                                 {movel.fotos?.map(f => (
-                                    <img 
+                                    <img
                                         key={f.id}
-                                        src={`http://localhost/tcc_baronesa/api/uploads/${f.foto}`} 
-                                        alt="miniatura" 
-                                        width="80" 
-                                        height="80" 
-                                        className={`rounded border ${f.foto === imagemPrincipal ? 'border-warning' : 'border-light'}`} 
+                                        src={`http://localhost/tcc_baronesa/api/uploads/${f.foto}`}
+                                        alt="miniatura"
+                                        width="80"
+                                        height="80"
+                                        className={`rounded border ${f.foto === imagemPrincipal ? 'border-warning' : 'border-light'}`}
                                         style={{ cursor: 'pointer', objectFit: 'cover', transition: '0.3s', filter: f.foto === imagemPrincipal ? 'brightness(1.1)' : 'brightness(0.9)' }}
                                         onClick={() => setImagemPrincipal(f.foto)}
                                         onMouseEnter={e => e.currentTarget.style.filter = 'brightness(1.2)'}
@@ -131,7 +131,7 @@ export default function VerMovel() {
                             <h4>R$ {movel.valor},00</h4>
                             <p><strong>Categoria:</strong> {categoria || '—'}</p>
                             <p><strong>Descrição:</strong> {movel.descricao}</p>
-                            <button 
+                            <button
                                 className="btn btn-warning corBotao mt-3"
                                 onClick={adicionarPedido}
                             >

@@ -16,8 +16,8 @@ function Carroussel() {
 
 
 
-    return (
-      <div className="wide-carousel-container" data-aos="fade-up">
+  return (
+    <div className="wide-carousel-container" data-aos="fade-up">
       {/* O id "carouselExampleIndicators" é importante para o Bootstrap JS */}
       <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel" data-bs-interval="4500">
         {/* Indicadores (os pequenos pontos na parte inferior) */}
@@ -102,7 +102,7 @@ function Carroussel() {
             </div>
           </div>
         </div>
-        
+
         {/* Controles do Carrossel */}
         <button
           className="carousel-control-prev"

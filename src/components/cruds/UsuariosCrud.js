@@ -16,7 +16,7 @@ export default function UsuariosCrud() {
 
     // Estado unificado para o modal de formulário (Adicionar/Editar)
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
-    
+
     // Estado unificado para os dados do formulário
     const [formData, setFormData] = useState({
         id: null,
@@ -86,7 +86,7 @@ export default function UsuariosCrud() {
                 const errData = await res.json();
                 throw new Error(errData.message || "Falha ao salvar usuário");
             }
-            
+
             fecharFormModal();
             fetchUsuarios(); // Recarrega a lista para mostrar as alterações
 
@@ -106,7 +106,7 @@ export default function UsuariosCrud() {
         setFormData({ ...usuario, senha: '' }); // Limpa a senha para não exibi-la
         setIsFormModalOpen(true);
     }
-    
+
     function fecharFormModal() {
         setIsFormModalOpen(false);
         setMostrarSenha(false); // Garante que a senha esteja oculta na próxima vez

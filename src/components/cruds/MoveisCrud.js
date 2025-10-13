@@ -91,9 +91,9 @@ export default function MoveisCrud() {
                 const errData = await res.json();
                 throw new Error(errData.message || "Falha ao salvar móvel");
             }
-            
-            fecharFormModal(); 
-            carregarMoveis(); 
+
+            fecharFormModal();
+            carregarMoveis();
 
         } catch (err) {
             console.error("Falha ao salvar móvel", err);
@@ -117,7 +117,7 @@ export default function MoveisCrud() {
         });
         setIsFormModalOpen(true);
     }
-    
+
     function fecharFormModal() {
         setIsFormModalOpen(false);
         setFormData({ id: null, nome: '', valor: '', descricao: '', categoria_id: '', fotos: null });
