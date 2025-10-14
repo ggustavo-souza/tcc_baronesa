@@ -6,6 +6,7 @@ import Aos from 'aos';
 import 'aos/dist/aos.css';
 import React, { useEffect, useState } from 'react';
 import { useAuthUser } from "./auths/useAuthUser";
+// Não é necessário importar a SDK do MP se você usar o redirecionamento
 
 function MeusPedidos() {
   useAuthUser();
@@ -32,9 +33,11 @@ function MeusPedidos() {
     }
 
     try {
+      // Nota: Seu endpoint de pedidos deve ser ajustado para garantir que o campo 'preco' é numérico
       const resposta = await fetch(`http://localhost/tcc_baronesa/api/pedidos/${idUsuario}`);
       const data = await resposta.json();
-      setPedidos(data);
+      // Ajuste para garantir que 'pedidos' seja um array
+      setPedidos(Array.isArray(data) ? data : []); 
     } catch (error) {
       console.error("Erro ao carregar pedidos:", error.message);
     } finally {
@@ -43,6 +46,13 @@ function MeusPedidos() {
   };
 
   async function pagarPedido(pedido) {
+    const precoNumerico = parseFloat(pedido.preco);
+    if (isNaN(precoNumerico)) {
+      setMensagemModal({ message: "Erro: O preço do pedido não é um número válido." });
+      setModal(true);
+      return;
+    }
+
     try {
       const resposta = await fetch("http://localhost/tcc_baronesa/api/criar_preferencia.php", {
         method: "POST",
@@ -50,29 +60,20 @@ function MeusPedidos() {
         body: JSON.stringify({
           id_pedido: pedido.id,
           titulo: `Pedido #${pedido.id}`,
-          valor: pedido.preco
+          valor: precoNumerico.toFixed(2) // Envia formatado com 2 casas
         }),
       });
 
       const data = await resposta.json();
 
-      if (!data.id) {
-        setMensagemModal({ message: "Erro ao criar preferência de pagamento." });
+      if (!data.id || !data.init_point) { 
+        console.error("Erro na preferência:", data);
+        setMensagemModal({ message: "Erro ao criar preferência de pagamento. Detalhes ausentes do Mercado Pago." });
         setModal(true);
         return;
       }
 
-      const script = document.createElement("script");
-      script.src = "https://sdk.mercadopago.com/js/v2";
-      script.onload = () => {
-        const mp = new window.MercadoPago(data.public_key, { locale: "pt-BR" });
-
-        mp.checkout({
-          preference: { id: data.id },
-          autoOpen: true
-        });
-      };
-      document.body.appendChild(script);
+      window.location.href = data.init_point;
 
     } catch (erro) {
       console.error("Erro:", erro);
@@ -116,7 +117,8 @@ function MeusPedidos() {
                     <strong>Status:</strong>{" "}
                     <span
                       style={{
-                        color: pedido.status === "Pago" ? "#28a745" : "#FFD230",
+                        // Corrigi a verificação de status para ser case-insensitive ou exata
+                        color: pedido.status && pedido.status.toLowerCase() === "pago" ? "#28a745" : "#FFD230",
                         fontWeight: "bold",
                       }}
                     >
@@ -124,7 +126,8 @@ function MeusPedidos() {
                     </span>
                   </p>
 
-                  {pedido.status !== "pago" && (
+                  {/* Corrigi a verificação de status para ser minúsculo, conforme você usa "pago" no botão */}
+                  {pedido.status && pedido.status.toLowerCase() !== "pago" && ( 
                     <button
                       className="btn btn-success w-100 mt-2"
                       onClick={() => pagarPedido(pedido)}
