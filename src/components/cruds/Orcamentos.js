@@ -11,6 +11,7 @@ export default function AdminOrcamentos() {
     const [categorias, setCategorias] = useState([])
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [showModalErro, setShowModalErro] = useState(false)
     const [showModalExcluir, setShowModalExcluir] = useState(false);
     const [showModalAprovar, setShowModalAprovar] = useState(false);
     const [showModalDesaprovar, setShowModalDesaprovar] = useState(false);
@@ -97,7 +98,7 @@ export default function AdminOrcamentos() {
             })
             .catch(err => {
                 console.error(err.message);
-                alert("Erro ao aprovar orçamento.");
+                setShowModalErro(true)
             });
     }
 
@@ -294,6 +295,26 @@ export default function AdminOrcamentos() {
                 </div>
             )}
             {showModalDesaprovar && <div className="modal-backdrop fade show"></div>}
+
+            {showModalErro && (
+                <div className="modal" data-aos="fade-up" tabIndex="-1" style={{ display: 'block' }}>
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content CorNavbar">
+                            <div className="modal-header">
+                                <h5 className="modal-title" style={{ color: '#FFD230' }}>Erro no Orçamento</h5>
+                                <button type="button" className="btn-close" onClick={() => setShowModalErro(false)}></button>
+                            </div>
+                            <div className="modal-body">
+                                <h3 style={{ color: '#FFD230' }}>Ocorreu um erro na interação.</h3>
+                            </div>
+                            <div className="modal-footer">
+                                <button className="btn btn-secondary" onClick={() => setShowModalErro(false)}>Voltar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {showModalErro && <div className="modal-backdrop fade show"></div>}
         </>
     )
 }

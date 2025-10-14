@@ -77,7 +77,7 @@ function Navbar() {
                         <li className="nav-item">
                             <Link className="nav-link fw-bold fs-5 " to={usuarioLogado ? "/minhaconta" : "/login"} style={{ color: '#FFD230' }}>
                                 <i className="fa-solid fa-user-plus me-2"></i>
-                                {usuarioLogado ? "Minha Conta" : "Login"}
+                                {usuarioLogado ? "Minha Conta" : "Fazer Login"}
                             </Link>
                         </li>
                     </ul>

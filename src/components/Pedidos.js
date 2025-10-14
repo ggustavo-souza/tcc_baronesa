@@ -11,6 +11,8 @@ function MeusPedidos() {
   useAuthUser();
   const [pedidos, setPedidos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [modal, setModal] = useState(false)
+  const [mensagemModal, setMensagemModal] = useState({ message: "" })
 
   useEffect(() => {
     const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'))
@@ -24,8 +26,8 @@ function MeusPedidos() {
 
   async function carregarPedidos(idUsuario) {
     if (!idUsuario) {
-      alert("Você precisa estar logado para ver seus pedidos!");
-      window.location.href = "/login";
+      setMensagemModal({ message: "Você precisa estar logado para ver seus pedidos!" });
+      setModal(true)
       return;
     }
 
@@ -55,7 +57,8 @@ function MeusPedidos() {
       const data = await resposta.json();
 
       if (!data.id) {
-        alert("Erro ao criar preferência de pagamento.");
+        setMensagemModal({ message: "Erro ao criar preferência de pagamento." });
+        setModal(true);
         return;
       }
 
@@ -73,7 +76,8 @@ function MeusPedidos() {
 
     } catch (erro) {
       console.error("Erro:", erro);
-      alert("Falha na conexão com o servidor.");
+      setMensagemModal({ message: "Falha na conexão com o servidor." });
+      setModal(true)
     }
   };
 
@@ -135,6 +139,33 @@ function MeusPedidos() {
         )}
       </div>
       <Footer />
+      {modal && (
+        <>
+          <div className="modal" data-aos="fade-up" style={{ display: 'block' }}>
+            <div className="modal-dialog modal-dialog-centered">
+              <div className="modal-content border-0 shadow-lg rounded-4">
+                <div className="modal-header border-0 pb-0">
+                  <h5 className="modal-title text-dark fw-bold">
+                    <i className="fa-solid fa-triangle-exclamation text-danger me-2"></i>
+                    Mensagem!
+                  </h5>
+                  <button type="button" className="btn-close" onClick={() => setModal(false)}></button>
+                </div>
+                <div className="modal-body py-4">
+                  <p className="mb-0">{mensagemModal.message}</p>
+                </div>
+                <div className="modal-footer border-0 bg-light">
+                  <button type="button" className="btn btn-secondary" onClick={() => setModal(false)}>
+                    <i className="fa-solid"></i>
+                    Voltar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="modal-backdrop fade show"></div>
+        </>
+      )}
     </div>
   );
 }

@@ -11,6 +11,8 @@ export default function VerMovel() {
     const [categoria, setCategoria] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [mensagem, setMensagem] = useState(null)
+    const [modal, setModal] = useState(false)
     const [imagemPrincipal, setImagemPrincipal] = useState('');
 
     useEffect(() => {
@@ -63,17 +65,20 @@ export default function VerMovel() {
                 const data = await res.json();
                 console.log(data);
                 if (data.sucesso) {
-                    alert("Pedido adicionado com sucesso!");
+                    setMensagem("Pedido adicionado com sucesso!");
+                    setModal(true);
                 } else {
-                    alert("Erro ao adicionar pedido.");
+                    setMensagem("Erro ao adicionar pedido.");
+                    setModal(true)
                 }
             } catch (err) {
                 console.error(err);
-                alert("Falha na comunicação com o servidor.");
+                setMensagem("Falha na comunicação com o servidor.");
+                setModal(true)
             }
         } else {
-            alert("Você precisa estar logado para adicionar um pedido!");
-            navigate("/login");
+            setMensagem("Você precisa estar logado para adicionar um pedido!");
+            setModal(true)
             return;
         }
     }
@@ -141,6 +146,44 @@ export default function VerMovel() {
                     </div>
                 </div>
             </div>
+            {modal && (
+                <div
+                    className="modal"
+                    data-aos="fade-up"
+                    style={{ display: 'block' }}
+                >
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content border-0 shadow-lg" style={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}>
+
+                            <div className="modal-header border-0 pb-2" style={{ backgroundColor: '#FFD230' }}>
+                                <h5 className="modal-title text-dark fw-bold">Mensagem</h5>
+                                <button
+                                    type="button"
+                                    className="btn-close"
+                                    aria-label="Close"
+                                    onClick={() => setModal(false)}
+                                ></button>
+                            </div>
+
+                            <div className="modal-body pt-4 pb-4">
+                                <h5 className="">{mensagem}</h5>
+                            </div>
+
+                            <div className="modal-footer align-self-center border-0 pt-0">
+                                <button
+                                    type="button"
+                                    className="btn btn-success fw-bold px-4"
+                                    onClick={() => navigate(-1)}
+                                    style={{ backgroundColor: '#FFD230', borderColor: '#FFD660' }}
+                                >
+                                    Voltar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {modal && <div className="modal-backdrop fade show"></div>}
         </>
     );
 }

@@ -16,6 +16,14 @@
   word-break: break-word;
 }
 
+.corBotao {
+  transition: transform 0.3s ease-in-out;
+}
+
+.corBotao:hover {
+  transform: scale(1.10);
+}
+
 .CorNavbar {
   background-color: #503325;
 }
@@ -346,3 +354,4 @@
     width: 42px;
     justify-content: center;
 }
+

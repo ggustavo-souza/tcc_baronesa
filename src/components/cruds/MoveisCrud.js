@@ -10,6 +10,7 @@ export default function MoveisCrud() {
     const [categorias, setCategorias] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showModalErro, setShowModalErro] = useState(false)
     const [showModalExcluir, setShowModalExcluir] = useState(false);
     const [movelIdParaExcluir, setMovelIdParaExcluir] = useState(null);
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
@@ -62,7 +63,7 @@ export default function MoveisCrud() {
             setMovelIdParaExcluir(null);
         } catch (err) {
             console.error(err);
-            alert(err.message);
+            setShowModalErro(true);
         }
     }
 
@@ -97,7 +98,7 @@ export default function MoveisCrud() {
 
         } catch (err) {
             console.error("Falha ao salvar móvel", err);
-            alert(err.message);
+            setShowModalErro(true);
         }
     }
 
@@ -211,6 +212,34 @@ export default function MoveisCrud() {
                                     <button type="button" className="btn btn-danger fw-bold" onClick={deletarMovel}>
                                         <i className="fa-solid fa-trash me-2"></i>
                                         Sim, Excluir
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="modal-backdrop fade show"></div>
+                </>
+            )}
+
+            {showModalErro && (
+                <>
+                    <div className="modal" data-aos="fade-up" style={{ display: 'block' }}>
+                        <div className="modal-dialog modal-dialog-centered">
+                            <div className="modal-content border-0 shadow-lg rounded-4">
+                                <div className="modal-header border-0 pb-0">
+                                    <h5 className="modal-title text-dark fw-bold">
+                                        <i className="fa-solid fa-triangle-exclamation text-danger me-2"></i>
+                                        Erro
+                                    </h5>
+                                    <button type="button" className="btn-close" onClick={() => setShowModalErro(false)}></button>
+                                </div>
+                                <div className="modal-body py-4">
+                                    <p className="mb-0">Ocorreu um erro na interação.</p>
+                                </div>
+                                <div className="modal-footer border-0 bg-light">
+                                    <button type="button" className="btn btn-danger fw-bold" onClick={() => setShowModalErro(false)}>
+                                        <i className="fa-solid"></i>
+                                        Voltar
                                     </button>
                                 </div>
                             </div>

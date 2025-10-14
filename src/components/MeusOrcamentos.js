@@ -9,6 +9,8 @@ export default function MeusOrcamentos() {
     const [erro, setErro] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showModalExcluir, setShowModalExcluir] = useState(false);
+    const [modal, setModal] = useState(false);
+    const [mensagemModal, setMensagemModal] = useState({ message: "" });
     const [orcamentoSelecionado, setOrcamentoSelecionado] = useState(null);
 
     useEffect(() => {
@@ -55,11 +57,13 @@ export default function MeusOrcamentos() {
                 }
 
                 setOrcamentos(orcamentos.filter(o => o.id !== idOrcamento));
-                alert("Orçamento excluído com sucesso!");
-
+                setMensagemModal({ message: "Orçamento excluído com sucesso!" });
+                setModal(true)
             } catch (error) {
-                console.error("Erro ao excluir orçamento:", error);
-                alert(error.message);
+                let erro = `Erro ao excluir orçamento: ${error.message}`;
+                console.error(erro);
+                setMensagemModal({ message: erro })
+                setModal(true)
             }
         }
     }
@@ -169,6 +173,34 @@ export default function MeusOrcamentos() {
                 </div>
             )}
             {showModalExcluir && <div className="modal-backdrop fade show"></div>}
+
+            {modal && (
+                <>
+                    <div className="modal" data-aos="fade-up" style={{ display: 'block' }}>
+                        <div className="modal-dialog modal-dialog-centered">
+                            <div className="modal-content border-0 shadow-lg rounded-4">
+                                <div className="modal-header border-0 pb-0">
+                                    <h5 className="modal-title text-dark fw-bold">
+                                        <i className="fa-solid fa-triangle-exclamation text-danger me-2"></i>
+                                        Mensagem!
+                                    </h5>
+                                    <button type="button" className="btn-close" onClick={() => setModal(false)}></button>
+                                </div>
+                                <div className="modal-body py-4">
+                                    <p className="mb-0">{mensagemModal.message}</p>
+                                </div>
+                                <div className="modal-footer border-0 bg-light">
+                                    <button type="button" className="btn btn-secondary" onClick={() => setModal(false)}>
+                                        Voltar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="modal-backdrop fade show"></div>
+                </>
+            )}
+
         </>
     );
 }
