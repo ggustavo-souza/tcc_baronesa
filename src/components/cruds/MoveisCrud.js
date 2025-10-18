@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function MoveisCrud() {
+    const baseUrl = "https://tccbaronesapi.cloud"
     const navigate = useNavigate();
     const [registros, setRegistros] = useState([]);
     const [categorias, setCategorias] = useState([]);
@@ -31,7 +32,7 @@ export default function MoveisCrud() {
 
     async function carregarMoveis() {
         try {
-            const res = await fetch("http://localhost/tcc_baronesa/api/moveis");
+            const res = await fetch(`${baseUrl}/api/moveis`);
             if (!res.ok) throw new Error("Erro ao carregar móveis");
             const data = await res.json();
             setRegistros(data);
