@@ -45,7 +45,7 @@ export default function MoveisCrud() {
 
     async function carregarCategorias() {
         try {
-            const res = await fetch("http://localhost/tcc_baronesa/api/categorias");
+            const res = await fetch(`${baseUrl}/api/categorias`);
             if (!res.ok) throw new Error("Erro ao carregar categorias");
             const data = await res.json();
             setCategorias(data);
@@ -57,7 +57,7 @@ export default function MoveisCrud() {
     async function deletarMovel() {
         if (!movelIdParaExcluir) return;
         try {
-            const res = await fetch(`http://localhost/tcc_baronesa/api/moveis/${movelIdParaExcluir}`, { method: 'DELETE' });
+            const res = await fetch(`${baseUrl}/api/moveis/${movelIdParaExcluir}`, { method: 'DELETE' });
             if (!res.ok) throw new Error("Erro ao excluir móvel");
             setRegistros(registros.filter(m => m.id !== movelIdParaExcluir));
             setShowModalExcluir(false);
@@ -84,7 +84,7 @@ export default function MoveisCrud() {
         }
 
         try {
-            const res = await fetch("http://localhost/tcc_baronesa/api/moveis", {
+            const res = await fetch(`${baseUrl}/api/moveis`, {
                 method: "POST",
                 body: form
             });
@@ -167,7 +167,7 @@ export default function MoveisCrud() {
                                             <td>{categorias.find(c => c.id === m.categoria_id)?.nome || '—'}</td>
                                             <td>
                                                 {m.fotos?.length > 0 && (
-                                                    <img src={`http://localhost/tcc_baronesa/api/uploads/${m.fotos.find(f => f.principal)?.foto || m.fotos[0].foto}`} alt={m.nome} width="50" className="img-thumbnail" />
+                                                    <img src={`${baseUrl}/api/uploads/${m.fotos.find(f => f.principal)?.foto || m.fotos[0].foto}`} alt={m.nome} width="50" className="img-thumbnail" />
                                                 )}
                                             </td>
                                             <td>
