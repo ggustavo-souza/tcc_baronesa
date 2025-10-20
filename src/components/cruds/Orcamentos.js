@@ -49,12 +49,11 @@ export default function AdminOrcamentos() {
         }
     }
 
-    function handleContato(idOrcamento) {
+    function handleContato(idOrcamento, numeroCliente) {
         // logica whatsapp
         console.log("Entrando em contato sobre o orçamento:", idOrcamento);
-        const numeroWhatsapp = "5515997396140";
         const mensagem = `Olá! Somos da A Baronesa Movelaria. Queremos contatar sobre o Orçamento (Nº ${idOrcamento}).`;
-        window.open(`https://wa.me/${numeroWhatsapp}?text=${encodeURIComponent(mensagem)}`, '_blank');
+        window.open(`https://wa.me/${numeroCliente}?text=${encodeURIComponent(mensagem)}`, '_blank');
     }
 
     async function fetchCategorias() {
@@ -179,13 +178,17 @@ export default function AdminOrcamentos() {
                                 }>
                                     <i className='fa fa-xmark me-1'></i>Desaprovar
                                 </button>
+
+                            </>
+                        )}
+                        {registro.aprovacao === ('aprovado') && (
+                            <>
                                 <button className="btn btn-warning m-3" onClick={() => {
-                                    handleContato(registro.id)
+                                    handleContato(registro.id,registro.telefone)
                                 }
                                 }>
                                     <i className='fa fa-phone me-2'></i>Entrar em contato
                                 </button>
-
                             </>
                         )}
                         <button className="btn btn-danger m-3" onClick={() => {
