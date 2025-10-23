@@ -74,7 +74,7 @@ function HomeProdutos() {
                         <h1 className="titulo-pagina">
                             {categoria ? capitalizar(categoria) : 'Nossos Produtos'}
                         </h1>
-                        <p className="lead text-muted mb-5">
+                        <p className="lead mb-5" style={{color: "#ffffff"}}>
                             Móveis artesanais que contam uma história em cada detalhe.
                         </p>
                     </div>
