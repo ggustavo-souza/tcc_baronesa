@@ -49,7 +49,7 @@ try {
     $client = new PreferenceClient();
 
     // Define a base das URLs de retorno (backurls)
-    $backUrlsBase = "http://localhost/tcc_baronesa/api/backurls"; 
+    $backUrlsBase = "http://localhost:3000/"; 
 
     $preferenceData = [
         "items" => [
@@ -60,21 +60,13 @@ try {
             ]
         ],
         "back_urls" => [
-            "success" => $backUrlsBase . "/sucesso.php",
-            "failure" => $backUrlsBase . "/falha.php",
-            "pending" => $backUrlsBase . "/pendente.php"
+            "success" => $backUrlsBase . "/pagamentosucesso",
+            "failure" => $backUrlsBase . "/pagamentofalha",
+            "pending" => $backUrlsBase . "/pagamentopendente"
         ],
         "external_reference" => strval($dados['id_pedido']),
         
-        // ⭐️ CORREÇÃO FINAL: FORÇANDO PIX, SALDO E CRÉDITO ⭐️
-        // Remove Boleto/Offline e Débito Virtual para priorizar Pix e Saldo
         "payment_methods" => [
-            "excluded_payment_types" => [
-                // 'ticket' é o ID para Boleto, Pagamento na Lotérica e outros meios offline
-                ["id" => "ticket"], 
-                // 'debit_card' exclui o débito virtual da Caixa (Pode ser o Débito que estava aparecendo)
-                ["id" => "debit_card"] 
-            ], 
             // Define o máximo de parcelas
             "installments" => 12 
         ]

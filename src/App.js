@@ -16,6 +16,9 @@ import AuthAcess from './components/auths/AuthAcess';
 import AdminOrcamentos from './components/cruds/Orcamentos';
 import MeusOrcamentos from './components/MeusOrcamentos';
 import Pedidos from './components/Pedidos';
+import Sucesso from './components/backurls/Sucesso';
+import Falha from './components/backurls/Falha';
+import Pendente from './components/backurls/Pendente';
 import { useEffect } from 'react';
 
 
@@ -40,6 +43,9 @@ function App() {
           <Route path="/minhaconta" element={<MinhaConta />}></Route>
           <Route path="/meusorcamentos" element={<MeusOrcamentos />}></Route>
           <Route path="/pedidos" element={<Pedidos />}></Route>
+          <Route path="/pagamentosucesso" element={<Sucesso />}></Route>
+          <Route path="/pagamentofalha" element={<Falha />}></Route>
+          <Route path="/pagamentopendente" element={<Pendente />}></Route>
           <Route path="/crud" element={
             <AuthAcess >
               <Crud />
