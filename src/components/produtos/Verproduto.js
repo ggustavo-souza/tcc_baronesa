@@ -6,7 +6,7 @@ import Aos from 'aos';
 
 export default function VerMovel() {
     const { id } = useParams();
-    const urlAPI = "https://tccbaronesaapi.cloud"
+    const urlAPI = "https://tccbaronesapi.cloud"
     const navigate = useNavigate();
     const [movel, setMovel] = useState(null);
     const [categoria, setCategoria] = useState('');

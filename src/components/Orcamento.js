@@ -15,7 +15,7 @@ function HomeOrcamento() {
         Aos.init({ duration: 1000, once: true });
     }, []);
     
-    const urlAPI = "https://tccbaronesaapi.cloud"
+    const urlAPI = "https://tccbaronesapi.cloud"
 
     // estados do form
     const [categoria, setCategoria] = useState("");
