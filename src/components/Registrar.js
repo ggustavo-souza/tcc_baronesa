@@ -15,6 +15,7 @@ function FormRegistrar() {
     }, []);
     const [form, setForm] = useState({ nome: "", email: "", password: "" });
     const [alertMessage, setAlertMessage] = useState({ type: "", message: "" });
+    const urlAPI = "https://tccbaronesaapi.cloud"
 
     const handleChange = e => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -28,7 +29,7 @@ function FormRegistrar() {
         e.preventDefault();
         setAlertMessage({ type: '', message: ''});
 
-        const resposta = await fetch("http://localhost/tcc_baronesa/api/cadastro.php", {
+        const resposta = await fetch(`${urlAPI}/api/cadastro.php`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(form)
