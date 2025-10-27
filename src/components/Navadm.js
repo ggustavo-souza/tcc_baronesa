@@ -53,23 +53,23 @@ function Navadm() {
                 <div className={`collapse navbar-collapse${isNavCollapsed ? "" : " show"}`} id="navbarAdmin">
                     <ul className="navbar-nav subir mx-auto w-100 justify-content-center me-5">
                         <li className="nav-item">
-                            <Link className="nav-link fw-bold fs-5 m-1" to="/crud" style={{ color: '#FFD230' }}>
-                                <i className="fa-solid fa-home me-2"></i>Home
-                            </Link>
-                        </li>
-                        <li className="nav-item">
                             <Link className="nav-link fw-bold fs-5 m-1" to="/admin-usuarios" style={{ color: '#FFD230' }}>
                                 <i className="fa-solid fa-users me-2"></i>Usuários
                             </Link>
                         </li>
                         <li className="nav-item">
                             <Link className="nav-link fw-bold fs-5 m-1" to="/admin-produtos" style={{ color: '#FFD230' }}>
-                                <i className="fa-solid fa-cart-shopping me-2"></i>Móveis
+                                <i className="fa-solid fa-chair me-2"></i>Móveis
                             </Link>
                         </li>
                         <li className="nav-item">
                             <Link className="nav-link fw-bold fs-5 m-1" to="/admin-orcamentos" style={{ color: '#FFD230' }}>
                                 <i className="fa-solid fa-file-invoice-dollar me-2"></i>Orçamentos
+                            </Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link className="nav-link fw-bold fs-5 m-1" to="/admin-pedidos" style={{ color: '#FFD230' }}>
+                                <i className="fa-solid fa-cart-plus me-2"></i>Pedidos
                             </Link>
                         </li>
                     </ul>

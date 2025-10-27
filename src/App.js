@@ -19,6 +19,7 @@ import Pedidos from './components/Pedidos';
 import Sucesso from './components/backurls/Sucesso';
 import Falha from './components/backurls/Falha';
 import Pendente from './components/backurls/Pendente';
+import PedidosCrud from './components/cruds/PedidosCrud';
 import { useEffect } from 'react';
 
 
@@ -67,6 +68,12 @@ function App() {
           <Route path="/admin-orcamentos" element={
             <AuthAcess >
               <AdminOrcamentos />
+            </AuthAcess>
+          }>
+          </Route>
+          <Route path="/admin-pedidos" element={
+            <AuthAcess >
+              <PedidosCrud />
             </AuthAcess>
           }>
           </Route>
