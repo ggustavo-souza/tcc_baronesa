@@ -10,10 +10,12 @@ function PedidosCrud() {
 
     const urlAPI = "https://tccbaronesapi.cloud"
     const [pedidos, setPedidos] = useState([]);
+    const [usuarios, setUsuarios] = useState([]);
 
     useEffect(() => {
         Aos.init({ duration: 800, once: true });
         puxarPedidos();
+        puxarUsuarios();
 
     }, [])
 
@@ -36,15 +38,32 @@ function PedidosCrud() {
         }
     }
 
+    async function puxarUsuarios() {
+        const url = `${urlAPI}/api/usuarios`
+
+        try {
+            const res = await fetch(url);
+            if (!res.ok) {
+                throw new Error(`Erro na API: ${res.status} - ${res.statusText}`);
+            }
+
+            const data = await res.json();
+
+            console.log(`Usuarios recebidos: ${data}`);
+            setUsuarios(data);
+        }catch (error) {
+            console.error("Ocorreu um erro na requisição: ", error.message);
+        }
+    }
+
+
+
     return (
         <>
             <Navadm />
                 <div className="container">
                     {pedidos.length > 0 ? (
-                        <div>
-                            {pedidos.map(pedido => (
-                                <p>{pedido.}</p>
-                            ))}
+                        <div key={pedidos.id}>
                         </div>
                     ) : "Não foi encontrado registro"}
                 </div>
