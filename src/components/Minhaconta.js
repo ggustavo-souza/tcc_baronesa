@@ -29,58 +29,6 @@ function MinhaConta() {
         navigate("/");
     }
 
-    const ConfirmModal = () => (
-        <div
-            className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-opacity duration-300 ${showModal ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-            style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)' }}
-        >
-            <div
-                className={`w-full max-w-sm rounded-xl shadow-2xl transition-transform duration-300 translate-y-0 translate-y-10`}
-                style={{ backgroundColor: '#FFFDF6' }} // Fundo mais claro para contraste
-            >
-                {/* Header */}
-                <div className="p-4 rounded-t-xl flex justify-between items-center" style={{ backgroundColor: '#FFD230' }}>
-                    <h5 className="text-lg font-extrabold text-[#503325]">Confirmar Saída</h5>
-                    <button
-                        type="button"
-                        className="text-[#503325] hover:text-red-700"
-                        aria-label="Close"
-                        onClick={() => setShowModal(false)}
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-
-                {/* Body */}
-                <div className="p-6 text-center">
-                    <h5 className="text-lg text-gray-700 font-medium">Deseja realmente sair da sua conta?</h5>
-                </div>
-
-                {/* Footer */}
-                <div className="p-4 flex justify-end space-x-3 border-t border-gray-100">
-                    <button
-                        type="button"
-                        className="px-4 py-2 text-sm font-semibold rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
-                        onClick={() => setShowModal(false)}
-                        style={{ backgroundColor: 'white', color: '#503325', border: '2px solid #503325' }}
-                    >
-                        Cancelar
-                    </button>
-                    <button
-                        type="button"
-                        className="px-4 py-2 text-sm font-semibold rounded-lg shadow-lg hover:bg-red-700 transition-colors duration-200"
-                        onClick={validarLogout}
-                        style={{ backgroundColor: '#dc3545', color: 'white' }}
-                    >
-                        Sair
-                    </button>
-                </div>
-            </div>
-        </div>
-    );
-
     return (
         <main>
             <Navbar />
@@ -184,7 +132,52 @@ function MinhaConta() {
                 </div>
             </div>
 
-            {showModal && <ConfirmModal />}
+            {showModal && (
+                <div
+                    className="modal"
+                    data-aos="fade-up"
+                    style={{ display: 'block' }}
+                >
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content border-0 shadow-lg" style={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}>
+
+                            <div className="modal-header border-0 pb-2" style={{ backgroundColor: '#FFD230' }}>
+                                <h5 className="modal-title text-dark fw-bold">Confirmar Saída</h5>
+                                <button
+                                    type="button"
+                                    className="btn-close"
+                                    aria-label="Close"
+                                    onClick={() => setShowModal(false)}
+                                ></button>
+                            </div>
+
+                            <div className="modal-body pt-4 pb-4">
+                                <h5 className="">Deseja realmente sair da sua conta?</h5>
+                            </div>
+
+                            <div className="modal-footer border-0 pt-0">
+                                <button
+                                    type="button"
+                                    className="btn btn-light text-dark fw-bold px-4"
+                                    onClick={() => setShowModal(false)}
+                                    style={{ border: '1px solid #ced4da' }}
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-danger fw-bold px-4"
+                                    onClick={validarLogout}
+                                    style={{ backgroundColor: '#dc3545', borderColor: '#dc3545' }}
+                                >
+                                    Sair
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {showModal && <div className="modal-backdrop fade show"></div>}
         </main>
     );
 }
