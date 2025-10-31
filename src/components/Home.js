@@ -35,15 +35,35 @@ function Home() {
 function ListaPequena() {
   const categories = ["mesas", "cadeiras", "armários", "cômodas"];
 
+  const categoryIcons = {
+  "mesas": "fa-solar-panel",      
+  "cadeiras": "fa-chair",    
+  "armários": "fa-toilet-portable", 
+  "cômodas": "fa-server",    
+};
+
+ const faBaseClass = "fas"; 
+
   return (
     <div className="category-container mt-4" data-aos="fade-up">
       <ul className="category-list">
-        {categories.map((category, index) => (
-          <li key={index} className="category-item">
-            <a href={`/produtos/${RemoverAcentos(category)}`}>{category.charAt(0).toUpperCase() + category.slice(1)}</a>
-          </li>
-        ))
-        }
+        {categories.map((category, index) => {
+          // Obtém o nome da classe do ícone, se existir
+          const iconClass = categoryIcons[category.toLowerCase()];
+          const iconElement = iconClass 
+            ? <i className={`${faBaseClass} ${iconClass} me-2`}></i> 
+            : null; // Não mostra ícone se não houver mapeamento
+
+          return (
+            <li key={index} className="category-item">
+              <a href={`/produtos/${RemoverAcentos(category)}`}>
+                {/* Adiciona o ícone antes do texto da categoria */}
+                {iconElement}
+                {category.charAt(0).toUpperCase() + category.slice(1)}
+              </a>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
