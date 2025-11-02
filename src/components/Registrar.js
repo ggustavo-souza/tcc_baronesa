@@ -49,8 +49,8 @@ function FormRegistrar() {
         <main>
             <Navbar />
             <div className="container">
-                <div className="row justify-content-center mt-4" data-aos="fade-up">
-                    <div className="col-md-6 card p-5" style={{ backgroundColor: '#503325c1', borderRadius: '10px' }}>
+                <div className="row justify-content-center mt-5 mb-5" data-aos="fade-up">
+                    <div className="col-md-8 col-lg-6 col-xl-6 col-9 card p-4 p-md-5 shadow-lg rounded-4 login-card">
                          {alertMessage.message && (
                             <div className={`alert alert-${alertMessage.type} alert-dismissible fade show`} role="alert">
                                 {alertMessage.message}
@@ -58,22 +58,24 @@ function FormRegistrar() {
                             </div>
                         )}
                         <form onSubmit={handleSubmit} className="form-login">
-                            <h1 className="text-center corAmarela" style={{ color: '#FFD230' }}>Registrar</h1>
-                            <div className="form-group mt-5">
-                                <label htmlFor="username" style={{ color: '#FFD230' }}>Nome de Usuário</label>
-                                <input type="text" id="username" name="nome" className="form-control mt-1" required value={form.nome} onChange={handleChange}
+                            <h1 className="text-center corAmarela fw-bold mb-4">Registrar</h1>
+                            
+                            <div className="form-group mb-3">
+                                <label htmlFor="username" className="corAmarela mb-2">Nome de Usuário</label>
+                                <input type="text" id="username" name="nome" className="form-control form-control-lg" required value={form.nome} onChange={handleChange}
 />
                             </div>
-                            <div className="form-group mt-3">
-                                <label htmlFor="email" style={{ color: '#FFD230' }}>E-mail</label>
-                                <input type="email" id="email" name="email" className="form-control mt-1" required value={form.email} onChange={handleChange}/>
+                            <div className="form-group mb-3">
+                                <label htmlFor="email" className="corAmarela mb-2">E-mail</label>
+                                <input type="email" id="email" name="email" className="form-control form-control-lg" required value={form.email} onChange={handleChange}/>
                             </div>
-                            <div className="form-group mt-3">
-                                <label htmlFor="password" style={{ color: '#FFD230' }}>Senha</label>
-                                <input type="password" id="password" name="password" className="form-control mt-1" required value={form.password} onChange={handleChange}/>
+                            <div className="form-group mb-4">
+                                <label htmlFor="password" className="corAmarela mb-2">Senha</label>
+                                <input type="password" id="password" name="password" className="form-control form-control-lg" required value={form.password} onChange={handleChange}/>
                             </div>
-                            <div>
-                                <button type="submit" className="btn btn-warning mt-4 corBotao">Registrar</button>
+                            
+                            <div className="d-grid gap-2 mt-5">
+                                <button type="submit" className="btn btn-warning btn-lg corBotao fw-bold rounded rounded-5">Registrar</button>
                             </div>
                         </form>
                     </div>

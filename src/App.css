@@ -518,4 +518,30 @@
             margin-top: 1rem;
         }
 
+        /* Adicione isso ao seu App.css */
+
+.login-card {
+  background-color: #503325c1;
+}
+
+.corAmarela {
+  color: #FFD230;
+}
+
+.form-control-lg.form-control-lg { /* A especificidade extra ajuda a sobrescrever o Bootstrap */
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid #FFD230;
+}
+
+.form-control-lg::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.form-control-lg:focus {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border-color: #ffd95e;
+  box-shadow: 0 0 0 0.25rem rgba(255, 210, 48, 0.25);
+}
 
