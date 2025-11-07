@@ -6,7 +6,6 @@ import Aos from 'aos';
 import 'aos/dist/aos.css';
 import React, { useEffect, useState } from 'react';
 import { useAuthUser } from "./auths/useAuthUser";
-// Não é necessário importar a SDK do MP se você usar o redirecionamento
 
 function MeusPedidos() {
   useAuthUser();
@@ -16,15 +15,45 @@ function MeusPedidos() {
   const [modal, setModal] = useState(false)
   const [mensagemModal, setMensagemModal] = useState({ message: "" })
 
+  // --- Novos Estados para Pagamento ---
+  const [usuarioLogado, setUsuarioLogado] = useState(null); // Guarda o objeto do usuário (com email)
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [pedidoParaPagar, setPedidoParaPagar] = useState(null);
+  const [cpfInput, setCpfInput] = useState('');
+  const [nomeInput, setNomeInput] = useState('');
+  // ------------------------------------
+
   useEffect(() => {
-    const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'))
-    if (usuarioLogado) {
-      carregarPedidos(usuarioLogado.id);
+    // Preservando a lógica do usuário de usar localStorage para obter o usuário logado
+    const usuario = JSON.parse(localStorage.getItem('usuarioLogado'));
+    if (usuario) {
+      setUsuarioLogado(usuario); // Armazena o objeto do usuário, que contém o email e nome
+      carregarPedidos(usuario.id);
     } else {
       setLoading(false);
     }
     Aos.init({ duration: 600, once: true });
   }, []);
+
+  // Função utilitária para limpar e validar CPF/CNPJ
+  function formatAndCleanCpf(value) {
+    // Remove tudo que não for dígito
+    return value.replace(/\D/g, '');
+  }
+  
+  // Função para formatar como moeda BRL
+  const formatCurrency = (value) => {
+    if (value === undefined || value === null) return 'R$ 0,00';
+    const num = parseFloat(value);
+    if (isNaN(num)) return `R$ ${value}`; // Retorna o valor original se não for número (para evitar crash)
+    
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+      minimumFractionDigits: 2,
+    }).format(num);
+  };
+
 
   async function carregarPedidos(idUsuario) {
     if (!idUsuario) {
@@ -46,22 +75,65 @@ function MeusPedidos() {
     }
   };
 
-  async function pagarPedido(pedido) {
+  // 1. O botão AGORA apenas guarda o pedido, verifica o e-mail e abre o modal de confirmação
+  function pagarPedido(pedido) {
+    if (!usuarioLogado || !usuarioLogado.email) {
+      setMensagemModal({ message: "Erro: Não foi possível identificar seu e-mail de cadastro para o pagamento." });
+      setModal(true);
+      return;
+    }
+
     const precoNumerico = parseFloat(pedido.preco);
     if (isNaN(precoNumerico)) {
       setMensagemModal({ message: "Erro: O preço do pedido não é um número válido." });
       setModal(true);
       return;
     }
+    
+    setPedidoParaPagar(pedido);
+    setCpfInput('');
+    // Pré-preenche o nome se disponível no objeto do usuário logado
+    setNomeInput(usuarioLogado.nome || ''); 
+    setShowPaymentModal(true);
+  };
+  
+  // 2. Nova função para confirmar o pagamento (chamada pelo modal)
+  async function handleConfirmPayment() {
+    const cpfLimpo = formatAndCleanCpf(cpfInput);
+    const nomeCompleto = nomeInput.trim();
+
+    // Validação de dados (Client-side)
+    if (cpfLimpo.length !== 11 && cpfLimpo.length !== 14) {
+      setMensagemModal({ message: "Por favor, insira um CPF (11 dígitos) ou CNPJ (14 dígitos) válido." });
+      setModal(true);
+      return;
+    }
+    if (nomeCompleto.split(' ').length < 2 || nomeCompleto.length < 5) {
+       setMensagemModal({ message: "Por favor, insira o Nome COMPLETO para o pagamento." });
+      setModal(true);
+      return;
+    }
+    
+    // Coletar dados
+    const pedido = pedidoParaPagar;
+    const precoNumerico = parseFloat(pedido.preco);
+    const emailCliente = usuarioLogado.email;
+    
+    setShowPaymentModal(false); 
+    setLoading(true); // Exibe loading enquanto a API do MP processa
 
     try {
+      // 3. Chamada da API com os dados completos do pagador
       const resposta = await fetch(`${urlAPI}/api/criar_preferencia.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           id_pedido: pedido.id,
-          titulo: `Pedido #${pedido.id}`,
-          valor: precoNumerico.toFixed(2) // Envia formatado com 2 casas
+          titulo: `Pedido #${pedido.id} - ${pedido.nome}`,
+          valor: precoNumerico.toFixed(2),
+          email_cliente: emailCliente, // Email recuperado do localStorage
+          cpf_cliente: cpfLimpo, // CPF/CNPJ coletado no modal
+          nome_completo: nomeCompleto // Nome completo coletado no modal
         }),
       });
 
@@ -69,19 +141,26 @@ function MeusPedidos() {
 
       if (!data.id || !data.init_point) { 
         console.error("Erro na preferência:", data);
-        setMensagemModal({ message: "Erro ao criar preferência de pagamento. Detalhes ausentes do Mercado Pago." });
+        // Exibe o erro retornado pelo PHP, que pode ser o erro do Mercado Pago
+        setMensagemModal({ 
+            message: data.message || "Erro ao criar preferência de pagamento. Verifique os detalhes no console." 
+        });
         setModal(true);
+        setLoading(false);
         return;
       }
-
+      
+      // Sucesso: Redirecionar para o Checkout Pro
       window.location.href = data.init_point;
 
     } catch (erro) {
       console.error("Erro:", erro);
-      setMensagemModal({ message: "Falha na conexão com o servidor." });
-      setModal(true)
+      setMensagemModal({ message: "Falha na conexão com o servidor ou erro inesperado." });
+      setModal(true);
+      setLoading(false);
     }
   };
+
 
   return (
     <div>
@@ -141,7 +220,6 @@ function MeusPedidos() {
                       borderRadius: "15px",
                       transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
                       cursor: 'default',
-                      // Adicionado um pequeno hover effect com CSS inline (necessário JS para um efeito real de hover)
                     }}
                     onMouseOver={(e) => {
                       e.currentTarget.style.transform = 'translateY(-5px)';
@@ -176,7 +254,7 @@ function MeusPedidos() {
                           Preço:
                         </span>
                         <span className="ms-2 fw-bold text-end" style={{ color: "#FFD230" }}>
-                          R$ {(pedido.preco)}
+                          {formatCurrency(pedido.preco)}
                         </span>
                       </div>
                     </div>
@@ -227,6 +305,87 @@ function MeusPedidos() {
         )}
       </div>
       <Footer />
+      
+      {/* ------------------------------------- */}
+      {/* MODAL DE CONFIRMAÇÃO DE PAGAMENTO (CPF) */}
+      {/* ------------------------------------- */}
+      {showPaymentModal && pedidoParaPagar && (
+        <>
+          <div className="modal" data-aos="fade-up" style={{ display: 'block', zIndex: 1050 }}>
+            <div className="modal-dialog modal-dialog-centered">
+              <div className="modal-content border-0 shadow-lg rounded-4">
+                <div className="modal-header border-0 pb-0 bg-light rounded-top-4">
+                  <h5 className="modal-title text-dark fw-bold">
+                    <i className="fa-solid fa-lock me-2 text-danger"></i>
+                    Confirmação de Pagamento
+                  </h5>
+                  <button type="button" className="btn-close" onClick={() => setShowPaymentModal(false)}></button>
+                </div>
+                <div className="modal-body py-4 bg-white">
+                    <p className="mb-3 text-dark">
+                        Para prosseguir com o pagamento de **{formatCurrency(pedidoParaPagar.preco)}** via Mercado Pago (incluindo Pix), precisamos do seu documento de identificação.
+                    </p>
+                    <div className="mb-3">
+                        <label htmlFor="nomeCompletoInput" className="form-label fw-bold text-dark">Nome Completo:</label>
+                        <input
+                            type="text"
+                            id="nomeCompletoInput"
+                            className="form-control"
+                            value={nomeInput}
+                            onChange={(e) => setNomeInput(e.target.value)}
+                            placeholder="Seu nome e sobrenome"
+                            required
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="cpfCnpjInput" className="form-label fw-bold text-dark">CPF ou CNPJ:</label>
+                        <input
+                            type="text"
+                            id="cpfCnpjInput"
+                            className="form-control"
+                            value={cpfInput}
+                            onChange={(e) => setCpfInput(e.target.value)}
+                            placeholder="Apenas números (Ex: 12345678901)"
+                            required
+                        />
+                        <small className="text-muted">Necessário para emissão do Pix/Boleto.</small>
+                    </div>
+                    {usuarioLogado && (
+                        <div className="alert alert-info py-2" role="alert">
+                            <i className="fa-solid fa-envelope me-2"></i>
+                            E-mail de cobrança: **{usuarioLogado.email}**
+                        </div>
+                    )}
+                </div>
+                <div className="modal-footer border-0 bg-light rounded-bottom-4">
+                  <button 
+                    type="button" 
+                    className="btn btn-secondary fw-bold" 
+                    onClick={() => setShowPaymentModal(false)}
+                  >
+                    Cancelar
+                  </button>
+                  <button 
+                    type="button" 
+                    className="btn fw-bold text-white" 
+                    style={{ backgroundColor: "#005a32ff" }}
+                    onClick={handleConfirmPayment}
+                    disabled={!cpfInput || !nomeInput}
+                  >
+                    <i className="fa-solid fa-money-check-dollar me-2"></i>
+                    Confirmar Pagamento
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="modal-backdrop fade show" style={{ zIndex: 1040 }}></div>
+        </>
+      )}
+
+      {/* ------------------------------------- */}
+      {/* MODAL DE ERRO/MENSAGEM GERAL (Original) */}
+      {/* ------------------------------------- */}
       {modal && (
         <>
           <div className="modal" data-aos="fade-up" style={{ display: 'block' }}>
