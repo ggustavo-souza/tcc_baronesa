@@ -323,7 +323,7 @@ function MeusPedidos() {
                 </div>
                 <div className="modal-body py-4 bg-white">
                     <p className="mb-3 text-dark">
-                        Para prosseguir com o pagamento de **{formatCurrency(pedidoParaPagar.preco)}** via Mercado Pago (incluindo Pix), precisamos do seu documento de identificação.
+                        Para prosseguir com o pagamento de <bold>{formatCurrency(pedidoParaPagar.preco)}</bold> via Mercado Pago (incluindo Pix), precisamos do seu documento de identificação.
                     </p>
                     <div className="mb-3">
                         <label htmlFor="nomeCompletoInput" className="form-label fw-bold text-dark">Nome Completo:</label>
@@ -353,7 +353,7 @@ function MeusPedidos() {
                     {usuarioLogado && (
                         <div className="alert alert-info py-2" role="alert">
                             <i className="fa-solid fa-envelope me-2"></i>
-                            E-mail de cobrança: **{usuarioLogado.email}**
+                            E-mail de cobrança: <bold>{usuarioLogado.email}</bold>
                         </div>
                     )}
                 </div>
