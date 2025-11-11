@@ -12,7 +12,6 @@ $charset = 'utf8mb4';
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 $options = [
     // Lança exceções para erros, o que é ótimo para try/catch
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
     // Define o fetch padrão para arrays associativos
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     // Desativa a emulação de prepared statements (melhor para segurança)
