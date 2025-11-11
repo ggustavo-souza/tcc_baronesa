@@ -14,6 +14,10 @@ function PedidosCrud() {
     const [error, setError] = useState();
     const [loading, setLoading] = useState(true);
 
+    if(usuarios && setUsuarios && error && loading && setLoading) {
+        console.log("Teste Contra ci")
+    }
+
     useEffect(() => {
         Aos.init({ duration: 800, once: true });
         puxarPedidos();

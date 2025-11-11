@@ -9,6 +9,10 @@ function Navadm() {
     const [showModalSair, setShowModalSair] = React.useState(false);
     const [usuarioLogado, setUsuarioLogado] = React.useState(null);
 
+    if (usuarioLogado) {
+        console.log("ok");
+    }
+
     const handleToggle = () => {
         setIsNavCollapsed(!isNavCollapsed);
     };
