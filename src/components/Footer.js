@@ -19,7 +19,7 @@ function Footer() {
                 </div>
                 <div class="text-center text-white p-3">
                     <p>© 2025 - 2025 Copyright</p>
-                    <a class="text-white" href="https://www.abaronesa.vercel.app/"> A Baronesa - Movelaria</a>
+                    <a class="text-white" href="https://abaronesa.vercel.app/"> A Baronesa - Movelaria</a>
                 </div>
             </footer>
         </div>
