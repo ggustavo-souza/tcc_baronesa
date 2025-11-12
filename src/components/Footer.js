@@ -1,4 +1,4 @@
-import React, { use } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import '../App.css';
 import '../awesome/all.min.css'
