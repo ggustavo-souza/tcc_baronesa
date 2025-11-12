@@ -547,12 +547,10 @@
 
 .map-responsive {
   overflow: hidden; 
-  /* A chave para o tamanho menor na coluna */
   padding-bottom: 45%; 
   position: relative; 
   height: 0; 
-  /* Largura máxima para evitar que o mapa fique muito esticado na coluna */
-  max-width: 300px; 
+  max-width: 300px; /* Largura na coluna */
 }
 
 .map-responsive iframe {
