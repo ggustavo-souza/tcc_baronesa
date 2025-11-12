@@ -19,7 +19,7 @@ export default function VerMovel() {
     useEffect(() => {
         Aos.init({ duration: 500 });
         carregarMovel();
-    }, []);
+    },);
 
     async function carregarMovel() {
         try {
