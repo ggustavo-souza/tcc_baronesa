@@ -544,3 +544,37 @@
   border-color: #ffd95e;
   box-shadow: 0 0 0 0.25rem rgba(255, 210, 48, 0.25);
 }
+
+.carousel-item {
+  height: 250px; 
+}
+          
+.wide-carousel-img {
+  height: 100%;
+  object-fit: cover;
+  object-position: center; 
+}
+
+  @media (min-width: 768px) {
+    .carousel-item {
+      height: 400px; 
+    }
+  }
+  
+  @media (min-width: 992px) {
+    .carousel-item {
+      height: 500px;
+    }
+  }
+
+  .wide-carousel-container {
+    max-width: 1600px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  }
+  .carousel-inner {
+    border-radius: 0.75rem;
+  }
