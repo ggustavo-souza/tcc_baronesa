@@ -547,10 +547,11 @@
 
 .map-responsive {
   overflow: hidden; 
+  /* ESTE DEFINE A ALTURA VISUAL: */
   padding-bottom: 45%; 
   position: relative; 
-  height: 0; 
-  max-width: 300px; /* Largura na coluna */
+  height: 200px; /* MANTENHA O ZERO */
+  max-width: 300px; 
 }
 
 .map-responsive iframe {
