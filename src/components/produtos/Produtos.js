@@ -114,7 +114,7 @@ function HomeProdutos() {
                                         <div className="card-img-overlay-content">
                                             <Link to={`/produto/${movel.id}`} className="btn btn-ver-mais">
                                                 Ver Detalhes
-                                            </Link>
+                                            </Link>  
                                         </div>
                                     </div>
                                     <div className="card-body">
