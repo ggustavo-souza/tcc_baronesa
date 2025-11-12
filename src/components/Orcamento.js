@@ -1,453 +1,295 @@
-import React, { useEffect, useState, useCallback } from 'react';
-// Importações de Módulos Externos (Mantidas)
-import '../App.css'; // Assumindo que App.css existe no seu projeto
-import '../awesome/all.min.css'; // Assumindo que o Font Awesome existe
-import Navbar from './Navbar'; // Assumindo que Navbar existe
-import Footer from './Footer'; // Assumindo que Footer existe
-import Aos from 'aos'; // Assumindo que Aos foi instalado via npm
-import 'aos/dist/aos.css'; // Assumindo que o CSS do Aos existe
+import "../App.css";
+import "../awesome/all.min.css";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
+import { useAuthUser } from './auths/useAuthUser';
+import { useEffect, useState } from "react";
+import Aos from "aos";
+import { useNavigate } from "react-router-dom";
 
-// Assumindo que useAuthUser existe
-import { useAuthUser } from "./auths/useAuthUser"; 
+function HomeOrcamento() {
+    // pega o usuário logado
+    const usuario = useAuthUser(); // retorna o objeto do usuário ou redireciona se não estiver logado
 
-// --- Componente Principal ---
-function MeusPedidos() {
-	useAuthUser();
-	const urlAPI = "https://tccbaronesapi.cloud" 
-	
-	const [pedidos, setPedidos] = useState([]);
-	const [loading, setLoading] = useState(true);
-	const [modal, setModal] = useState(false);
-	const [mensagemModal, setMensagemModal] = useState({ message: "" });
+    useEffect(() => {
+        Aos.init({ duration: 1000, once: true });
+    }, []);
+    
+    const urlAPI = "https://tccbaronesapi.cloud"
 
-	// --- Estados para Pagamento ---
-	const [usuarioLogado, setUsuarioLogado] = useState(null);
-	const [showPaymentModal, setShowPaymentModal] = useState(false);
-	const [pedidoParaPagar, setPedidoParaPagar] = useState(null);
-	const [cpfInput, setCpfInput] = useState('');
-	const [nomeInput, setNomeInput] = useState('');
-	// ------------------------------------
+    // estados do form
+    const [categoria, setCategoria] = useState("");
+    const [mensagem, setMensagem] = useState("");
+    const [telefone, setTelefone] = useState("");
+    const [modalErro, setModalErro] = useState(false);
+    const [modalConcluido, setModalConcluido] = useState(false);
+    const [modalLogado, setModalLogado] = useState(false);
 
-	// Função para aplicar a máscara de CPF ou CNPJ (Mantida como useCallback estável)
-	const maskCpfCnpj = useCallback((value) => {
-		let cleanValue = value.replace(/\D/g, ''); 
+    const navigate = useNavigate();
 
-		if (cleanValue.length <= 11) {
-			cleanValue = cleanValue.substring(0, 11);
-			return cleanValue
-				.replace(/(\d{3})(\d)/, '$1.$2')
-				.replace(/(\d{3})(\d)/, '$1.$2')
-				.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-		} else {
-			cleanValue = cleanValue.substring(0, 14);
-			return cleanValue
-				.replace(/^(\d{2})(\d)/, '$1.$2')
-				.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
-				.replace(/\.(\d{3})(\d)/, '.$1/$2')
-				.replace(/(\d{4})(\d)/, '$1-$2');
-		}
-	}, []);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-	// Handler para o campo CPF/CNPJ
-	const handleCpfCnpjChange = (e) => {
-		const value = e.target.value;
-		const maskedValue = maskCpfCnpj(value);
-		setCpfInput(maskedValue);
-	};
-	
-	// Função utilitária para limpar e validar CPF/CNPJ
-	function formatAndCleanCpf(value) {
-		return value.replace(/\D/g, '');
-	}
+        if (!usuario?.id) {
+            setModalLogado(true)
+            return;
+        }
 
-	// Função para formatar como moeda BRL
-	const formatCurrency = (value) => {
-		if (value === undefined || value === null) return 'R$ 0,00';
-		const num = parseFloat(value);
-		if (isNaN(num)) return `R$ ${value}`;
-		
-		return new Intl.NumberFormat('pt-BR', {
-			style: 'currency',
-			currency: 'BRL',
-			minimumFractionDigits: 2,
-		}).format(num);
-	};
+        try {
+            const response = await fetch(`${urlAPI}/api/orcamentos`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    id_usuario: usuario.id,
+                    id_categoria: categoria,
+                    mensagem,
+                    telefone,
+                }),
+            });
 
-	// Funções de Setter de Estado adicionadas ao useCallback para satisfazer o Linter/Vercel
-	const carregarPedidos = useCallback(async (idUsuario) => {
-		if (!idUsuario) {
-			setMensagemModal({ message: "Você precisa estar logado para ver seus pedidos!" });
-			setModal(true);
-			setLoading(false); 
-			return;
-		}
+            const data = await response.json();
+            console.log("Resposta do backend:", data); // <-- para debugging
 
-		try {
-			const resposta = await fetch(`${urlAPI}/api/pedidos/${idUsuario}`);
-			if (!resposta.ok) {
-				throw new Error(`Erro HTTP: ${resposta.status}`);
-			}
-			const data = await resposta.json();
-			setPedidos(Array.isArray(data) ? data : []); 
-		} catch (error) {
-			console.error("Erro ao carregar pedidos:", error.message);
-			setMensagemModal({ message: "Falha ao carregar pedidos. Verifique sua conexão." });
-			setModal(true);
-			setPedidos([]);
-		} finally {
-			setLoading(false);
-		}
-	}, [urlAPI, setMensagemModal, setModal, setLoading, setPedidos]); // DEPENDÊNCIAS ADICIONADAS
+            if (!response.ok) throw new Error(data.message || "Erro ao enviar orçamento");
 
-	// CORREÇÃO: Adicionando carregarPedidos e setUsuarioLogado como dependências do useEffect
-	useEffect(() => {
-		const usuario = JSON.parse(localStorage.getItem('usuarioLogado'));
-		if (usuario) {
-			setUsuarioLogado(usuario); 
-			carregarPedidos(usuario.id); 
-		} else {
-			setLoading(false);
-		}
-		// Aos.init não precisa de dependências
-		Aos.init({ duration: 600, once: true });
-	}, [carregarPedidos, setUsuarioLogado, setLoading]); // CORREÇÃO APLICADA AQUI
+            setModalConcluido(true)
+            setCategoria("");
+            setMensagem("");
+            setTelefone("");
+        } catch (err) {
+            console.error(err.message);
+            setModalErro(true)
+        }
+    };
 
-	// 1. O botão AGORA apenas guarda o pedido, verifica o e-mail e abre o modal de confirmação
-	function pagarPedido(pedido) {
-		if (!usuarioLogado || !usuarioLogado.email) {
-			setMensagemModal({ message: "Erro: Não foi possível identificar seu e-mail de cadastro para o pagamento." });
-			setModal(true);
-			return;
-		}
+    return (
+        <main>
+            <Navbar />
+            {/* comeco do formulario */}
+            <div className="container py-5 d-flex justify-content-center align-items-center" data-aos='fade-up'>
+                <div className="col-lg-8 col-xl-7 col-10 col-md-10">
+                    <div
+                        className="card text-center shadow-lg border-0 rounded-4 shadow-5"
+                        style={{
+                            backgroundColor: '#343a40', // Fundo escuro para contraste (cor dark do BS)
+                            animation: modalErro || modalConcluido ? 'none' : 'fadeInUp 1s ease-out' // Simula Aos.js
+                        }}
+                    >
+                        <div className="card-body p-4 p-md-5">
+                            <h1 className="fw-bolder mb-2" style={{ color: '#FFD230' }}>
+                                <i className="fas fa-file-invoice me-2"></i> Faça Já Seu Orçamento!
+                            </h1>
+                            <p className="card-text h5 mt-3 mb-5" style={{ color: '#FFFFFF'}}>
+                                Descreva seu projeto de imóvel. Nossa equipe entrará em contato em breve!
+                            </p>
 
-		const precoNumerico = parseFloat(pedido.preco);
-		if (isNaN(precoNumerico)) {
-			setMensagemModal({ message: "Erro: O preço do pedido não é um número válido." });
-			setModal(true);
-			return;
-		}
-		
-		setPedidoParaPagar(pedido);
-		setCpfInput('');
-		setNomeInput(usuarioLogado.nome || ''); 
-		setShowPaymentModal(true);
-	};
-	
-	// 2. Nova função para confirmar o pagamento (chamada pelo modal)
-	async function handleConfirmPayment() {
-		const cpfLimpo = formatAndCleanCpf(cpfInput);
-		const nomeCompleto = nomeInput.trim();
+                            <form onSubmit={handleSubmit}>
+                                {/* Categoria */}
+                                <div className="mb-4 text-start">
+                                    <label htmlFor="selectCategoria" className="form-label text-white fw-semibold">
+                                        <i className="fas fa-tags me-2"></i> Selecione a Categoria <span className="text-danger">*</span>
+                                    </label>
+                                    <div className="input-group">
+                                        <span className="input-group-text bg-light border-0"><i className="fas fa-boxes text-secondary"></i></span>
+                                        <select
+                                            className="form-select form-control-lg border-0 shadow-sm"
+                                            id="selectCategoria"
+                                            value={categoria}
+                                            onChange={(e) => setCategoria(e.target.value)}
+                                            required
+                                        >
+                                            <option value="" disabled>Selecione o tipo de móvel...</option>
+                                            <option value="1">Mesas</option>
+                                            <option value="2">Cadeiras</option>
+                                            <option value="3">Cômodas</option>
+                                            <option value="4">Armários</option>
+                                        </select>
+                                    </div>
+                                </div>
 
-		// Validação de dados (Client-side)
-		if (cpfLimpo.length !== 11 && cpfLimpo.length !== 14) {
-			setMensagemModal({ message: "Por favor, insira um CPF (11 dígitos) ou CNPJ (14 dígitos) válido." });
-			setModal(true);
-			return;
-		}
-		if (nomeCompleto.split(' ').length < 2 || nomeCompleto.length < 5) {
-			setMensagemModal({ message: "Por favor, insira o Nome COMPLETO para o pagamento." });
-			setModal(true);
-			return;
-		}
-		
-		// Coletar dados
-		const pedido = pedidoParaPagar;
-		const precoNumerico = parseFloat(pedido.preco);
-		const emailCliente = usuarioLogado.email;
-		
-		setShowPaymentModal(false); 
-		setLoading(true);
+                                {/* Telefone */}
+                                <div className="mb-4 text-start">
+                                    <label htmlFor="telefone" className="form-label text-white fw-semibold">
+                                        <i className="fas fa-phone me-2"></i> Telefone de Contato <span className="text-danger">*</span>
+                                    </label>
+                                    <div className="input-group">
+                                        <span className="input-group-text bg-light border-0"><i className="fas fa-mobile-alt text-secondary"></i></span>
+                                        <input
+                                            type="tel"
+                                            className="form-control form-control-lg border-0 shadow-sm"
+                                            id="telefone"
+                                            placeholder="(11) 91234-5678"
+                                            maxLength="15"
+                                            value={telefone}
+                                            onChange={(e) => setTelefone(e.target.value)}
+                                            onInput={(e) => {
+                                                let value = e.target.value.replace(/\D/g, "");
+                                                if (value.length > 11) value = value.slice(0, 11);
+                                                if (value.length <= 10) {
+                                                    e.target.value = value.replace(/(\d{2})(\d{4})(\d{0,4})/, "($1) $2-$3");
+                                                } else {
+                                                    e.target.value = value.replace(/(\d{2})(\d{5})(\d{0,4})/, "($1) $2-$3");
+                                                }
 
-		try {
-			// 3. Chamada da API com os dados completos do pagador
-			const resposta = await fetch(`${urlAPI}/api/criar_preferencia.php`, {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({
-					id_pedido: pedido.id,
-					titulo: `Pedido #${pedido.id} - ${pedido.nome}`,
-					valor: precoNumerico.toFixed(2),
-					email_cliente: emailCliente, 
-					cpf_cliente: cpfLimpo, 
-					nome_completo: nomeCompleto 
-				}),
-			});
+                                                setTelefone(e.target.value);
 
-			const data = await resposta.json();
+                                            }} // Usa a nova função de máscara
+                                            required
+                                        />
+                                    </div>
+                                </div>
 
-			if (!data.id || !data.init_point) { 
-				console.error("Erro na preferência:", data);
-				setMensagemModal({ 
-					message: data.message || "Erro ao criar preferência de pagamento. Verifique os detalhes no console." 
-				});
-				setModal(true);
-				setLoading(false);
-				return;
-			}
-			
-			// Redirecionamento original (revertido de console.log)
-			window.location.href = data.init_point;
+                                {/* Mensagem */}
+                                <div className="mb-4 text-start">
+                                    <label htmlFor="message" className="form-label text-white fw-semibold">
+                                        <i className="fas fa-edit me-2"></i> Descreva seu Projeto <span className="text-danger">*</span>
+                                    </label>
+                                    <div className="input-group">
+                                        <span className="input-group-text bg-light border-0 align-items-start pt-3"><i className="fas fa-comment-dots text-secondary"></i></span>
+                                        <textarea
+                                            className="form-control border-0 shadow-sm"
+                                            id="message"
+                                            rows="5"
+                                            value={mensagem}
+                                            onChange={(e) => setMensagem(e.target.value)}
+                                            required
+                                            placeholder="Detalhe o máximo possível, incluindo dimensões, materiais desejados ou referências."
+                                        ></textarea>
+                                    </div>
+                                </div>
 
-		} catch (erro) {
-			console.error("Erro:", erro);
-			setMensagemModal({ message: "Falha na conexão com o servidor ou erro inesperado." });
-			setModal(true);
-			setLoading(false);
-		}
-	};
+                                {/* Botão de Envio */}
+                                <div className="text-center mt-5">
+                                    <button
+                                        type="submit"
+                                        className="btn btn-lg fw-bold px-5 py-3 shadow-lg corBotao btn-floating"
+                                        style={{
+                                            backgroundColor: '#FFD230',
+                                            borderColor: '#FFD230',
+                                            color: '#343a40',
+                                            borderRadius: '50px',
+                                        }}
+                                        
+                                    >
+                                        <i className="fas fa-paper-plane me-2"></i> Enviar Orçamento
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <Footer />
 
+            {modalConcluido && (
+                <div
+                    className="modal"
+                    data-aos="fade-up"
+                    style={{ display: 'block' }}
+                >
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content border-0 shadow-lg" style={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}>
 
-	return (
-		<div>
-			<Navbar />
-			<div className="container py-5" style={{ minHeight: '80vh' }}>
-				<h1 className="text-center fw-bolder mb-5 display-4" style={{ color: "#FFD230" }}>
-					<i className="fa-solid fa-list-check me-3"></i>
-					Meus Pedidos
-				</h1>
+                            <div className="modal-header border-0 pb-2" style={{ backgroundColor: '#FFD230' }}>
+                                <h5 className="modal-title text-dark fw-bold">Sucesso!</h5>
+                                <button
+                                    type="button"
+                                    className="btn-close"
+                                    aria-label="Close"
+                                    onClick={() => setModalConcluido(false)}
+                                ></button>
+                            </div>
 
-				{loading ? (
-					<div className="text-center text-light mt-5">
-						<div 
-							className="spinner-border" 
-							role="status" 
-							style={{ color: "#FFD230", width: '3rem', height: '3rem', borderWidth: '0.4em' }}
-						>
-							<span className="visually-hidden">Carregando pedidos...</span>
-						</div>
-						<p className="mt-3 fs-5">Carregando pedidos...</p>
-					</div>
-				) : pedidos.length === 0 ? (
-					<div 
-						className="text-center text-light mt-5 p-5 rounded-4 mx-auto" 
-						style={{ 
-							maxWidth: '600px', 
-							backgroundColor: "#503325",
-							boxShadow: '0 0 20px rgba(0, 0, 0, 0.5)',
-							border: `1px solid ${"#FFD230"}`
-						}}
-					>
-						<i className="fa-solid fa-box-open fa-3x mb-3" style={{ color: "#FFD230" }}></i>
-						<p className="fs-5 fw-light mb-0">Nenhum pedido encontrado. Faça seu primeiro pedido!</p>
-					</div>
-				) : (
-					<div className="row justify-content-center g-4 mt-4">
-						{pedidos.map((pedido) => {
-							const statusLower = pedido.status ? pedido.status.toLowerCase() : '';
-							
-							let statusColor = "#FFD230";
-							let statusTextColor = '#212529'; 
-							if (statusLower === 'pago') {
-								statusColor = "#005a32ff";
-								statusTextColor = '#fff';
-							} else if (statusLower === 'pronto') {
-								statusColor = "#005a32ff";
-								statusTextColor = '#fff';
-							}
+                            <div className="modal-body pt-4 pb-4">
+                                <h5 className="">Seu orçamento foi enviado com sucesso!</h5>
+                            </div>
 
-							return (
-								<div key={pedido.id} className="col-lg-4 col-md-6 col-sm-12" data-aos="fade-up">
-									<div
-										className="card h-100 p-4 text-light border-0 shadow-lg" 
-										style={{
-											backgroundColor: "#503325",
-											borderRadius: "15px",
-											transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
-											cursor: 'default',
-										}}
-										onMouseOver={(e) => {
-											e.currentTarget.style.transform = 'translateY(-5px)';
-											e.currentTarget.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.5)';
-										}}
-										onMouseOut={(e) => {
-											e.currentTarget.style.transform = 'translateY(0)';
-											e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.3)';
-										}}
-									>
-										<h5 className="card-title text-center fw-bold mb-3" style={{ color: "#FFD230" }}>
-											<i className="fa-solid fa-receipt me-2"></i>
-											Pedido #{pedido.id}
-										</h5>
-										<hr style={{ borderColor: "#FFD230", opacity: 0.8, marginTop: '0.5rem', marginBottom: '1.5rem' }} />
-										
-										<div className="mb-2">
-											<div className="d-flex justify-content-between align-items-center mb-1">
-												<span className="fw-semibold" style={{ color: "#FFD230" }}>
-													<i className="fa-solid fa-chair me-2"></i>
-													Produto:
-												</span> 
-												<span className="ms-2 text-end">{pedido.nome}</span>
-											</div>
-										</div>
-										
-										<div className="mb-3">
-											<div className="d-flex justify-content-between align-items-center mb-1">
-												<span className="fw-semibold" style={{ color: "#FFD230" }}>
-													<i className="fa-solid fa-money-bill-wave me-2"></i>
-													Preço:
-												</span>
-												<span className="ms-2 fw-bold text-end" style={{ color: "#FFD230" }}>
-													{formatCurrency(pedido.preco)}
-												</span>
-											</div>
-										</div>
+                            <div className="modal-footer align-self-center border-0 pt-0">
+                                <button
+                                    type="button"
+                                    className="btn btn-success fw-bold px-4"
+                                    onClick={() => navigate("/")}
+                                    style={{ backgroundColor: '#198754', borderColor: '#198710' }}
+                                >
+                                    OK!
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {modalConcluido && <div className="modal-backdrop fade show"></div>}
 
-										<div className="mb-4">
-											<div className="d-flex justify-content-between align-items-center mb-0">
-												<span className="fw-semibold" style={{ color: "#FFD230" }}>
-													<i className="fa-solid fa-info-circle me-2"></i>
-													Status:
-												</span>
-												<span
-													className="badge text-uppercase p-2 rounded-pill fw-bold"
-													style={{
-														fontSize: '0.85rem',
-														backgroundColor: statusColor,
-														color: statusTextColor,
-														minWidth: '100px',
-														textAlign: 'center'
-													}}
-												>
-													{pedido.status}
-												</span>
-											</div>
-										</div>
+            {modalErro && (
+                <div
+                    className="modal"
+                    data-aos="fade-up"
+                    style={{ display: 'block' }}
+                >
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content border-0 shadow-lg" style={{ backgroundColor: '#FFFFFF', borderRadius: '10px' }}>
 
-										{/* Botão de Pagamento */}
-										{statusLower !== "pago" && statusLower !== "pronto" && ( 
-											<button
-												className="btn w-100 mt-auto fw-bold btn-lg" 
-												style={{ 
-													backgroundColor: "#005a32ff", 
-													borderColor: "#005a32ff",
-													color: 'white',
-													boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
-												}}
-												onClick={() => pagarPedido(pedido)}
-											>
-												<i className="fa-brands fa-mercadopago me-2"></i>
-												Pagar Agora
-											</button>
-										)}
-									</div>
-								</div>
-							);
-						})}
-					</div>
-				)}
-			</div>
-			<Footer />
-			
-			{/* ------------------------------------- */}
-			{/* MODAL DE CONFIRMAÇÃO DE PAGAMENTO (CPF) */}
-			{/* ------------------------------------- */}
-			{showPaymentModal && pedidoParaPagar && (
-				<>
-					<div className="modal" data-aos="fade-up" style={{ display: 'block', zIndex: 1050 }}>
-						<div className="modal-dialog modal-dialog-centered">
-							<div className="modal-content border-0 shadow-lg rounded-4">
-								<div className="modal-header border-0 pb-0 bg-light rounded-top-4">
-									<h5 className="modal-title text-dark fw-bold">
-										<i className="fa-solid fa-lock me-2 text-danger"></i>
-										Confirmação de Pagamento
-									</h5>
-									<button type="button" className="btn-close" onClick={() => setShowPaymentModal(false)}></button>
-								</div>
-								<div className="modal-body py-4 bg-white">
-									<p className="mb-3 text-dark">
-										Para prosseguir com o pagamento de <bold>{formatCurrency(pedidoParaPagar.preco)}</bold> via Mercado Pago (incluindo Pix), precisamos do seu documento de identificação.
-									</p>
-									<div className="mb-3">
-										<label htmlFor="nomeCompletoInput" className="form-label fw-bold text-dark">Nome Completo:</label>
-										<input
-											type="text"
-											id="nomeCompletoInput"
-											className="form-control"
-											value={nomeInput}
-											onChange={(e) => setNomeInput(e.target.value)}
-											placeholder="Seu nome e sobrenome"
-											required
-										/>
-									</div>
-									<div className="mb-3">
-										<label htmlFor="cpfCnpjInput" className="form-label fw-bold text-dark">CPF ou CNPJ:</label>
-										<input
-											type="text"
-											id="cpfCnpjInput"
-											className="form-control"
-											value={cpfInput}
-											onChange={handleCpfCnpjChange} 
-											maxLength={18} 
-											placeholder="Digite seu CPF ou CNPJ"
-											required
-										/>
-										<small className="text-muted">A máscara de CPF/CNPJ será aplicada automaticamente.</small>
-									</div>
-									{usuarioLogado && (
-										<div className="alert alert-info py-2" role="alert">
-											<i className="fa-solid fa-envelope me-2"></i>
-											E-mail de cobrança: <bold>{usuarioLogado.email}</bold>
-										</div>
-									)}
-								</div>
-								<div className="modal-footer border-0 bg-light rounded-bottom-4">
-									<button 
-										type="button" 
-										className="btn btn-secondary fw-bold" 
-										onClick={() => setShowPaymentModal(false)}
-									>
-										Cancelar
-									</button>
-									<button 
-										type="button" 
-										className="btn fw-bold text-white" 
-										style={{ backgroundColor: "#005a32ff" }}
-										onClick={handleConfirmPayment}
-										disabled={!cpfInput || !nomeInput}
-									>
-										<i className="fa-solid fa-money-check-dollar me-2"></i>
-										Confirmar Pagamento
-									</button>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div className="modal-backdrop fade show" style={{ zIndex: 1040 }}></div>
-				</>
-			)}
+                            <div className="modal-header border-0 pb-2" style={{ backgroundColor: '#FFD230' }}>
+                                <h5 className="modal-title text-dark fw-bold">Erro!</h5>
+                                <button
+                                    type="button"
+                                    className="btn-close"
+                                    aria-label="Close"
+                                    onClick={() => setModalErro(false)}
+                                ></button>
+                            </div>
 
-			{/* ------------------------------------- */}
-			{/* MODAL DE ERRO/MENSAGEM GERAL (Original) */}
-			{/* ------------------------------------- */}
-			{modal && (
-				<>
-					<div className="modal" data-aos="fade-up" style={{ display: 'block' }}>
-						<div className="modal-dialog modal-dialog-centered">
-							<div className="modal-content border-0 shadow-lg rounded-4">
-								<div className="modal-header border-0 pb-0">
-									<h5 className="modal-title text-dark fw-bold">
-										<i className="fa-solid fa-triangle-exclamation text-danger me-2"></i>
-										Mensagem!
-									</h5>
-									<button type="button" className="btn-close" onClick={() => setModal(false)}></button>
-								</div>
-								<div className="modal-body py-4">
-									<p className="mb-0">{mensagemModal.message}</p>
-								</div>
-								<div className="modal-footer border-0 bg-light">
-									<button type="button" className="btn btn-secondary" onClick={() => setModal(false)}>
-										<i className="fa-solid"></i>
-										Voltar
-									</button>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div className="modal-backdrop fade show"></div>
-				</>
-			)}
-		</div>
-	);
+                            <div className="modal-body pt-4 pb-4">
+                                <h5 className="">Ocorreu um erro ao enviar o orçamento!</h5>
+                            </div>
+
+                            <div className="modal-footer align-self-center border-0 pt-0">
+                                <button
+                                    type="button"
+                                    className="btn btn-warning fw-bold px-4"
+                                    onClick={() => setModalErro(false)}
+                                    style={{ backgroundColor: 'crimson', borderColor: 'crimson' }}
+                                >
+                                    Voltar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {modalErro && <div className="modal-backdrop fade show"></div>}
+
+            {modalLogado && (
+                <>
+                    <div className="modal" data-aos="fade-up" style={{ display: 'block' }}>
+                        <div className="modal-dialog modal-dialog-centered">
+                            <div className="modal-content border-0 shadow-lg rounded-4">
+                                <div className="modal-header border-0 pb-0">
+                                    <h5 className="modal-title text-dark fw-bold">
+                                        <i className="fa-solid fa-triangle-exclamation text-danger me-2"></i>
+                                        !
+                                    </h5>
+                                    <button type="button" className="btn-close" onClick={() => setModalLogado(false)}></button>
+                                </div>
+                                <div className="modal-body py-4">
+                                    <p className="mb-0">Você não está logado!</p>
+                                </div>
+                                <div className="modal-footer border-0 bg-light">
+                                    <button type="button" className="btn btn-secondary" onClick={() => setModalLogado(false)}>
+                                        <i className="fa-solid fa-trash me-2"></i>
+                                        Voltar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="modal-backdrop fade show"></div>
+                </>
+            )}
+        </main>
+    );
 }
 
-export default MeusPedidos;
+export default HomeOrcamento;

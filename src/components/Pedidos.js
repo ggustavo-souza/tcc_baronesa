@@ -1,13 +1,18 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import Navbar from "./Navbar";
-import Footer from "./Footer";
-const useAuthUser = () => { /* Simulação do hook, pois a implementação real não está disponível */ };
-const Aos = { init: () => console.log('AOS init stub.') }; // Stub para AOS
+// Importações de Módulos Externos (Mantidas)
+import '../App.css'; // Assumindo que App.css existe no seu projeto
+import '../awesome/all.min.css'; // Assumindo que o Font Awesome existe
+import Navbar from './Navbar'; // Assumindo que Navbar existe
+import Footer from './Footer'; // Assumindo que Footer existe
+import Aos from 'aos'; // Assumindo que Aos foi instalado via npm
+import 'aos/dist/aos.css'; // Assumindo que o CSS do Aos existe
+
+// Assumindo que useAuthUser existe
+import { useAuthUser } from "./auths/useAuthUser"; 
 
 // --- Componente Principal ---
 function MeusPedidos() {
 	useAuthUser();
-	// Usando uma URL de API mockada/exemplo já que o endpoint real não está disponível
 	const urlAPI = "https://tccbaronesapi.cloud" 
 	
 	const [pedidos, setPedidos] = useState([]);
@@ -43,7 +48,7 @@ function MeusPedidos() {
 		}
 	}, []);
 
-	// Handler para o campo CPF/CNPJ que aplica a máscara e o limite de caracteres
+	// Handler para o campo CPF/CNPJ
 	const handleCpfCnpjChange = (e) => {
 		const value = e.target.value;
 		const maskedValue = maskCpfCnpj(value);
@@ -68,7 +73,7 @@ function MeusPedidos() {
 		}).format(num);
 	};
 
-	// Função carregarPedidos (Mantida como useCallback)
+	// Funções de Setter de Estado adicionadas ao useCallback para satisfazer o Linter/Vercel
 	const carregarPedidos = useCallback(async (idUsuario) => {
 		if (!idUsuario) {
 			setMensagemModal({ message: "Você precisa estar logado para ver seus pedidos!" });
@@ -92,9 +97,9 @@ function MeusPedidos() {
 		} finally {
 			setLoading(false);
 		}
-	}, [urlAPI, setMensagemModal, setModal, setLoading, setPedidos]); // Adicionado set...
+	}, [urlAPI, setMensagemModal, setModal, setLoading, setPedidos]); // DEPENDÊNCIAS ADICIONADAS
 
-	// --- CORREÇÃO DA DEPENDÊNCIA AQUI ---
+	// CORREÇÃO: Adicionando carregarPedidos e setUsuarioLogado como dependências do useEffect
 	useEffect(() => {
 		const usuario = JSON.parse(localStorage.getItem('usuarioLogado'));
 		if (usuario) {
@@ -103,10 +108,9 @@ function MeusPedidos() {
 		} else {
 			setLoading(false);
 		}
-		// Chamada do stub Aos.init
+		// Aos.init não precisa de dependências
 		Aos.init({ duration: 600, once: true });
-	}, [carregarPedidos, setUsuarioLogado, setLoading]); // Dependências adicionadas!
-	// ------------------------------------
+	}, [carregarPedidos, setUsuarioLogado, setLoading]); // CORREÇÃO APLICADA AQUI
 
 	// 1. O botão AGORA apenas guarda o pedido, verifica o e-mail e abre o modal de confirmação
 	function pagarPedido(pedido) {
@@ -152,7 +156,7 @@ function MeusPedidos() {
 		const emailCliente = usuarioLogado.email;
 		
 		setShowPaymentModal(false); 
-		setLoading(true); 
+		setLoading(true);
 
 		try {
 			// 3. Chamada da API com os dados completos do pagador
@@ -181,11 +185,8 @@ function MeusPedidos() {
 				return;
 			}
 			
-			// Sucesso: Redirecionar para o Checkout Pro
-			console.log("SUCESSO! Redirecionando para:", data.init_point);
-			setMensagemModal({ message: `Sucesso! Redirecionamento de pagamento simulado para: ${data.init_point}` });
-			setModal(true);
-			setLoading(false);
+			// Redirecionamento original (revertido de console.log)
+			window.location.href = data.init_point;
 
 		} catch (erro) {
 			console.error("Erro:", erro);
@@ -237,7 +238,7 @@ function MeusPedidos() {
 							let statusColor = "#FFD230";
 							let statusTextColor = '#212529'; 
 							if (statusLower === 'pago') {
-								statusColor = "#005a32ff";
+								statusColor = "#3cff00ff";
 								statusTextColor = '#fff';
 							} else if (statusLower === 'pronto') {
 								statusColor = "#005a32ff";
