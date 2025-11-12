@@ -1,12 +1,8 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import '../App.css';
 import '../awesome/all.min.css'
 
 function Footer() {
-
-    const navigate = useNavigate();
-
     return (
         <div class="container-fluid corFooter">
             <footer class="text-center text-lg-start">
