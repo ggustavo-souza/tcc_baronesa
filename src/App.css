@@ -544,21 +544,3 @@
   border-color: #ffd95e;
   box-shadow: 0 0 0 0.25rem rgba(255, 210, 48, 0.25);
 }
-
-.map-responsive {
-  overflow: hidden; 
-  /* ESTE DEFINE A ALTURA VISUAL: */
-  padding-bottom: 45%; 
-  position: relative; 
-  height: 200px; /* MANTENHA O ZERO */
-  max-width: 300px; 
-}
-
-.map-responsive iframe {
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 100%;
-  position: absolute; 
-  border-radius: 0.5rem;
-}
