@@ -7,13 +7,13 @@ function Footer() {
         <div class="container-fluid corFooter">
             <footer class="text-center text-lg-start">
                 <div class="container-fluid d-flex justify-content-center py-5">
-                    <a type="button" class="btn btn-warning btn-lg btn-floating mx-2 footerBotao" href="https://www.facebook.com/profile.php?id=100088414481184">
+                    <a type="button" class="btn btn-warning btn-lg btn-floating mx-2 footerBotao" href="https://www.facebook.com/profile.php?id=100088414481184" target="blank">
                         <i class="fab fa-facebook-f"></i>
                     </a>
-                    <a type="button" class="btn btn-warning btn-lg btn-floating mx-2 footerBotao" href="wa.me/5515997396140">
+                    <a type="button" class="btn btn-warning btn-lg btn-floating mx-2 footerBotao" href="wa.me/5515997396140" target="blank">
                         <i class="fab fa-whatsapp"></i>
                     </a>
-                    <a type="button" class="btn btn-warning btn-lg btn-floating mx-2 footerBotao" href="https://www.instagram.com/abaronesamovelaria/">
+                    <a type="button" class="btn btn-warning btn-lg btn-floating mx-2 footerBotao" href="https://www.instagram.com/abaronesamovelaria/" target="blank">
                         <i class="fab fa-instagram"></i>
                     </a>
                 </div>
