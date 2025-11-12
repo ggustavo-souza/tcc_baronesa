@@ -42,7 +42,7 @@ function MeusPedidos() {
 		}
 		// Chamada do stub Aos.init
 		Aos.init({ duration: 600, once: true });
-	}, []);
+	},);
 	
 	// Função para aplicar a máscara de CPF ou CNPJ
 	const maskCpfCnpj = useCallback((value) => {
