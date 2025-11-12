@@ -21,6 +21,30 @@ export default function VerMovel() {
         carregarMovel();
     },);
 
+    function LoadingSpinner() {
+        return (
+            <div className="d-flex vh-100 justify-content-center align-items-center" style={{ backgroundColor: '#333' }}>
+                <div className="spinner-border text-warning" role="status" style={{ width: '3rem', height: '3rem' }}>
+                    <span className="visually-hidden">Carregando...</span>
+                </div>
+            </div>
+        );
+    }
+
+    function ErrorDisplay({ error, onRetry }) {
+        const navigate = useNavigate();
+        return (
+            <div className="d-flex vh-100 justify-content-center align-items-center text-center" style={{ backgroundColor: '#333' }}>
+                <div>
+                    <h3 className="text-danger mb-3">Ocorreu algum erro: {error}</h3>
+                    <button className='btn btn-warning me-2' onClick={() => navigate(-1)}>← Voltar</button>
+                    <button className='btn btn-outline-warning' onClick={onRetry}>Tentar Novamente</button>
+                </div>
+            </div>
+        );
+    }
+
+
     async function carregarMovel() {
         try {
             const res = await fetch(`${urlAPI}/api/moveis/${id}`);
@@ -84,11 +108,8 @@ export default function VerMovel() {
         }
     }
 
-    if (loading) return <h3 className='mt-5' style={{ color: '#FFD230' }}>Carregando...</h3>;
-    if (error) return <div className="container mt-5">
-        <h3 style={{ color: '#FFD230' }}>Ocorreu algum erro: {error}</h3>
-        <button className='btn btn-warning mt-3' onClick={() => navigate(-1)}>← Voltar</button>
-    </div>;
+ if (loading) return <LoadingSpinner />;
+    if (error) return <ErrorDisplay error={error} onRetry={() => window.location.reload()} />; // Recarrega a página
     if (!movel) return null;
 
     return (
@@ -104,45 +125,82 @@ export default function VerMovel() {
                     </button>
                 </div>
 
-                <div className="card shadow-sm mx-auto" style={{ maxWidth: '900px', borderRadius: '12px', backgroundColor: '#503325c1', color: '#FFD230', padding: '20px' }}>
-                    <div className="row">
-                        <div className="col-md-6">
-                            {imagemPrincipal && (
-                                <img
-                                    src={`${urlAPI}/api/uploads/${imagemPrincipal}`}
-                                    alt={movel.nome}
-                                    className="img-fluid rounded mb-3"
-                                    style={{ objectFit: 'cover', width: '100%', height: '400px' }}
-                                />
-                            )}
-                            <div className="d-flex flex-wrap gap-2 justify-content-center">
-                                {movel.fotos?.map(f => (
+                <div className="row g-5 mt-1">
+                    {/* Coluna da Galeria de Imagens */}
+                    <div className="col-lg-7">
+                        {/* Imagem Principal */}
+                        <img
+                            src={`${urlAPI}/api/uploads/${imagemPrincipal}`}
+                            alt={movel.nome}
+                            className="img-fluid rounded-3 shadow-lg mb-3"
+                            style={{
+                                width: '100%',
+                                height: 'auto',
+                                maxHeight: '550px',
+                                objectFit: 'cover',
+                                border: '1px solid #FFD230'
+                            }}
+                        />
+                        {/* Miniaturas */}
+                        <div className="row g-2">
+                            {movel.fotos?.map(f => (
+                                <div className="col-3" key={f.id}>
                                     <img
-                                        key={f.id}
                                         src={`${urlAPI}/api/uploads/${f.foto}`}
                                         alt="miniatura"
-                                        width="80"
-                                        height="80"
-                                        className={`rounded border ${f.foto === imagemPrincipal ? 'border-warning' : 'border-light'}`}
-                                        style={{ cursor: 'pointer', objectFit: 'cover', transition: '0.3s', filter: f.foto === imagemPrincipal ? 'brightness(1.1)' : 'brightness(0.9)' }}
+                                        className="img-fluid rounded shadow-sm"
+                                        style={{
+                                            cursor: 'pointer',
+                                            objectFit: 'cover',
+                                            width: '100%',
+                                            height: '120px',
+                                            border: f.foto === imagemPrincipal
+                                                ? '3px solid #FFD230' // Destaque na selecionada
+                                                : '3px solid transparent', // Borda transparente
+                                            transition: 'border 0.2s ease'
+                                        }}
                                         onClick={() => setImagemPrincipal(f.foto)}
-                                        onMouseEnter={e => e.currentTarget.style.filter = 'brightness(1.2)'}
-                                        onMouseLeave={e => e.currentTarget.style.filter = f.foto === imagemPrincipal ? 'brightness(1.1)' : 'brightness(0.9)'}
                                     />
-                                ))}
-                            </div>
+                                </div>
+                            ))}
                         </div>
-                        <div className="col-md-6 mt-4 mt-md-0 d-flex flex-column justify-content-center">
-                            <h2>{movel.nome}</h2>
-                            <h4>R$ {movel.valor},00</h4>
-                            <p><strong>Categoria:</strong> {categoria || '—'}</p>
-                            <p><strong>Descrição:</strong> {movel.descricao}</p>
-                            <button
-                                className="btn btn-warning corBotao mt-3"
-                                onClick={adicionarPedido}
-                            >
-                                Adicionar Pedido
-                            </button>
+                    </div>
+
+                    {/* Coluna de Informações do Produto */}
+                    <div className="col-lg-5">
+                        <div
+                            className="p-4 p-md-5 rounded-3 shadow-sm h-100 d-flex flex-column"
+                            style={{
+                                backgroundColor: '#503325', // Cor do seu card
+                                color: '#FFD230', // Cor do seu texto
+                                border: '1px solid #FFD230'
+                            }}
+                        >
+                            {/* Categoria */}
+                            <h6 className="text-uppercase text-warning mb-2">{categoria || 'Sem Categoria'}</h6>
+                            {/* Nome do Móvel */}
+                            <h1 className="display-5 fw-bold mb-3 text-white">{movel.nome}</h1>
+                            {/* Preço */}
+                            <h2 className="mb-4" style={{ color: '#FFD230', fontWeight: 300 }}>
+                                R$ {movel.valor},00
+                            </h2>
+                            {/* Descrição */}
+                            <p className="lead mb-4" style={{ color: '#eee' }}>{movel.descricao}</p>
+
+                            {/* Botão de Adicionar Pedido (ocupa todo o espaço) */}
+                            <div className="d-grid mt-auto">
+                                <button
+                                    className="btn btn-warning btn-lg fw-bold"
+                                    onClick={adicionarPedido}
+                                    style={{
+                                        backgroundColor: '#FFD230',
+                                        borderColor: '#FFD230',
+                                        color: '#333' // Texto escuro para melhor contraste
+                                    }}
+                                >
+                                    Adicionar Pedido
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

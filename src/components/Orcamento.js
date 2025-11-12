@@ -73,8 +73,8 @@ function HomeOrcamento() {
                     <div
                         className="card text-center shadow-lg border-0 rounded-4 shadow-5"
                         style={{
-                            backgroundColor: '#343a40', // Fundo escuro para contraste (cor dark do BS)
-                            animation: modalErro || modalConcluido ? 'none' : 'fadeInUp 1s ease-out' // Simula Aos.js
+                            backgroundColor: '#343a40',
+                            animation: modalErro || modalConcluido ? 'none' : 'fadeInUp 1s ease-out' 
                         }}
                     >
                         <div className="card-body p-4 p-md-5">
@@ -94,7 +94,7 @@ function HomeOrcamento() {
                                     <div className="input-group">
                                         <span className="input-group-text bg-light border-0"><i className="fas fa-boxes text-secondary"></i></span>
                                         <select
-                                            className="form-select form-control-lg border-0 shadow-sm"
+                                            className="form-select form-control-lg border-0 shadow-sm text-dark"
                                             id="selectCategoria"
                                             value={categoria}
                                             onChange={(e) => setCategoria(e.target.value)}
@@ -115,10 +115,10 @@ function HomeOrcamento() {
                                         <i className="fas fa-phone me-2"></i> Telefone de Contato <span className="text-danger">*</span>
                                     </label>
                                     <div className="input-group">
-                                        <span className="input-group-text bg-light border-0"><i className="fas fa-mobile-alt text-secondary"></i></span>
+                                        <span className="input-group-text border-0"><i className="fas fa-mobile-alt text-secondary"></i></span>
                                         <input
                                             type="tel"
-                                            className="form-control form-control-lg border-0 shadow-sm"
+                                            className="form-control text-dark border-0 text-secondary"
                                             id="telefone"
                                             placeholder="(11) 91234-5678"
                                             maxLength="15"
@@ -149,7 +149,7 @@ function HomeOrcamento() {
                                     <div className="input-group">
                                         <span className="input-group-text bg-light border-0 align-items-start pt-3"><i className="fas fa-comment-dots text-secondary"></i></span>
                                         <textarea
-                                            className="form-control border-0 shadow-sm"
+                                            className="form-control border-0 shadow-sm text-dark"
                                             id="message"
                                             rows="5"
                                             value={mensagem}

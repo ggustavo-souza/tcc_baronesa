@@ -60,8 +60,8 @@ function Carroussel() {
               alt="Primeiro slide"
             />
             <div className="carousel-caption d-none d-md-block">
-              <h4>Móveis para Quarto</h4>
-              <p>Confira novos itens para o seu quarto!</p>
+              <h4>Armários</h4>
+              <p>Confira nossos armários!</p>
             </div>
           </div>
 
@@ -73,8 +73,8 @@ function Carroussel() {
               alt="Segundo slide"
             />
             <div className="carousel-caption d-none d-md-block">
-              <h4>Móveis para Cozinha</h4>
-              <p>Nosso catálogo para cozinhas!</p>
+              <h4>Cadeiras</h4>
+              <p>Nosso catálogo de cadeiras!</p>
             </div>
           </div>
 
@@ -86,8 +86,8 @@ function Carroussel() {
               alt="Terceiro slide"
             />
             <div className="carousel-caption d-none d-md-block">
-              <h4>Móveis para Sala de estar</h4>
-              <p>Confira nossos itens para salas!</p>
+              <h4>Mesas</h4>
+              <p>Confira nossos itens!</p>
             </div>
           </div>
           <div className="carousel-item">
