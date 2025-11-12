@@ -547,7 +547,7 @@
 
 .map-responsive {
   overflow: hidden; 
-  padding-bottom: 56.25%; 
+  padding-bottom: 40%;
   position: relative; 
   height: 0; 
 }
@@ -558,4 +558,5 @@
   height: 100%;
   width: 100%;
   position: absolute; 
+  border-radius: 0.5rem; 
 }
