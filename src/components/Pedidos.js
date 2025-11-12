@@ -1,10 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
-
-// Adaptação: Módulos de terceiros e componentes externos (Navbar, Footer, CSS)
-// foram removidos para garantir que o código compile em um ambiente de arquivo único.
+import Navbar from "./Navbar";
+import Footer from "./Footer";
 const useAuthUser = () => { /* Simulação do hook, pois a implementação real não está disponível */ };
-const Navbar = () => <div className="p-3 bg-dark text-white text-center">Navbar Simulado</div>;
-const Footer = () => <div className="p-3 bg-dark text-white text-center mt-5">Footer Simulado</div>;
 const Aos = { init: () => console.log('AOS init stub.') }; // Stub para AOS
 
 // --- Componente Principal ---
@@ -240,7 +237,7 @@ function MeusPedidos() {
 							let statusColor = "#FFD230";
 							let statusTextColor = '#212529'; 
 							if (statusLower === 'pago') {
-								statusColor = "#3cff00ff";
+								statusColor = "#005a32ff";
 								statusTextColor = '#fff';
 							} else if (statusLower === 'pronto') {
 								statusColor = "#005a32ff";
