@@ -547,16 +547,14 @@
 
 .map-responsive {
   overflow: hidden; 
-  /* Crucial: Reduz o padding-bottom para que o mapa tenha uma altura menor 
-     e caiba bem na coluna de 1/3 (40% ou 45% é ideal) */
+  /* A chave para o tamanho menor na coluna */
   padding-bottom: 45%; 
   position: relative; 
   height: 0; 
-  /* Limita a largura do mapa para que ele não fique esticado demais no desktop */
+  /* Largura máxima para evitar que o mapa fique muito esticado na coluna */
   max-width: 300px; 
 }
 
-/* O iframe preenche todo o container .map-responsive */
 .map-responsive iframe {
   left: 0;
   top: 0;
