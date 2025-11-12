@@ -528,9 +528,9 @@
   color: #FFD230;
 }
 
-.form-control-lg.form-control-lg { /* A especificidade extra ajuda a sobrescrever o Bootstrap */
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #fff;
+.form-control-lg.form-control-lg { 
+  background-color: #fff;
+  color: rgba(255, 255, 255, 0.1);
   border: 1px solid #FFD230;
 }
 
