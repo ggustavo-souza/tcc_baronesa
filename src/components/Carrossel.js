@@ -55,7 +55,7 @@ function Carroussel() {
           {/* Item 1 do Carrossel */}
           <div className="carousel-item active">
             <img
-              src="/carroussel1.jfif"
+              src="/carroussel3.png"
               className="d-block w-100 wide-carousel-img"
               alt="Primeiro slide"
             />
@@ -68,7 +68,7 @@ function Carroussel() {
           {/* Item 2 do Carrossel */}
           <div className="carousel-item">
             <img
-              src="/ex2.jpg"
+              src="/carroussel2.jpeg"
               className="d-block w-100 wide-carousel-img"
               alt="Segundo slide"
             />
@@ -81,7 +81,7 @@ function Carroussel() {
           {/* Item 3 do Carrossel */}
           <div className="carousel-item">
             <img
-              src="/carroussel3.jfif"
+              src="/carroussel.jpeg"
               className="d-block w-100 wide-carousel-img"
               alt="Terceiro slide"
             />
@@ -97,8 +97,8 @@ function Carroussel() {
               alt="Quarto slide"
             />
             <div className="carousel-caption d-none d-md-block">
-              <h4>Planejados</h4>
-              <p>Planeje seu móvel como você quiser!</p>
+              <h4>Orçamentos</h4>
+              <p>Planeje seu orçamento como você quiser!</p>
             </div>
           </div>
         </div>
