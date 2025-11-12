@@ -2,9 +2,6 @@ import React, { useEffect, useState, useCallback } from 'react';
 
 // Adaptação: Módulos de terceiros e componentes externos (Navbar, Footer, CSS)
 // foram removidos para garantir que o código compile em um ambiente de arquivo único.
-// As bibliotecas CSS (Awesome e Bootstrap) são pressupostas estarem carregadas externamente.
-// Aos (Animate on Scroll) não pode ser importado, mas o useEffect original é mantido
-// para a função stub de Aos.init.
 const useAuthUser = () => { /* Simulação do hook, pois a implementação real não está disponível */ };
 const Navbar = () => <div className="p-3 bg-dark text-white text-center">Navbar Simulado</div>;
 const Footer = () => <div className="p-3 bg-dark text-white text-center mt-5">Footer Simulado</div>;
@@ -29,34 +26,17 @@ function MeusPedidos() {
 	const [nomeInput, setNomeInput] = useState('');
 	// ------------------------------------
 
-	useEffect(() => {
-		// Preservando a lógica do usuário de usar localStorage para obter o usuário logado
-		const usuario = JSON.parse(localStorage.getItem('usuarioLogado'));
-		if (usuario) {
-			setUsuarioLogado(usuario); // Armazena o objeto do usuário, que contém o email e nome
-			// Como o ID do usuário pode estar no objeto, vamos tentar carregar
-			// Embora a função carregarPedidos também verifique a existência do ID.
-			carregarPedidos(usuario.id); 
-		} else {
-			setLoading(false);
-		}
-		// Chamada do stub Aos.init
-		Aos.init({ duration: 600, once: true });
-	},);
-	
-	// Função para aplicar a máscara de CPF ou CNPJ
+	// Função para aplicar a máscara de CPF ou CNPJ (Mantida como useCallback estável)
 	const maskCpfCnpj = useCallback((value) => {
-		let cleanValue = value.replace(/\D/g, ''); // Remove tudo que não for dígito
+		let cleanValue = value.replace(/\D/g, ''); 
 
 		if (cleanValue.length <= 11) {
-			// CPF (máximo 11 dígitos)
 			cleanValue = cleanValue.substring(0, 11);
 			return cleanValue
 				.replace(/(\d{3})(\d)/, '$1.$2')
 				.replace(/(\d{3})(\d)/, '$1.$2')
 				.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
 		} else {
-			// CNPJ (máximo 14 dígitos)
 			cleanValue = cleanValue.substring(0, 14);
 			return cleanValue
 				.replace(/^(\d{2})(\d)/, '$1.$2')
@@ -69,14 +49,12 @@ function MeusPedidos() {
 	// Handler para o campo CPF/CNPJ que aplica a máscara e o limite de caracteres
 	const handleCpfCnpjChange = (e) => {
 		const value = e.target.value;
-		// O maskCpfCnpj já aplica o limite de 14 dígitos internamente
 		const maskedValue = maskCpfCnpj(value);
 		setCpfInput(maskedValue);
 	};
 	
 	// Função utilitária para limpar e validar CPF/CNPJ
 	function formatAndCleanCpf(value) {
-		// Remove tudo que não for dígito
 		return value.replace(/\D/g, '');
 	}
 
@@ -93,18 +71,17 @@ function MeusPedidos() {
 		}).format(num);
 	};
 
-
+	// Função carregarPedidos (Mantida como useCallback)
 	const carregarPedidos = useCallback(async (idUsuario) => {
 		if (!idUsuario) {
 			setMensagemModal({ message: "Você precisa estar logado para ver seus pedidos!" });
 			setModal(true);
-			setLoading(false); // Parar loading se não tiver usuário
+			setLoading(false); 
 			return;
 		}
 
 		try {
 			const resposta = await fetch(`${urlAPI}/api/pedidos/${idUsuario}`);
-			// Tratamento de erro básico se a API retornar um status ruim (ex: 404, 500)
 			if (!resposta.ok) {
 				throw new Error(`Erro HTTP: ${resposta.status}`);
 			}
@@ -114,11 +91,25 @@ function MeusPedidos() {
 			console.error("Erro ao carregar pedidos:", error.message);
 			setMensagemModal({ message: "Falha ao carregar pedidos. Verifique sua conexão." });
 			setModal(true);
-			setPedidos([]); // Limpa a lista em caso de erro
+			setPedidos([]);
 		} finally {
 			setLoading(false);
 		}
-	}, [urlAPI]); // Dependência adicionada
+	}, [urlAPI, setMensagemModal, setModal, setLoading, setPedidos]); // Adicionado set...
+
+	// --- CORREÇÃO DA DEPENDÊNCIA AQUI ---
+	useEffect(() => {
+		const usuario = JSON.parse(localStorage.getItem('usuarioLogado'));
+		if (usuario) {
+			setUsuarioLogado(usuario); 
+			carregarPedidos(usuario.id); 
+		} else {
+			setLoading(false);
+		}
+		// Chamada do stub Aos.init
+		Aos.init({ duration: 600, once: true });
+	}, [carregarPedidos, setUsuarioLogado, setLoading]); // Dependências adicionadas!
+	// ------------------------------------
 
 	// 1. O botão AGORA apenas guarda o pedido, verifica o e-mail e abre o modal de confirmação
 	function pagarPedido(pedido) {
@@ -137,7 +128,6 @@ function MeusPedidos() {
 		
 		setPedidoParaPagar(pedido);
 		setCpfInput('');
-		// Pré-preenche o nome se disponível no objeto do usuário logado
 		setNomeInput(usuarioLogado.nome || ''); 
 		setShowPaymentModal(true);
 	};
@@ -148,7 +138,6 @@ function MeusPedidos() {
 		const nomeCompleto = nomeInput.trim();
 
 		// Validação de dados (Client-side)
-		// Verifica se tem 11 (CPF) ou 14 (CNPJ) dígitos limpos
 		if (cpfLimpo.length !== 11 && cpfLimpo.length !== 14) {
 			setMensagemModal({ message: "Por favor, insira um CPF (11 dígitos) ou CNPJ (14 dígitos) válido." });
 			setModal(true);
@@ -166,7 +155,7 @@ function MeusPedidos() {
 		const emailCliente = usuarioLogado.email;
 		
 		setShowPaymentModal(false); 
-		setLoading(true); // Exibe loading enquanto a API do MP processa
+		setLoading(true); 
 
 		try {
 			// 3. Chamada da API com os dados completos do pagador
@@ -177,9 +166,9 @@ function MeusPedidos() {
 					id_pedido: pedido.id,
 					titulo: `Pedido #${pedido.id} - ${pedido.nome}`,
 					valor: precoNumerico.toFixed(2),
-					email_cliente: emailCliente, // Email recuperado do localStorage
-					cpf_cliente: cpfLimpo, // CPF/CNPJ coletado no modal (LIMPO)
-					nome_completo: nomeCompleto // Nome completo coletado no modal
+					email_cliente: emailCliente, 
+					cpf_cliente: cpfLimpo, 
+					nome_completo: nomeCompleto 
 				}),
 			});
 
@@ -187,7 +176,6 @@ function MeusPedidos() {
 
 			if (!data.id || !data.init_point) { 
 				console.error("Erro na preferência:", data);
-				// Exibe o erro retornado pelo PHP, que pode ser o erro do Mercado Pago
 				setMensagemModal({ 
 					message: data.message || "Erro ao criar preferência de pagamento. Verifique os detalhes no console." 
 				});
@@ -197,8 +185,6 @@ function MeusPedidos() {
 			}
 			
 			// Sucesso: Redirecionar para o Checkout Pro
-			// window.location.href = data.init_point;
-			// Usando console.log em vez de redirecionamento imediato para evitar loop no ambiente
 			console.log("SUCESSO! Redirecionando para:", data.init_point);
 			setMensagemModal({ message: `Sucesso! Redirecionamento de pagamento simulado para: ${data.init_point}` });
 			setModal(true);
@@ -224,7 +210,6 @@ function MeusPedidos() {
 
 				{loading ? (
 					<div className="text-center text-light mt-5">
-						{/* Spinner de carregamento do Bootstrap */}
 						<div 
 							className="spinner-border" 
 							role="status" 
@@ -253,7 +238,7 @@ function MeusPedidos() {
 							const statusLower = pedido.status ? pedido.status.toLowerCase() : '';
 							
 							let statusColor = "#FFD230";
-							let statusTextColor = '#212529'; // Texto escuro no amarelo
+							let statusTextColor = '#212529'; 
 							if (statusLower === 'pago') {
 								statusColor = "#3cff00ff";
 								statusTextColor = '#fff';
@@ -287,7 +272,6 @@ function MeusPedidos() {
 										</h5>
 										<hr style={{ borderColor: "#FFD230", opacity: 0.8, marginTop: '0.5rem', marginBottom: '1.5rem' }} />
 										
-										{/* Detalhes do Pedido com Flexbox Bootstrap */}
 										<div className="mb-2">
 											<div className="d-flex justify-content-between align-items-center mb-1">
 												<span className="fw-semibold" style={{ color: "#FFD230" }}>
@@ -316,7 +300,6 @@ function MeusPedidos() {
 													<i className="fa-solid fa-info-circle me-2"></i>
 													Status:
 												</span>
-												{/* Uso de badge do Bootstrap com cores inline dinâmicas */}
 												<span
 													className="badge text-uppercase p-2 rounded-pill fw-bold"
 													style={{
@@ -396,7 +379,7 @@ function MeusPedidos() {
 											className="form-control"
 											value={cpfInput}
 											onChange={handleCpfCnpjChange} 
-											maxLength={18}
+											maxLength={18} 
 											placeholder="Digite seu CPF ou CNPJ"
 											required
 										/>
