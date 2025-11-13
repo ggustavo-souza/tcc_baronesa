@@ -529,8 +529,7 @@
 }
 
 .form-control-lg.form-control-lg { 
-  background-color: #fff;
-  color: rgba(255, 255, 255, 0.1);
+
   border: 1px solid #FFD230;
 }
 
@@ -539,8 +538,24 @@
 }
 
 .form-control-lg:focus {
-  background-color: #fff;
-  color: rgba(255, 255, 255, 0.2);
   border-color: #ffd95e;
   box-shadow: 0 0 0 0.25rem rgba(255, 210, 48, 0.25);
+}
+
+@media (max-width: 767.98px) {
+  
+  .wide-carousel-img {
+    height: 300px;
+    object-fit: cover; 
+    object-position: center; 
+  }
+
+  .carousel-caption h4 {
+    font-size: 1.25rem; 
+  }
+
+  .carousel-caption p {
+    font-size: 0.875rem; 
+    
+  }
 }
