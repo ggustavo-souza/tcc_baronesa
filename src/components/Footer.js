@@ -16,7 +16,7 @@ function Footer() {
                     <div className="row d-flex align-items-center"> 
                         
                         {/* 1. COLUNA ESQUERDA: REDES SOCIAIS */}
-                        <div className="col-lg-4 col-md-12 mb-4 mb-lg-0 text-white">
+                        <div className="col-lg-4 col-md-12 mb-4 mb-lg-0 text-white justify-content-center justify-content-lg-start">
                             {/* Título GRANDE: fs-4 */}
                             <h5 className="mb-3 fs-4">Siga-nos</h5>
                             <div className="d-flex justify-content-center justify-content-lg-start"> 
@@ -42,7 +42,7 @@ function Footer() {
                         </div>
 
                         {/* 3. COLUNA DIREITA: MAPA (CORREÇÃO DE ALTURA) */}
-                        <div className="col-lg-4 col-md-12 text-center text-lg-end"> 
+                        <div className="col-lg-4 col-md-12 text-center"> 
                             <div className="d-flex flex-column align-items-center align-items-lg-end"> 
                                 <h5 className="mb-3 text-white text-center text-lg-end fs-4">Nossa Localização</h5>
                                  

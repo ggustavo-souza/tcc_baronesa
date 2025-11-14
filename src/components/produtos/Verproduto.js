@@ -16,9 +16,6 @@ export default function VerMovel() {
     const [modal, setModal] = useState(false);
     const [imagemPrincipal, setImagemPrincipal] = useState('');
 
-    // =======================================================
-    // FIX FINAL: carregarMovel usa a imagemPrincipal na lógica e nas dependências
-    // =======================================================
     const carregarMovel = useCallback(async () => {
         try {
             const res = await fetch(`${urlAPI}/api/moveis/${id}`);
