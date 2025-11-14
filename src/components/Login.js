@@ -35,6 +35,7 @@ function FormLogin() {
                 body: JSON.stringify({
                     nome: form.nome,
                     email: form.email,
+                    telefone: form.telefone,
                     password: form.password
                 }),
             });
@@ -47,6 +48,7 @@ function FormLogin() {
                     id: data.usuario.id,
                     nome: data.usuario.nome,
                     email: data.usuario.email,
+                    telefone: data.usuario.telefone,
                     cargo: data.usuario.cargo,
                 }));
                 if (data.usuario.cargo === "admin") {

@@ -13,16 +13,33 @@ function PedidosCrud() {
     const [usuarios, setUsuarios] = useState([]);
     const [error, setError] = useState();
     const [loading, setLoading] = useState(true);
+    const [loadingUsuarios, setLoadingUsuarios] = useState(true);
 
-    if(usuarios && setUsuarios && error && loading && setLoading) {
+    if (usuarios && setUsuarios && error && loading && setLoading) {
         console.log("Teste Contra ci")
     }
 
     useEffect(() => {
         Aos.init({ duration: 800, once: true });
+        fetchUsuarios();
         puxarPedidos();
-
     }, [])
+
+    async function fetchUsuarios() {
+        setLoadingUsuarios(true);
+        const url = `${urlAPI}/api/usuarios`
+        try {
+            const res = await fetch(url);
+            if (!res.ok) throw new Error("Erro ao carregar usuários");
+            const data = await res.json();
+            console.log(data)
+            setUsuarios(data)
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     async function puxarPedidos() {
         const url = `${urlAPI}/api/pedidos/pagos`
@@ -50,7 +67,7 @@ function PedidosCrud() {
         }
 
         const url = `${urlAPI}/api/pedidos/${id}`;
-        
+
         try {
             const res = await fetch(url, {
                 method: 'POST', // Usando POST para atualização na sua API
@@ -68,14 +85,24 @@ function PedidosCrud() {
             }
 
             console.log("Sucesso:", data.message);
-            
-            // Recarrega a lista de pedidos para remover o pedido que acabou de ser concluído
+
             puxarPedidos();
 
         } catch (error) {
             console.error("Erro ao processar o pedido:", error.message);
             setError("Erro ao marcar pedido como pronto: " + error.message);
         }
+    }
+
+    if (loadingUsuarios && pedidos.length === 0) {
+        return (
+             <div style={{ padding: '2rem', color: 'white', textAlign: 'center' }}>
+                <Navadm />
+                <h1 className="mt-5" style={{ color: "#FFD230" }}>Pedidos Pagos</h1>
+                <p>Carregando usuários e pedidos...</p>
+                <Footer />
+            </div>
+        )
     }
 
     return (
@@ -86,18 +113,32 @@ function PedidosCrud() {
             </div>
             {pedidos.length > 0 ? (
                 <div className="container mb-5 mt-5">
-                    {pedidos.map(pedido => (
-                        <div key={pedidos.id} className="card col-4 p-4">
-                            <p>ID: {pedido.id}</p>
-                            <p>Nome do produto: {pedido.nome}</p>
-                            <p>Status: {pedido.status}</p>
-                            <button className="btn btn-warning" onClick={() => pedidoPronto(pedido.id, "pronto")}>
-                                <i className="fa fa-check me-2"></i>Pedido Pronto
-                            </button>
-                        </div>
-                    ))}
+                    {pedidos.map(pedido => {
+                        const usuarioDoPedido = usuarios.find(user => user.id === pedido.id_usuario);
+
+                        const telefone = usuarioDoPedido
+                            ? usuarioDoPedido.telefone
+                            : (loadingUsuarios ? "Carregando..." : "Não encontrado");
+                        // --- FIM DA LÓGICA ---
+
+                        return (
+                            <div className="mt-4" key={pedido.id} style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '1.5rem', backgroundColor: '#f9f9f9', color: 'black' }}>
+                                <p><strong>ID do Pedido:</strong> {pedido.id}</p>
+                                <p><strong>Produto:</strong> {pedido.nome}</p>
+                                <p><strong>Status:</strong> <span style={{ backgroundColor: '#FFD230', color: 'black', padding: '0.25rem 0.5rem', borderRadius: '4px' }}>{pedido.status}</span></p>
+                                <p><strong>Telefone Cliente:</strong> {telefone}</p>
+                                <hr />
+                                <button
+                                    style={{ backgroundColor: '#28a745', color: 'white', border: 'none', padding: '0.5rem 1rem', borderRadius: '5px', cursor: 'pointer' }}
+                                    onClick={() => pedidoPronto(pedido.id, "pronto")}
+                                >
+                                    <i className="fa fa-check me-2"></i>Marcar como Pronto
+                                </button>
+                            </div>
+                        )
+})}
                 </div>
-            ) : <p style={{color: "#ffffff"}}>Não foi encontrado registro</p>}
+            ) : <p style={{ color: "#ffffff" }}>Não foi encontrado registro</p>}
             <Footer />
         </>
     )

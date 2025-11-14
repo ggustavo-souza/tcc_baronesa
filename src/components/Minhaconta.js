@@ -52,6 +52,12 @@ function MinhaConta() {
                                 Nome de Usuário: <span className="font-semibold">{nomeUsuario ? nomeUsuario.nome : "Carregando..."}</span>
                             </h4>
                         </div>
+                        <div className="p-3 rounded-lg flex items-center shadow-inner" style={{ backgroundColor: '#503325e0' }}>
+                            <i className="fas fa-user-circle text-xl mr-3" style={{ color: '#FFD230' }}></i>
+                            <h4 className="text-lg md:text-xl font-medium" style={{ color: '#FFD230' }}>
+                                Telefone: <span className="font-semibold">{nomeUsuario ? nomeUsuario.telefone : "Carregando..."}</span>
+                            </h4>
+                        </div>
 
                         {/* Email */}
                         <div className="p-3 rounded-lg flex items-center shadow-inner rounded-5" style={{ backgroundColor: '#503325' }}>
