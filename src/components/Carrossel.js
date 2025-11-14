@@ -55,11 +55,11 @@ function Carroussel() {
           {/* Item 1 do Carrossel */}
           <div className="carousel-item active">
             <img
-              src="/carroussel3.png"
+              src="/carrousselarmario.jpg"
               className="d-block w-100 wide-carousel-img"
               alt="Primeiro slide"
             />
-            <div className="carousel-caption d-none d-md-block">
+            <div className="carousel-caption">
               <h4>Armários</h4>
               <p>Confira nossos armários!</p>
             </div>
@@ -72,7 +72,7 @@ function Carroussel() {
               className="d-block w-100 wide-carousel-img"
               alt="Segundo slide"
             />
-            <div className="carousel-caption d-none d-md-block">
+            <div className="carousel-caption">
               <h4>Cadeiras</h4>
               <p>Nosso catálogo de cadeiras!</p>
             </div>
@@ -85,7 +85,7 @@ function Carroussel() {
               className="d-block w-100 wide-carousel-img"
               alt="Terceiro slide"
             />
-            <div className="carousel-caption d-none d-md-block">
+            <div className="carousel-caption">
               <h4>Mesas</h4>
               <p>Confira nossos itens!</p>
             </div>
@@ -96,7 +96,7 @@ function Carroussel() {
               className="d-block w-100 wide-carousel-img"
               alt="Quarto slide"
             />
-            <div className="carousel-caption d-none d-md-block">
+            <div className="carousel-caption">
               <h4>Orçamentos</h4>
               <p>Planeje seu orçamento como você quiser!</p>
             </div>
