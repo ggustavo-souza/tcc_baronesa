@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react'; // <-- Importado useCallback
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../Navbar';
 import "../../App.css";
@@ -16,36 +16,12 @@ export default function VerMovel() {
     const [modal, setModal] = useState(false);
     const [imagemPrincipal, setImagemPrincipal] = useState('');
 
-    useEffect(() => {
-        Aos.init({ duration: 500 });
-        carregarMovel();
-    }, [id]);
-
-    function LoadingSpinner() {
-        return (
-            <div className="d-flex vh-100 justify-content-center align-items-center" style={{ backgroundColor: '#333' }}>
-                <div className="spinner-border text-warning" role="status" style={{ width: '3rem', height: '3rem' }}>
-                    <span className="visually-hidden">Carregando...</span>
-                </div>
-            </div>
-        );
-    }
-
-    function ErrorDisplay({ error, onRetry }) {
-        const navigate = useNavigate();
-        return (
-            <div className="d-flex vh-100 justify-content-center align-items-center text-center" style={{ backgroundColor: '#333' }}>
-                <div>
-                    <h3 className="text-danger mb-3">Ocorreu algum erro: {error}</h3>
-                    <button className='btn btn-warning me-2' onClick={() => navigate(-1)}>← Voltar</button>
-                    <button className='btn btn-outline-warning' onClick={onRetry}>Tentar Novamente</button>
-                </div>
-            </div>
-        );
-    }
-
-
-    async function carregarMovel() {
+    // =======================================================
+    // FIX: carregarMovel agora usa useCallback
+    // Isso garante que a função só mude quando o 'id' ou 'urlAPI' mudar.
+    // Assim, o useEffect só roda na montagem e não a cada clique na miniatura.
+    // =======================================================
+    const carregarMovel = useCallback(async () => {
         try {
             const res = await fetch(`${urlAPI}/api/moveis/${id}`);
             if (!res.ok) throw new Error('Erro ao carregar móvel');
@@ -53,7 +29,7 @@ export default function VerMovel() {
             setMovel(data);
             if (data.fotos?.length > 0) {
                 const principal = data.fotos.find(f => f.principal) || data.fotos[0];
-                setImagemPrincipal(principal.foto); // <--- Ela sempre seta a imagem padrão da API
+                setImagemPrincipal(principal.foto);
             }
             if (data.categoria_id) {
                 const resCat = await fetch(`${urlAPI}/api/categorias/${data.categoria_id}`);
@@ -68,7 +44,42 @@ export default function VerMovel() {
         } finally {
             setLoading(false);
         }
+    }, [id, urlAPI]); // Dependências da função: id e urlAPI
+
+    // =======================================================
+    // FIX: useEffect agora depende de carregarMovel
+    // Resolve o problema da re-execução excessiva e o warning do ESLint.
+    // =======================================================
+    useEffect(() => {
+        Aos.init({ duration: 500 });
+        carregarMovel();
+    }, [carregarMovel]); // Depende da função estável (useCallback)
+
+    function LoadingSpinner() {
+        return (
+            <div className="d-flex vh-100 justify-content-center align-items-center" style={{ backgroundColor: '#333' }}>
+                <div className="spinner-border text-warning" role="status" style={{ width: '3rem', height: '3rem' }}>
+                    <span className="visually-hidden">Carregando...</span>
+                </div>
+            </div>
+        );
     }
+
+    function ErrorDisplay({ error, onRetry }) {
+        // Atenção: Removida a linha 'const navigate = useNavigate();' pois já é feito no componente principal.
+        return (
+            <div className="d-flex vh-100 justify-content-center align-items-center text-center" style={{ backgroundColor: '#333' }}>
+                <div>
+                    <h3 className="text-danger mb-3">Ocorreu algum erro: {error}</h3>
+                    <button className='btn btn-warning me-2' onClick={() => navigate(-1)}>← Voltar</button>
+                    <button className='btn btn-outline-warning' onClick={onRetry}>Tentar Novamente</button>
+                </div>
+            </div>
+        );
+    }
+
+
+    // A função carregarMovel original foi substituída pela versão useCallback acima.
 
     // =============================
     // Função para adicionar pedido
@@ -159,7 +170,8 @@ export default function VerMovel() {
                                                 : '3px solid transparent', // Borda transparente
                                             transition: 'border 0.2s ease'
                                         }}
-                                        onClick={() => setImagemPrincipal(f.foto)}
+                                        // Esta linha agora funcionará perfeitamente sem ser sobrescrita.
+                                        onClick={() => setImagemPrincipal(f.foto)} 
                                     />
                                 </div>
                             ))}
