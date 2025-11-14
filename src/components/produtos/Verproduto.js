@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react'; // <-- Importado useCallback
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../Navbar';
 import "../../App.css";
@@ -12,49 +12,25 @@ export default function VerMovel() {
     const [categoria, setCategoria] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [mensagem, setMensagem] = useState(null)
-    const [modal, setModal] = useState(false)
+    const [mensagem, setMensagem] = useState(null);
+    const [modal, setModal] = useState(false);
     const [imagemPrincipal, setImagemPrincipal] = useState('');
 
-    useEffect(() => {
-        Aos.init({ duration: 500 });
-        carregarMovel();
-    },);
-
-    function LoadingSpinner() {
-        return (
-            <div className="d-flex vh-100 justify-content-center align-items-center" style={{ backgroundColor: '#333' }}>
-                <div className="spinner-border text-warning" role="status" style={{ width: '3rem', height: '3rem' }}>
-                    <span className="visually-hidden">Carregando...</span>
-                </div>
-            </div>
-        );
-    }
-
-    function ErrorDisplay({ error, onRetry }) {
-        const navigate = useNavigate();
-        return (
-            <div className="d-flex vh-100 justify-content-center align-items-center text-center" style={{ backgroundColor: '#333' }}>
-                <div>
-                    <h3 className="text-danger mb-3">Ocorreu algum erro: {error}</h3>
-                    <button className='btn btn-warning me-2' onClick={() => navigate(-1)}>← Voltar</button>
-                    <button className='btn btn-outline-warning' onClick={onRetry}>Tentar Novamente</button>
-                </div>
-            </div>
-        );
-    }
-
-
-    async function carregarMovel() {
+    const carregarMovel = useCallback(async () => {
         try {
             const res = await fetch(`${urlAPI}/api/moveis/${id}`);
             if (!res.ok) throw new Error('Erro ao carregar móvel');
             const data = await res.json();
             setMovel(data);
+            
             if (data.fotos?.length > 0) {
-                const principal = data.fotos.find(f => f.principal) || data.fotos[0];
-                setImagemPrincipal(principal.foto);
+                // VERIFICAÇÃO CRUCIAL: Só define a imagem padrão se o estado estiver vazio.
+                if (!imagemPrincipal) { 
+                    const principal = data.fotos.find(f => f.principal) || data.fotos[0];
+                    setImagemPrincipal(principal.foto);
+                }
             }
+            
             if (data.categoria_id) {
                 const resCat = await fetch(`${urlAPI}/api/categorias/${data.categoria_id}`);
                 if (resCat.ok) {
@@ -68,6 +44,37 @@ export default function VerMovel() {
         } finally {
             setLoading(false);
         }
+    }, [id, urlAPI, imagemPrincipal]); // <-- 'imagemPrincipal' PRECISA estar aqui para que o useCallback veja o valor atualizado.
+
+    // =======================================================
+    // useEffect depende de carregarMovel
+    // =======================================================
+    useEffect(() => {
+        Aos.init({ duration: 500 });
+        carregarMovel();
+    }, [carregarMovel]);
+
+    function LoadingSpinner() {
+        return (
+            <div className="d-flex vh-100 justify-content-center align-items-center" style={{ backgroundColor: '#333' }}>
+                <div className="spinner-border text-warning" role="status" style={{ width: '3rem', height: '3rem' }}>
+                    <span className="visually-hidden">Carregando...</span>
+                </div>
+            </div>
+        );
+    }
+
+    function ErrorDisplay({ error, onRetry }) {
+        // const navigate = useNavigate(); já está no escopo principal
+        return (
+            <div className="d-flex vh-100 justify-content-center align-items-center text-center" style={{ backgroundColor: '#333' }}>
+                <div>
+                    <h3 className="text-danger mb-3">Ocorreu algum erro: {error}</h3>
+                    <button className='btn btn-warning me-2' onClick={() => navigate(-1)}>← Voltar</button>
+                    <button className='btn btn-outline-warning' onClick={onRetry}>Tentar Novamente</button>
+                </div>
+            </div>
+        );
     }
 
     // =============================
@@ -159,7 +166,7 @@ export default function VerMovel() {
                                                 : '3px solid transparent', // Borda transparente
                                             transition: 'border 0.2s ease'
                                         }}
-                                        onClick={() => setImagemPrincipal(f.foto)}
+                                        onClick={() => setImagemPrincipal(f.foto)} 
                                     />
                                 </div>
                             ))}
