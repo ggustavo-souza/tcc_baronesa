@@ -17,9 +17,7 @@ export default function VerMovel() {
     const [imagemPrincipal, setImagemPrincipal] = useState('');
 
     // =======================================================
-    // FIX: carregarMovel agora usa useCallback
-    // Isso garante que a função só mude quando o 'id' ou 'urlAPI' mudar.
-    // Assim, o useEffect só roda na montagem e não a cada clique na miniatura.
+    // FIX FINAL: carregarMovel usa a imagemPrincipal na lógica e nas dependências
     // =======================================================
     const carregarMovel = useCallback(async () => {
         try {
@@ -27,10 +25,15 @@ export default function VerMovel() {
             if (!res.ok) throw new Error('Erro ao carregar móvel');
             const data = await res.json();
             setMovel(data);
+            
             if (data.fotos?.length > 0) {
-                const principal = data.fotos.find(f => f.principal) || data.fotos[0];
-                setImagemPrincipal(principal.foto);
+                // VERIFICAÇÃO CRUCIAL: Só define a imagem padrão se o estado estiver vazio.
+                if (!imagemPrincipal) { 
+                    const principal = data.fotos.find(f => f.principal) || data.fotos[0];
+                    setImagemPrincipal(principal.foto);
+                }
             }
+            
             if (data.categoria_id) {
                 const resCat = await fetch(`${urlAPI}/api/categorias/${data.categoria_id}`);
                 if (resCat.ok) {
@@ -44,16 +47,15 @@ export default function VerMovel() {
         } finally {
             setLoading(false);
         }
-    }, [id, urlAPI]); // Dependências da função: id e urlAPI
+    }, [id, urlAPI, imagemPrincipal]); // <-- 'imagemPrincipal' PRECISA estar aqui para que o useCallback veja o valor atualizado.
 
     // =======================================================
-    // FIX: useEffect agora depende de carregarMovel
-    // Resolve o problema da re-execução excessiva e o warning do ESLint.
+    // useEffect depende de carregarMovel
     // =======================================================
     useEffect(() => {
         Aos.init({ duration: 500 });
         carregarMovel();
-    }, [carregarMovel]); // Depende da função estável (useCallback)
+    }, [carregarMovel]);
 
     function LoadingSpinner() {
         return (
@@ -66,7 +68,7 @@ export default function VerMovel() {
     }
 
     function ErrorDisplay({ error, onRetry }) {
-        // Atenção: Removida a linha 'const navigate = useNavigate();' pois já é feito no componente principal.
+        // const navigate = useNavigate(); já está no escopo principal
         return (
             <div className="d-flex vh-100 justify-content-center align-items-center text-center" style={{ backgroundColor: '#333' }}>
                 <div>
@@ -77,9 +79,6 @@ export default function VerMovel() {
             </div>
         );
     }
-
-
-    // A função carregarMovel original foi substituída pela versão useCallback acima.
 
     // =============================
     // Função para adicionar pedido
@@ -170,7 +169,6 @@ export default function VerMovel() {
                                                 : '3px solid transparent', // Borda transparente
                                             transition: 'border 0.2s ease'
                                         }}
-                                        // Esta linha agora funcionará perfeitamente sem ser sobrescrita.
                                         onClick={() => setImagemPrincipal(f.foto)} 
                                     />
                                 </div>
