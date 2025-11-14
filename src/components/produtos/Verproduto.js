@@ -12,14 +12,14 @@ export default function VerMovel() {
     const [categoria, setCategoria] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [mensagem, setMensagem] = useState(null)
-    const [modal, setModal] = useState(false)
+    const [mensagem, setMensagem] = useState(null);
+    const [modal, setModal] = useState(false);
     const [imagemPrincipal, setImagemPrincipal] = useState('');
 
     useEffect(() => {
         Aos.init({ duration: 500 });
         carregarMovel();
-    },);
+    }, [id]);
 
     function LoadingSpinner() {
         return (
@@ -53,7 +53,7 @@ export default function VerMovel() {
             setMovel(data);
             if (data.fotos?.length > 0) {
                 const principal = data.fotos.find(f => f.principal) || data.fotos[0];
-                setImagemPrincipal(principal.foto);
+                setImagemPrincipal(principal.foto); // <--- Ela sempre seta a imagem padrão da API
             }
             if (data.categoria_id) {
                 const resCat = await fetch(`${urlAPI}/api/categorias/${data.categoria_id}`);
