@@ -26,6 +26,7 @@ export default function UsuariosCrud() {
         nome: '',
         email: '',
         senha: '',
+        telefone: '',
         cargo: ''
     });
     const [mostrarSenha, setMostrarSenha] = useState(false);
@@ -104,7 +105,7 @@ export default function UsuariosCrud() {
 
     // --- FUNÇÕES DE CONTROLE DO MODAL DE FORMULÁRIO ---
     function abrirModalAdicionar() {
-        setFormData({ id: null, nome: '', email: '', senha: '', cargo: '' });
+        setFormData({ id: null, nome: '', email: '', senha: '', telefone: '', cargo: '' });
         setIsFormModalOpen(true);
     }
 
@@ -116,7 +117,7 @@ export default function UsuariosCrud() {
     function fecharFormModal() {
         setIsFormModalOpen(false);
         setMostrarSenha(false); // Garante que a senha esteja oculta na próxima vez
-        setFormData({ id: null, nome: '', email: '', senha: '', cargo: '' });
+        setFormData({ id: null, nome: '', email: '', senha: '', telefone: '', cargo: '' });
     }
 
     if (loading) return <h3 className='mt-5' style={{ color: '#FFD230' }}>Carregando...</h3>;
@@ -144,6 +145,7 @@ export default function UsuariosCrud() {
                                         <th>ID</th>
                                         <th>Nome</th>
                                         <th>Email</th>
+                                        <th>Tel.</th>
                                         <th>Cargo</th>
                                         <th className='text-center'>Opções</th>
                                     </tr>
@@ -154,6 +156,7 @@ export default function UsuariosCrud() {
                                             <td>{registro.id}</td>
                                             <td>{registro.nome}</td>
                                             <td>{registro.email}</td>
+                                            <td>{registro.telefone}</td>
                                             <td>{registro.cargo}</td>
                                             <td>
                                                 <div className="d-flex justify-content-center gap-2">
@@ -264,6 +267,20 @@ export default function UsuariosCrud() {
                                                 </div>
                                             </div>
                                             <div className="col-md-6">
+                                                <div className="form-floating">
+                                                    <input maxLength="20" type="tel" className="form-control" id="telefoneUsuario" placeholder="E-mail" value={formData.telefone} onChange={e => setFormData({ ...formData, telefone: e.target.value })} onInput={(e) => {
+                                                let value = e.target.value.replace(/\D/g, "");
+                                                if (value.length > 11) value = value.slice(0, 11);
+                                                if (value.length <= 10) {
+                                                    e.target.value = value.replace(/(\d{2})(\d{4})(\d{0,4})/, "($1) $2-$3");
+                                                } else {
+                                                    e.target.value = value.replace(/(\d{2})(\d{5})(\d{0,4})/, "($1) $2-$3");
+                                                }
+                                            }}required />
+                                                    <label htmlFor="telefoneUsuario">Telefone</label>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-12">
                                                 <div className="input-group">
                                                     <span className="input-group-text"><i className="fa-solid fa-briefcase"></i></span>
                                                     <select className="form-select p-3" value={formData.cargo} onChange={e => setFormData({ ...formData, cargo: e.target.value })} required>
