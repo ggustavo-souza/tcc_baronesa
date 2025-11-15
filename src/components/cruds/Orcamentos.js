@@ -70,7 +70,7 @@ export default function AdminOrcamentos() {
     }
 
     function excluirOrcamento(id) {
-        fetch(`${urlAPI}/api/orcamentos/${Number(id)}`, { method: "DELETE" })
+        fetch(`${urlAPI}/api/orcamentos/${id}`, { method: "DELETE" })
             .then(res => res.json())
             .then(() => {
                 setRegistros(registros.filter(u => u.id !== id));
@@ -216,7 +216,7 @@ export default function AdminOrcamentos() {
 
                         <button className="btn btn-danger m-3" onClick={() => {
                             setShowModalExcluir(true);
-                            setOrcamentoSelecionado(Number(registro.id));
+                            setOrcamentoSelecionado(registro.id);
                         }}><i className='fa fa-trash me-1'></i>Excluir</button>
                     </div>
                 </div>
@@ -289,7 +289,7 @@ export default function AdminOrcamentos() {
                                 </div>
                                 <div className="modal-footer border-0 bg-light">
                                     <button type="button" className="btn btn-secondary" onClick={() => setShowModalExcluir(false)}>Cancelar</button>
-                                    <button type="button" className="btn btn-danger fw-bold" onClick={excluirOrcamento}>
+                                    <button type="button" className="btn btn-danger fw-bold" onClick={() => excluirOrcamento}>
                                         <i className="fa-solid fa-trash me-2"></i>
                                         Sim, Excluir
                                     </button>
