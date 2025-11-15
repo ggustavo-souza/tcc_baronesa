@@ -216,7 +216,7 @@ export default function AdminOrcamentos() {
                         
                         <button className="btn btn-danger m-3" onClick={() => {
                             setShowModalExcluir(true);
-                            setOrcamentoSelecionado(registro.id);
+                            setOrcamentoSelecionado(Number(registro.id));
                         }}><i className='fa fa-trash me-1'></i>Excluir</button>
                     </div>
                 </div>
@@ -371,7 +371,7 @@ export default function AdminOrcamentos() {
 
                                 <div className="modal-body pt-4 pb-4">
                                     <h5 className="text-dark">Quer mesmo desaprovar o orçamento?</h5>
-                                    <p className='text-dark'>Por favor, insira o **motivo da desaprovação** para o cliente:</p>
+                                    <p className='text-dark'>Por favor, insira o <b>motivo da desaprovação</b> para o cliente:</p>
                                     <div className="mb-3">
                                         <textarea
                                             className="form-control"
