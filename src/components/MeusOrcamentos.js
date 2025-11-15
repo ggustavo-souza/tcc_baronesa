@@ -46,7 +46,6 @@ export default function MeusOrcamentos() {
     }
 
     async function handleExcluir(idOrcamento) {
-        // Remoção do 'window.confirm' para usar o modal personalizado.
         console.log("Excluindo orçamento:", idOrcamento);
         try {
             const resposta = await fetch(`${urlAPI}/api/orcamentos/${idOrcamento}`, {
