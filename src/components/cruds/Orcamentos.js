@@ -70,7 +70,7 @@ export default function AdminOrcamentos() {
     }
 
     function excluirOrcamento(id) {
-        fetch(`${urlAPI}/api/orcamentos/${id}`, { method: "DELETE" })
+        fetch(`${urlAPI}/api/orcamentos/${Number(id)}`, { method: "DELETE" })
             .then(res => res.json())
             .then(() => {
                 setRegistros(registros.filter(u => u.id !== id));
