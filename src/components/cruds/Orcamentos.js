@@ -16,7 +16,7 @@ export default function AdminOrcamentos() {
     const [showModalAprovar, setShowModalAprovar] = useState(false);
     const [showModalDesaprovar, setShowModalDesaprovar] = useState(false);
     const [orcamentoSelecionado, setOrcamentoSelecionado] = useState(null);
-    
+
     const [observacaoDesaprovacao, setObservacaoDesaprovacao] = useState('');
 
     const navigate = useNavigate();
@@ -84,11 +84,11 @@ export default function AdminOrcamentos() {
         const dados = {
             aprovacao: aprovado
         };
-        
+
         if (aprovado === "desaprovado" && observacao) {
             dados.observacao = observacao;
         } else if (aprovado === "aprovado") {
-            dados.observacao = null; 
+            dados.observacao = null;
         }
 
         fetch(`${urlAPI}/api/orcamentos/${id}`, {
@@ -104,18 +104,18 @@ export default function AdminOrcamentos() {
                 console.log(data);
 
                 setRegistros(registros.map(reg =>
-                    reg.id === id 
-                        ? { 
-                            ...reg, 
-                            aprovacao: aprovado, 
-                            observacao: (aprovado === "desaprovado" ? observacao : null) 
-                        } 
+                    reg.id === id
+                        ? {
+                            ...reg,
+                            aprovacao: aprovado,
+                            observacao: (aprovado === "desaprovado" ? observacao : null)
+                        }
                         : reg
                 ));
 
                 setShowModalAprovar(false);
                 setShowModalDesaprovar(false);
-                setObservacaoDesaprovacao(''); 
+                setObservacaoDesaprovacao('');
                 setOrcamentoSelecionado(null);
             })
             .catch(err => {
@@ -123,7 +123,7 @@ export default function AdminOrcamentos() {
                 setShowModalErro(true)
             });
     }
-    
+
     const handleConfirmarDesaprovacao = () => {
         if (!observacaoDesaprovacao.trim()) {
             alert("A observação é obrigatória para desaprovação.");
@@ -146,10 +146,10 @@ export default function AdminOrcamentos() {
         let situacaoCor = 'crimson';
         if (registro.aprovacao === 'naoLido') {
             situacaoTexto = 'Pendente';
-            situacaoCor = '#FFD230'; 
+            situacaoCor = '#FFD230';
         } else if (registro.aprovacao === 'aprovado') {
             situacaoTexto = 'Aprovado';
-            situacaoCor = 'lightgreen'; 
+            situacaoCor = 'lightgreen';
         }
 
         const usuarioNome = usuarios.find(u => u.id === registro.id_usuario)?.nome || '—';
@@ -179,7 +179,7 @@ export default function AdminOrcamentos() {
                             {situacaoTexto}
                         </i>
                     </h3>
-                    
+
                     {/* APENAS ESTA SEÇÃO FOI ALTERADA para aplicar a cor amarela ao texto da observação */}
                     {registro.aprovacao === 'desaprovado' && registro.observacao && (
                         <h3 style={{ color: '#FFD230', marginTop: '10px' }}>
@@ -187,7 +187,7 @@ export default function AdminOrcamentos() {
                             <strong>Motivo:</strong> <i>{registro.observacao}</i>
                         </h3>
                     )}
-                    
+
                     <div>
                         {registro.aprovacao !== 'aprovado' && (
                             <button className="btn btn-warning m-3" onClick={() => {
@@ -195,25 +195,25 @@ export default function AdminOrcamentos() {
                                 setOrcamentoSelecionado(registro.id);
                             }}><i className='fa fa-check me-1'></i>Aprovar</button>
                         )}
-                        
+
                         {registro.aprovacao !== 'desaprovado' && (
                             <button className="btn btn-warning m-3" onClick={() => {
                                 setShowModalDesaprovar(true);
                                 setOrcamentoSelecionado(registro.id);
-                                setObservacaoDesaprovacao(registro.observacao || ''); 
+                                setObservacaoDesaprovacao(registro.observacao || '');
                             }}>
                                 <i className='fa fa-xmark me-1'></i>Desaprovar
                             </button>
                         )}
-                        
+
                         {registro.aprovacao === ('aprovado') && (
                             <button className="btn btn-warning m-3" onClick={() => {
-                                handleContato(registro.id,registro.telefone)
+                                handleContato(registro.id, registro.telefone)
                             }}>
                                 <i className='fa fa-phone me-2'></i>Entrar em contato
                             </button>
                         )}
-                        
+
                         <button className="btn btn-danger m-3" onClick={() => {
                             setShowModalExcluir(true);
                             setOrcamentoSelecionado(registro.id);
@@ -285,11 +285,11 @@ export default function AdminOrcamentos() {
                                     <button type="button" className="btn-close" onClick={() => setShowModalExcluir(false)}></button>
                                 </div>
                                 <div className="modal-body py-4">
-                                    <p className="mb-0 text-dark">Deseja realmente excluir este orçamento? Esta ação não pode ser desfeita.</p>
+                                    <p className="mb-0">Deseja realmente excluir este orçamento? Esta ação não pode ser desfeita.</p>
                                 </div>
                                 <div className="modal-footer border-0 bg-light">
                                     <button type="button" className="btn btn-secondary" onClick={() => setShowModalExcluir(false)}>Cancelar</button>
-                                    <button type="button" className="btn btn-danger fw-bold" onClick={() => excluirOrcamento(orcamentoSelecionado)}>
+                                    <button type="button" className="btn btn-danger fw-bold" onClick={excluirOrcamento}>
                                         <i className="fa-solid fa-trash me-2"></i>
                                         Sim, Excluir
                                     </button>
@@ -397,7 +397,7 @@ export default function AdminOrcamentos() {
                                     <button
                                         type="button"
                                         className="btn btn-danger fw-bold px-4"
-                                        onClick={handleConfirmarDesaprovacao} 
+                                        onClick={handleConfirmarDesaprovacao}
                                         style={{ backgroundColor: 'crimson', borderColor: 'crimson', color: 'white' }}
                                     >
                                         <i className='fa fa-xmark me-1'></i>Desaprovar
