@@ -289,7 +289,7 @@ export default function AdminOrcamentos() {
                                 </div>
                                 <div className="modal-footer border-0 bg-light">
                                     <button type="button" className="btn btn-secondary" onClick={() => setShowModalExcluir(false)}>Cancelar</button>
-                                    <button type="button" className="btn btn-danger fw-bold" onClick={() => excluirOrcamento}>
+                                    <button type="button" className="btn btn-danger fw-bold" onClick={() => excluirOrcamento(orcamentoSelecionado)}>
                                         <i className="fa-solid fa-trash me-2"></i>
                                         Sim, Excluir
                                     </button>
