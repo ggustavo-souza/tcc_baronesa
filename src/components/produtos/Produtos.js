@@ -51,6 +51,15 @@ function HomeProdutos() {
         return str.charAt(0).toUpperCase() + str.slice(1);
     };
 
+    const substituicoesTitulo = {
+        comodas: "Cômodas",
+        armarios: "Armários",
+    };
+
+    const tituloExibicao = categoria
+        ? (substituicoesTitulo[categoria] || capitalizar(categoria))
+        : 'Nossos Produtos';
+
     const renderStatusContainer = (iconClass, text, isError = false) => (
         <div className="row mt-5">
             <div className="col-12">
@@ -72,7 +81,8 @@ function HomeProdutos() {
                     <div className="col-12 text-center">
                         {/* 5. Título dinâmico que reflete a categoria atual */}
                         <h1 className="titulo-pagina">
-                            {categoria ? capitalizar(categoria) : 'Nossos Produtos'}
+                            {/* Use a nova variável aqui */}
+                            {tituloExibicao}
                         </h1>
                         <p className="lead mb-5" style={{color: "#ffffff"}}>
                             Móveis artesanais que contam uma história em cada detalhe.
