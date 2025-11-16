@@ -215,7 +215,7 @@ function PedidosCrud() {
                         <h3 className="mt-2 fs-4 fw-medium text-white">
                             Nenhum pedido encontrado
                         </h3>
-                        <p className="mt-1 text-alert">
+                        <p className="mt-1 text-warning">
                             Não há registros de pedidos pagos no momento.
                         </p>
                     </div >
