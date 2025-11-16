@@ -89,12 +89,9 @@ function FormRegistrar() {
                             </div>
                             <div class="form-check">
                                 <input className="form-check-input mt-2" type="checkbox" value="" id="checkDefault" required />
-                                <button className="btn" type="button" onClick={() => setShowPolitica(true)}>
-                                    <p className="text-decoration-underline" style={{ color: "#FFD230" }}>
-                                        Li e concordo com os Termos de Privacidade
-                                    </p>
-                                </button>
-
+                                <span className="btn text-decoration-underline" style={{color: "#FFD230", cursor: 'pointer'}} onClick={() => setShowPolitica(true)}>
+                                    Li e concordo com os Termos de Privacidade
+                                </span>
                             </div>
 
                             <div className="d-grid gap-2 mt-5">
