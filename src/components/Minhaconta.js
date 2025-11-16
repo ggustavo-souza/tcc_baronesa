@@ -53,7 +53,7 @@ function MinhaConta() {
                             </h4>
                         </div>
                         <div className="p-3 rounded-lg flex items-center shadow-inner" style={{ backgroundColor: '#503325e0' }}>
-                            <i className="fas fa-user-circle text-xl mr-3" style={{ color: '#FFD230' }}></i>
+                            <i className="fas fa-phone text-xl mr-3" style={{ color: '#FFD230' }}></i>
                             <h4 className="text-lg md:text-xl font-medium" style={{ color: '#FFD230' }}>
                                 Telefone: <span className="font-semibold">{nomeUsuario ? nomeUsuario.telefone : "Carregando..."}</span>
                             </h4>
