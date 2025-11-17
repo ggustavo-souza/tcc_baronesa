@@ -52,12 +52,6 @@ export default function AdminOrcamentos() {
         }
     }
 
-    function handleContato(idOrcamento, numeroCliente) {
-        console.log("Entrando em contato sobre o orçamento:", idOrcamento);
-        const mensagem = `Olá! Somos da A Baronesa Movelaria. Queremos contatar sobre o Orçamento (Nº ${idOrcamento}).`;
-        window.open(`https://wa.me/55${numeroCliente}?text=${encodeURIComponent(mensagem)}`, '_blank');
-    }
-
     async function fetchCategorias() {
         try {
             const res = await fetch(`${urlAPI}/api/categorias`);
@@ -203,14 +197,6 @@ export default function AdminOrcamentos() {
                                 setObservacaoDesaprovacao(registro.observacao || '');
                             }}>
                                 <i className='fa fa-xmark me-1'></i>Desaprovar
-                            </button>
-                        )}
-
-                        {registro.aprovacao === ('aprovado') && (
-                            <button className="btn btn-warning m-3" onClick={() => {
-                                handleContato(registro.id, registro.telefone)
-                            }}>
-                                <i className='fa fa-phone me-2'></i>Entrar em contato
                             </button>
                         )}
 
