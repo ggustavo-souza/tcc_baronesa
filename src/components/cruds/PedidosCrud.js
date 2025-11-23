@@ -14,6 +14,7 @@ function PedidosCrud() {
     const [error, setError] = useState();
     const [loading, setLoading] = useState(true);
     const [loadingUsuarios, setLoadingUsuarios] = useState(true);
+    const [modalEmail, setModalEmail] = useState(false);
 
     if (usuarios && setUsuarios && error && loading && setLoading) {
         console.log("Teste Contra ci")
@@ -60,6 +61,38 @@ function PedidosCrud() {
 
         } catch (error) {
             console.error("Ocorreu um erro na requisição:", error.message);
+        }
+    }
+
+    async function mandarEmail(id, nomeUsuario, emailUsuario) {
+        const urlEmail = `${urlAPI}/api/email.php`;
+
+        console.log("Enviando email para:", emailUsuario);
+
+        try {
+            const res = await fetch(urlEmail, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                // Garante que os nomes das chaves batem com o que o PHP espera ($data['id'], $data['nome'], etc)
+                body: JSON.stringify({
+                    id: id,
+                    nome: nomeUsuario,
+                    email: emailUsuario
+                }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok || !data.success) {
+                throw new Error(data.message || `Erro desconhecido. Status: ${res.status}`);
+            }
+
+            console.log("Sucesso:", data.message);
+
+        } catch (error) {
+            console.error("Erro ao enviar email:", error.message);
         }
     }
 
@@ -190,12 +223,20 @@ function PedidosCrud() {
                                                 </p>
                                             </div>
 
+                                            <div className="mb-4">
+                                                <p className="small text-white mb-1">E-mail Cliente</p>
+                                                <p className="fs-5 fw-medium mb-0"
+                                                    style={{ color: "#FFD230" }}>
+                                                    {usuarioDoPedido.email}
+                                                </p>
+                                            </div>
+
                                             <hr className="text-secondary opacity-25" />
 
                                             {/* Botão */}
                                             <button
                                                 className="btn btn-success btn-lg w-100 mt-4 d-flex align-items-center justify-content-center fw-bold rounded-3"
-                                                onClick={() => pedidoPronto(pedido.id, "pronto")}
+                                                onClick={() => { pedidoPronto(pedido.id, "pronto"); mandarEmail(pedido.id, usuarioDoPedido.nome, usuarioDoPedido.email); setModalEmail(true) }}
                                             >
                                                 <i className="fa fa-check me-2"></i>
                                                 Marcar como Pronto
@@ -222,6 +263,31 @@ function PedidosCrud() {
                 )
                 }
             </main >
+
+            {modalEmail && (
+                <>
+                    <div className="modal" data-aos="fade-up" style={{ display: 'block' }}>
+                        <div className="modal-dialog modal-dialog-centered">
+                            <div className="modal-content border-0 shadow-lg rounded-4">
+                                <div className="modal-header border-0 pb-0">
+                                    <h5 className="modal-title text-dark fw-bold">
+                                        <i className="fa-solid fa-check text-success me-2"></i>
+                                        Pedido confirmado!
+                                    </h5>
+                                    <button type="button" className="btn-close" onClick={() => setModalEmail(false)}></button>
+                                </div>
+                                <div className="modal-body py-4">
+                                    <p className="mb-0">O pedido foi marcado como pronto e um e-mail foi enviado ao usuário!</p>
+                                </div>
+                                <div className="modal-footer border-0 bg-light">
+                                    <button type="button" className="btn btn-success" onClick={() => setModalEmail(false)}>Ok!</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="modal-backdrop fade show"></div>
+                </>
+            )}
 
             <Footer />
         </>
