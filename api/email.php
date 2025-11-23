@@ -40,7 +40,7 @@ try {
     $mail->Host       = 'smtp.hostinger.com'; 
     $mail->SMTPAuth   = true;
     $mail->Username   = 'abaronesa@tccbaronesapi.cloud';
-    $mail->Password   = 'Bananamole2007*'; 
+    $mail->Password   = 'senha'; 
     $mail->SMTPSecure = 'ssl'; 
     $mail->Port       = 465;    
     $mail->CharSet    = 'UTF-8'; 
